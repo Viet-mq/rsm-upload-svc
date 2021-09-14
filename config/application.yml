@@ -1,6 +1,6 @@
 spring:
   application:
-    name: acc-svc
+    name: upload-svc
   redis:
     host: '103.152.165.53'
     port: 9981
