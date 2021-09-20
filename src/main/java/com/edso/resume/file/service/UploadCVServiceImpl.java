@@ -1,39 +1,65 @@
 package com.edso.resume.file.service;
 
+import com.edso.resume.file.domain.elasticsearch.ElasticSearchActions;
 import com.edso.resume.file.domain.request.UploadCVRequest;
 import com.edso.resume.lib.response.BaseResponse;
 import lombok.SneakyThrows;
-import org.apache.pdfbox.cos.COSDocument;
-import org.apache.pdfbox.io.RandomAccessFile;
-import org.apache.pdfbox.pdfparser.PDFParser;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Objects;
 
 @Service
 public class UploadCVServiceImpl extends BaseService implements UploadCVService {
 
+    @Autowired
+    FileService fileService;
+
     @SneakyThrows
     @Override
     public BaseResponse uploadCV(UploadCVRequest request) {
-        BaseResponse baseResponse = new BaseResponse();
-        File pdf = new File(String.valueOf(request.getFile()));
         String textParsed;
+        BaseResponse baseResponse = new BaseResponse();
+        ElasticSearchActions elastic = new ElasticSearchActions();
+        MultipartFile fileUpload = request.getFile();
+        File file = convertToFile(fileUpload);
+        String extension = Objects.requireNonNull(fileUpload
+                        .getOriginalFilename())
+                        .substring(fileUpload.getOriginalFilename()
+                        .lastIndexOf(".") + 1);
 
-        PDFParser pdfParser = new PDFParser(new RandomAccessFile(pdf, "r"));
-        pdfParser.parse();
+        switch (extension){
+            case "pdf":
+                textParsed = fileService.PdfToText(file);
+                break;
+            case "docx":
+                textParsed = fileService.DocxToText(file);
+                break;
+            case "xlsx":
+                textParsed = fileService.XlsxToText(file);
+                break;
+            default:
+                baseResponse.setFailed("Invalid file");
+                return baseResponse;
+        }
 
-        COSDocument cosDocument = pdfParser.getDocument();
-        PDFTextStripper pdfTextStripper = new PDFTextStripper();
-        PDDocument pdDocument = new PDDocument(cosDocument);
-        textParsed = pdfTextStripper.getText(pdDocument);
-
-        baseResponse.setSuccess(textParsed);
+        baseResponse.setSuccess("OK");
+        //elastic.insertTextIntoElasticsearch(textParsed);
 
         return baseResponse;
 
+    }
+
+    public static File convertToFile(MultipartFile file) throws IOException {
+        File convFile = new File(file.getName());
+        FileOutputStream fos = new FileOutputStream(convFile);
+        fos.write(file.getBytes());
+        fos.close();
+        return convFile;
     }
 
 }
