@@ -1,6 +1,7 @@
 package com.edso.resume.file.service;
 
 import com.edso.resume.file.domain.elasticsearch.ElasticSearchActions;
+import com.edso.resume.file.domain.entities.CV;
 import com.edso.resume.file.domain.request.UploadCVRequest;
 import com.edso.resume.lib.response.BaseResponse;
 import lombok.SneakyThrows;
@@ -12,6 +13,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class UploadCVServiceImpl extends BaseService implements UploadCVService {
@@ -19,12 +21,14 @@ public class UploadCVServiceImpl extends BaseService implements UploadCVService 
     @Autowired
     FileService fileService;
 
+    @Autowired
+    CVService cvService;
+
     @SneakyThrows
     @Override
     public BaseResponse uploadCV(UploadCVRequest request) {
         String textParsed;
         BaseResponse baseResponse = new BaseResponse();
-        ElasticSearchActions elastic = new ElasticSearchActions();
         MultipartFile fileUpload = request.getFile();
         File file = convertToFile(fileUpload);
         String extension = Objects.requireNonNull(fileUpload
@@ -47,8 +51,14 @@ public class UploadCVServiceImpl extends BaseService implements UploadCVService 
                 return baseResponse;
         }
 
+        CV cv = new CV();
+        cv.setId(UUID.randomUUID().toString());
+        cv.setProfileId(request.getProfileId());
+        cv.setName(request.getHeaderInfo().getUsername());
+        cv.setPathFile("home/" + cv.getName());
+        cv.setContent(textParsed);
+        cvService.saveCv(cv);
         baseResponse.setSuccess("OK");
-        //elastic.insertTextIntoElasticsearch(textParsed);
 
         return baseResponse;
 

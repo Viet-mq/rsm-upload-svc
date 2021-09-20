@@ -20,15 +20,15 @@ public class Test implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         try {
-            String id = UUID.randomUUID().toString();
-            CV cv = new CV();
-            cv.setId(id);
-            cv.setName("dautv");
-            cv.setProfileId("212131");
-            cv.setPathFile("/home/dautv");
-            cv.setContent("Senior, ....");
-            cvService.saveCv(cv);
-            List<CV> cvs = cvService.findAllByName(id);
+//            String id = UUID.randomUUID().toString();
+//            CV cv = new CV();
+//            cv.setId(id);
+//            cv.setName("vietmq");
+//            cv.setProfileId("1506");
+//            cv.setPathFile("/home/vietmq");
+//            cv.setContent("Dev, ....");
+//            cvService.saveCv(cv);
+            List<CV> cvs = cvService.findAllByName(null);
             System.out.println(cvs);
         } catch (Throwable ex) {
             ex.printStackTrace();
