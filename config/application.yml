@@ -24,13 +24,11 @@ spring:
       username: 'resume'
       password: 'abc123resume'
     elasticsearch:
-      cluster-name: elasticsearch
-      cluster-nodes: 127.0.0.1:9300
 
-  elasticsearch:
-    rest:
-      uris: http://127.0.0.1:9200
-
+elasticsearch:
+  clustername: production
+  host: 34.126.82.235
+  port: 9300
 
 server:
   port: ${ACCOUNT_SVC_PORT:30005}
