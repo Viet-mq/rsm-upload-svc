@@ -13,9 +13,8 @@ import java.util.UUID;
 public interface CVService {
 
     void saveCv(CV cv);
-    List<CV> findAllByName(String name);
     GetArrayResponse<CV> viewAll (HeaderInfo headerInfo);
-    GetArrayResponse<CV> viewById(HeaderInfo headerInfo, UUID id);
+    GetArrayResponse<CV> viewByKey(HeaderInfo headerInfo, String key);
     BaseResponse delete(HeaderInfo headerInfo, DeleteCVRequest deleteCVRequest);
     BaseResponse update(HeaderInfo headerInfo, UpdateCVRequest updateCVRequest);
 }

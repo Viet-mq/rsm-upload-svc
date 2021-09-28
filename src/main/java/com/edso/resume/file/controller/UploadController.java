@@ -46,15 +46,14 @@ public class UploadController extends BaseController {
     }
 
     @GetMapping("/view")
-    public GetArrayResponse<CV> viewAll (@RequestHeader Map<String, String> headers) {
+    public GetArrayResponse<CV> viewAll (@RequestHeader Map<String, String> headers,
+                                         @RequestParam(required = false) String key) {
         HeaderInfo headerInfo = ParseHeaderUtil.build(headers);
-        return cvService.viewAll(headerInfo);
-    }
-
-    @GetMapping("/view/{id}")
-    public GetArrayResponse<CV> view (@RequestHeader Map<String, String> headers, @PathVariable UUID id){
-        HeaderInfo headerInfo = ParseHeaderUtil.build(headers);
-        return cvService.viewById(headerInfo, id);
+        if(key != null) {
+            return cvService.viewByKey(headerInfo, key);
+        }
+        else
+            return cvService.viewAll(headerInfo);
     }
 
     @DeleteMapping("/delete")

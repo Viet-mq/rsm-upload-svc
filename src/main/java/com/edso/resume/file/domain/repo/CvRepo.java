@@ -12,6 +12,8 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.springframework.stereotype.Repository;
 
@@ -55,8 +57,25 @@ public class CvRepo extends BaseService {
         return response.getSource();
     }
 
-    public List<CV> findByName(String name) {
-        return null;
+    public List<CV> multiMatchQuery(String key) throws IOException {
+        MultiMatchQueryBuilder multiMatchQuery = QueryBuilders.multiMatchQuery(key,
+                "id",
+                "name",
+                "profileID",
+                "pathFile",
+                "content");
+        SearchResponse response = elasticClient.getClient()
+                .prepareSearch("resume")
+                .setRouting("cv")
+                .setQuery(multiMatchQuery)
+                .execute()
+                .actionGet();
+        SearchHit[] searchHits = response
+                .getHits()
+                .getHits();
+        return Arrays.stream(searchHits)
+                .map(hit -> JSON.parseObject(hit.getSourceAsString(), CV.class))
+                .collect(Collectors.toList());
     }
 
     public String delete(DeleteCVRequest deleteCVRequest) {

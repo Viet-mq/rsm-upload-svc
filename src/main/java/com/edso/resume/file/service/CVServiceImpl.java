@@ -8,7 +8,6 @@ import com.edso.resume.lib.entities.HeaderInfo;
 import com.edso.resume.lib.response.BaseResponse;
 import com.edso.resume.lib.response.GetArrayResponse;
 import lombok.SneakyThrows;
-import org.elasticsearch.common.Strings;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -28,16 +27,6 @@ public class CVServiceImpl extends BaseService implements CVService {
     }
 
     @Override
-    public List<CV> findAllByName(String name) {
-        List<CV> cvList = new ArrayList<>();
-        if(Strings.isNullOrEmpty(name)){
-
-        }
-        logger.info("a: {}", cvList);
-        return null;
-    }
-
-    @Override
     public GetArrayResponse<CV> viewAll(HeaderInfo headerInfo) {
         List<CV> cvs = cvRepo.findAll();
         GetArrayResponse<CV> response = new GetArrayResponse<>();
@@ -46,14 +35,13 @@ public class CVServiceImpl extends BaseService implements CVService {
         return response;
     }
 
+    @SneakyThrows
     @Override
-    public GetArrayResponse<CV> viewById(HeaderInfo headerInfo, UUID id){
-        Map<String, Object> cv = cvRepo.findById(id);
+    public GetArrayResponse<CV> viewByKey(HeaderInfo headerInfo, String key) {
+        List<CV> cvs = cvRepo.multiMatchQuery(key);
         GetArrayResponse<CV> response = new GetArrayResponse<>();
-        Set<String> set = cv.keySet();
-        for (String key : set) {
-            response.setSuccess(1, (List<CV>) cv.get(key));
-        }
+        response.setSuccess(cvs.size(), cvs);
+        logger.info("View by key {}: {}", key, cvs);
         return response;
     }
 
