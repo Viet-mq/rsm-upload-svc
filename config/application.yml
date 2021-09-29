@@ -1,6 +1,14 @@
 spring:
   application:
     name: upload-svc
+  rabbitmq:
+    host: 18.139.222.137
+    port: 5672
+    username: admin
+    password: rabb@t@7911
+    exchange: message.exchange
+    queue: message.queue
+    routingkey: message.routingkey
   redis:
     host: '103.152.165.53'
     port: 9981
