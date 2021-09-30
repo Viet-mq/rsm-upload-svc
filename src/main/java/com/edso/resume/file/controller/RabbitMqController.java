@@ -2,6 +2,7 @@ package com.edso.resume.file.controller;
 
 import com.edso.resume.file.domain.rabbitmq.Msg;
 import com.edso.resume.file.service.RabbitMqSender;
+import com.edso.resume.lib.response.BaseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,9 +18,11 @@ public class RabbitMqController {
     }
 
     @PostMapping(value = "message")
-    public String publishMsgDetails(@RequestBody Msg msg) {
+    public BaseResponse publishMsgDetails(@RequestBody Msg msg) {
+        BaseResponse baseResponse = new BaseResponse();
         rabbitMqSender.send(msg);
-        return "Message has been sent successfully";
+        baseResponse.setSuccess("Message has been sent successfully");
+        return baseResponse;
     }
 }
 

@@ -12,8 +12,11 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
+import org.elasticsearch.index.query.MatchPhraseQueryBuilder;
+import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.search.MatchQuery;
 import org.elasticsearch.search.SearchHit;
 import org.springframework.stereotype.Repository;
 
@@ -61,13 +64,29 @@ public class CvRepo extends BaseService {
         MultiMatchQueryBuilder multiMatchQuery = QueryBuilders.multiMatchQuery(key,
                 "id",
                 "name",
-                "profileID",
+                "profileId",
                 "pathFile",
                 "content");
         SearchResponse response = elasticClient.getClient()
                 .prepareSearch("resume")
                 .setRouting("cv")
                 .setQuery(multiMatchQuery)
+                .execute()
+                .actionGet();
+        SearchHit[] searchHits = response
+                .getHits()
+                .getHits();
+        return Arrays.stream(searchHits)
+                .map(hit -> JSON.parseObject(hit.getSourceAsString(), CV.class))
+                .collect(Collectors.toList());
+    }
+
+    public List<CV> searchByProfileId(String profileId) throws IOException {
+        MultiMatchQueryBuilder query = QueryBuilders.multiMatchQuery(profileId, "profileId");
+        SearchResponse response = elasticClient.getClient()
+                .prepareSearch("resume")
+                .setRouting("cv")
+                .setQuery(query)
                 .execute()
                 .actionGet();
         SearchHit[] searchHits = response
