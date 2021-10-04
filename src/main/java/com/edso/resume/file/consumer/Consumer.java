@@ -39,20 +39,10 @@ public class Consumer {
                 cvService.saveCv(event.getCv());
                 break;
             case EVENT_UPDATE:
-//                List<CV> cv = cvRepo.searchByProfileId(event.getCv().getProfileId());
-//                if (cv != null) {
-//                    logger.info("Check point");
-//                    UpdateCVRequest updateCVRequest = new UpdateCVRequest();
-//                    updateCVRequest.setId(cv.getId());
-//                    updateCVRequest.setName(cv.getName());
-//                    updateCVRequest.setProfileId(cv.getProfileId());
-//                    updateCVRequest.setPathFile(cv.getPathFile());
-//                    updateCVRequest.setContent(cv.getContent());
-//                    cvService.update(null, updateCVRequest);
-//                }
+                cvService.update(event);
                 break;
             case EVENT_DELETE:
-
+                cvService.delete(event.getCv().getProfileId());
                 break;
             default:
                 logger.info("Invalid type");

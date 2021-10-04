@@ -81,7 +81,7 @@ public class CvRepo extends BaseService {
                 .collect(Collectors.toList());
     }
 
-    public List<CV> searchByProfileId(String profileId) throws IOException {
+    public CV searchByProfileId(String profileId) throws IOException {
         MultiMatchQueryBuilder query = QueryBuilders.multiMatchQuery(profileId, "profileId");
         SearchResponse response = elasticClient.getClient()
                 .prepareSearch("resume")
@@ -92,9 +92,11 @@ public class CvRepo extends BaseService {
         SearchHit[] searchHits = response
                 .getHits()
                 .getHits();
-        return Arrays.stream(searchHits)
+        List<CV> cvList = Arrays.stream(searchHits)
                 .map(hit -> JSON.parseObject(hit.getSourceAsString(), CV.class))
                 .collect(Collectors.toList());
+        if (cvList.isEmpty()) return null;
+        return cvList.get(0);
     }
 
     public String delete(DeleteCVRequest deleteCVRequest) {
@@ -133,6 +135,7 @@ public class CvRepo extends BaseService {
                     .prepareIndex("resume", "cv", cv.getId())
                     .setSource(jsonBuilder()
                             .startObject()
+                            .field("id", cv.getId())
                             .field("pathFile", cv.getPathFile())
                             .field("profileId", cv.getProfileId())
                             .field("name", cv.getName())

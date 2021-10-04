@@ -1,6 +1,7 @@
 package com.edso.resume.file.service;
 
 import com.edso.resume.file.domain.entities.CV;
+import com.edso.resume.file.domain.entities.Event;
 import com.edso.resume.file.domain.repo.CvRepo;
 import com.edso.resume.file.domain.request.DeleteCVRequest;
 import com.edso.resume.file.domain.request.UpdateCVRequest;
@@ -60,5 +61,31 @@ public class CVServiceImpl extends BaseService implements CVService {
         String result = cvRepo.delete(deleteCVRequest);
         response.setSuccess(result);
         return response;
+    }
+
+    @SneakyThrows
+    @Override
+    public void update(Event event) {
+        CV cv = cvRepo.searchByProfileId(event.getCv().getProfileId());
+        if (cv != null) {
+            UpdateCVRequest updateCVRequest = new UpdateCVRequest();
+            updateCVRequest.setId(cv.getId());
+            updateCVRequest.setName(event.getCv().getName());
+            updateCVRequest.setProfileId(event.getCv().getProfileId());
+            updateCVRequest.setPathFile(event.getCv().getPathFile());
+            updateCVRequest.setContent(event.getCv().getContent());
+            cvRepo.update(updateCVRequest);
+        }
+    }
+
+    @SneakyThrows
+    @Override
+    public void delete(String profileId) {
+        CV cv = cvRepo.searchByProfileId(profileId);
+        if (cv != null) {
+            DeleteCVRequest deleteCVRequest = new DeleteCVRequest();
+            deleteCVRequest.setId(cv.getId());
+            cvRepo.delete(deleteCVRequest);
+        }
     }
 }
