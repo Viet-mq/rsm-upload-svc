@@ -1,8 +1,7 @@
 package com.edso.resume.file.publisher;
 
-import com.edso.resume.file.domain.entities.CV;
 import com.edso.resume.file.domain.entities.Event;
-import com.edso.resume.file.domain.rabbitmq.Msg;
+import com.edso.resume.file.domain.entities.Profile;
 import com.edso.resume.lib.response.BaseResponse;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +23,11 @@ public class EventPublisher {
     @Value("${spring.rabbitmq.routingkey}")
     private String routingkey;
 
-    @PostMapping("/publish")
-    public BaseResponse addEvent(@RequestParam String type, @RequestBody(required = false) CV cv){
-        cv.setId(UUID.randomUUID().toString());
-        Event event = new Event(type, cv);
+    @PostMapping("/publish/{type}")
+    public BaseResponse addEvent(@PathVariable("type") String type, @RequestBody(required = false) Profile profile){
+        if(type.equals("create"))
+            profile.setId(UUID.randomUUID().toString());
+        Event event = new Event(type, profile);
         rabbitTemplate.convertAndSend(exchange, routingkey, event);
         BaseResponse baseResponse = new BaseResponse();
         baseResponse.setSuccess("Published");

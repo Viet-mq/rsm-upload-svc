@@ -66,14 +66,14 @@ public class CVServiceImpl extends BaseService implements CVService {
     @SneakyThrows
     @Override
     public void update(Event event) {
-        CV cv = cvRepo.searchByProfileId(event.getCv().getProfileId());
+        CV cv = cvRepo.searchByProfileId(event.getProfile().getId());
         if (cv != null) {
+            logger.info("check point");
             UpdateCVRequest updateCVRequest = new UpdateCVRequest();
             updateCVRequest.setId(cv.getId());
-            updateCVRequest.setName(event.getCv().getName());
-            updateCVRequest.setProfileId(event.getCv().getProfileId());
-            updateCVRequest.setPathFile(event.getCv().getPathFile());
-            updateCVRequest.setContent(event.getCv().getContent());
+            updateCVRequest.setName(event.getProfile().getFullName());
+            updateCVRequest.setProfileId(event.getProfile().getId());
+            updateCVRequest.setPathFile(event.getProfile().getSourceCV());
             cvRepo.update(updateCVRequest);
         }
     }
@@ -87,5 +87,15 @@ public class CVServiceImpl extends BaseService implements CVService {
             deleteCVRequest.setId(cv.getId());
             cvRepo.delete(deleteCVRequest);
         }
+    }
+
+    @Override
+    public void create(Event event) {
+        CV cv = new CV();
+        cv.setId(UUID.randomUUID().toString());
+        cv.setProfileId(event.getProfile().getId());
+        cv.setName(event.getProfile().getFullName());
+        cv.setPathFile(event.getProfile().getCv());
+        cvRepo.save(cv);
     }
 }
