@@ -9,5 +9,5 @@ import lombok.*;
 @NoArgsConstructor
 public class Event {
     private String type;
-    private Profile profile;
+    private CV cv;
 }

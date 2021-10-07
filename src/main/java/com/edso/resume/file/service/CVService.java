@@ -8,15 +8,13 @@ import com.edso.resume.lib.entities.HeaderInfo;
 import com.edso.resume.lib.response.BaseResponse;
 import com.edso.resume.lib.response.GetArrayResponse;
 
-import java.util.List;
-import java.util.UUID;
-
 public interface CVService {
 
     void saveCv(CV cv);
     void update(Event event);
     void delete(String profileId);
     void create(Event event);
+    void updateStatus(Event event);
     GetArrayResponse<CV> viewAll (HeaderInfo headerInfo);
     GetArrayResponse<CV> viewByKey(HeaderInfo headerInfo, String key);
     BaseResponse delete(HeaderInfo headerInfo, DeleteCVRequest deleteCVRequest);

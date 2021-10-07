@@ -6,9 +6,9 @@ spring:
     port: 5672
     username: admin
     password: rabb@t@7911
-    exchange: event.exchange
-    queue: event.queue
-    routingkey: event.routingkey
+    exchange: event.exchange1
+    queue: event.queue1
+    routingkey: event.routingkey1
   redis:
     host: '103.152.165.53'
     port: 9981

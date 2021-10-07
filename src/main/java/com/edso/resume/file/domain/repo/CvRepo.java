@@ -12,11 +12,8 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
-import org.elasticsearch.index.query.MatchPhraseQueryBuilder;
-import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.search.MatchQuery;
 import org.elasticsearch.search.SearchHit;
 import org.springframework.stereotype.Repository;
 
@@ -63,9 +60,20 @@ public class CvRepo extends BaseService {
     public List<CV> multiMatchQuery(String key) throws IOException {
         MultiMatchQueryBuilder multiMatchQuery = QueryBuilders.multiMatchQuery(key,
                 "id",
-                "name",
-                "profileId",
-                "pathFile",
+                "fullName",
+                "phoneNumber",
+                "email",
+                //"dateOfBirth",
+                "hometown",
+                "school",
+                "job",
+                "levelJob",
+                "cv",
+                "sourceCV",
+                "hrRef",
+                //"dateOfApply",
+                "cvType",
+                "statusCV",
                 "content");
         SearchResponse response = elasticClient.getClient()
                 .prepareSearch("resume")
@@ -81,8 +89,8 @@ public class CvRepo extends BaseService {
                 .collect(Collectors.toList());
     }
 
-    public CV searchByProfileId(String profileId) throws IOException {
-        MultiMatchQueryBuilder query = QueryBuilders.multiMatchQuery(profileId, "profileId");
+    public CV searchById(String id) throws IOException {
+        MultiMatchQueryBuilder query = QueryBuilders.multiMatchQuery(id, "id");
         SearchResponse response = elasticClient.getClient()
                 .prepareSearch("resume")
                 .setRouting("cv")
@@ -113,20 +121,46 @@ public class CvRepo extends BaseService {
                 .id(String.valueOf(updateCVRequest.getId()))
                 .doc(jsonBuilder()
                         .startObject()
-                        .field("name", updateCVRequest.getName())
-                        .field("profileId", updateCVRequest.getProfileId())
-                        .field("pathFile", updateCVRequest.getPathFile())
-                        .field("content", updateCVRequest.getContent())
+                        .field("id", updateCVRequest.getId())
+                        .field("fullName", updateCVRequest.getFullName())
+                        .field("phoneNumber", updateCVRequest.getPhoneNumber())
+                        .field("email", updateCVRequest.getEmail())
+                        .field("dateOfBirth", updateCVRequest.getDateOfBirth())
+                        .field("hometown", updateCVRequest.getHometown())
+                        .field("school", updateCVRequest.getSchool())
+                        .field("job", updateCVRequest.getJob())
+                        .field("levelJob", updateCVRequest.getLevelJob())
+                        .field("cv", updateCVRequest.getCv())
+                        .field("sourceCV", updateCVRequest.getSourceCV())
+                        .field("hrRef", updateCVRequest.getHrRef())
+                        .field("dateOfApply", updateCVRequest.getDateOfApply())
+                        .field("cvType", updateCVRequest.getCvType())
                         .field("update_at", System.currentTimeMillis())
                         .endObject());
         try {
             UpdateResponse updateResponse = elasticClient.getClient().update(updateRequest).get();
-            logger.info(updateResponse.status().toString());
             return updateResponse.status().toString();
         } catch (InterruptedException | ExecutionException e) {
             logger.error("Ex: ", e);
         }
         return "Id không tồn tại";
+    }
+
+    public void updateStatus(String id, String status) throws IOException{
+        UpdateRequest updateRequest = new UpdateRequest();
+        updateRequest.index("resume")
+                .type("cv")
+                .id(id)
+                .doc(jsonBuilder()
+                        .startObject()
+                        .field("statusCV", status)
+                        .field("update_at", System.currentTimeMillis())
+                        .endObject());
+        try {
+            UpdateResponse updateResponse = elasticClient.getClient().update(updateRequest).get();
+        } catch (InterruptedException | ExecutionException e) {
+            logger.error("Ex: ", e);
+        }
     }
 
     public void save(CV cv) {
@@ -136,9 +170,20 @@ public class CvRepo extends BaseService {
                     .setSource(jsonBuilder()
                             .startObject()
                             .field("id", cv.getId())
-                            .field("pathFile", cv.getPathFile())
-                            .field("profileId", cv.getProfileId())
-                            .field("name", cv.getName())
+                            .field("fullName", cv.getFullName())
+                            .field("phoneNumber", cv.getPhoneNumber())
+                            .field("email", cv.getEmail())
+                            .field("dateOfBirth", cv.getDateOfBirth().toString())
+                            .field("hometown", cv.getHometown())
+                            .field("school", cv.getSchool())
+                            .field("job", cv.getJob())
+                            .field("levelJob", cv.getLevelJob())
+                            .field("cv", cv.getCv())
+                            .field("sourceCV", cv.getSourceCV())
+                            .field("hrRef", cv.getHrRef())
+                            .field("dateOfApply", cv.getDateOfApply().toString())
+                            .field("cvType", cv.getCvType())
+                            .field("statusCV", cv.getStatusCV())
                             .field("content", cv.getContent())
                             .field("create_at", System.currentTimeMillis())
                             .field("update_at", System.currentTimeMillis())

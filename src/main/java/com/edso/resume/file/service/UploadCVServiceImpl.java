@@ -1,7 +1,7 @@
 package com.edso.resume.file.service;
 
-import com.edso.resume.file.domain.elasticsearch.ElasticSearchActions;
 import com.edso.resume.file.domain.entities.CV;
+import com.edso.resume.file.domain.repo.CvRepo;
 import com.edso.resume.file.domain.request.UploadCVRequest;
 import com.edso.resume.lib.response.BaseResponse;
 import lombok.SneakyThrows;
@@ -23,6 +23,9 @@ public class UploadCVServiceImpl extends BaseService implements UploadCVService 
 
     @Autowired
     CVService cvService;
+
+    @Autowired
+    CvRepo cvRepo;
 
     @SneakyThrows
     @Override
@@ -51,14 +54,13 @@ public class UploadCVServiceImpl extends BaseService implements UploadCVService 
                 return baseResponse;
         }
 
-        CV cv = new CV();
-        cv.setId(UUID.randomUUID().toString());
-        cv.setProfileId(request.getProfileId());
-        cv.setName(request.getHeaderInfo().getUsername());
-        cv.setPathFile("home/" + cv.getName());
-        cv.setContent(textParsed);
-        cvService.saveCv(cv);
-        baseResponse.setSuccess("OK");
+        CV cv = cvRepo.searchById(request.getProfileId());
+        if (cv != null) {
+            cv.setContent(textParsed);
+            cvRepo.save(cv);
+            baseResponse.setSuccess("OK");
+        } else
+            baseResponse.setFailed("Invalid profileId");
 
         return baseResponse;
 
