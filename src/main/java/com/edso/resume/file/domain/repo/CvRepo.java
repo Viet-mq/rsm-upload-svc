@@ -2,7 +2,7 @@ package com.edso.resume.file.domain.repo;
 
 import com.alibaba.fastjson.JSON;
 import com.edso.resume.file.config.ElasticClient;
-import com.edso.resume.file.domain.entities.CV;
+import com.edso.resume.file.domain.entities.Profile;
 import com.edso.resume.file.domain.request.DeleteCVRequest;
 import com.edso.resume.file.domain.request.UpdateCVRequest;
 import com.edso.resume.file.service.BaseService;
@@ -36,48 +36,51 @@ public class CvRepo extends BaseService {
         this.elasticClient = elasticClient;
     }
 
-    public List<CV> findAll() {
+    public List<Profile> findAll() {
         SearchResponse response = elasticClient.getClient()
                 .prepareSearch("resume")
-                .setRouting("cv")
+                .setRouting("profile")
                 .execute()
                 .actionGet();
         SearchHit[] searchHits = response
                 .getHits()
                 .getHits();
         return Arrays.stream(searchHits)
-                .map(hit -> JSON.parseObject(hit.getSourceAsString(), CV.class))
+                .map(hit -> JSON.parseObject(hit.getSourceAsString(), Profile.class))
                 .collect(Collectors.toList());
     }
 
     public Map<String, Object> findById(UUID id) {
         GetResponse response = elasticClient.getClient()
-                .prepareGet("resume", "cv", String.valueOf(id))
+                .prepareGet("resume", "profile", String.valueOf(id))
                 .get();
         return response.getSource();
     }
 
-    public List<CV> multiMatchQuery(String key) throws IOException {
+    public List<Profile> multiMatchQuery(String key) throws IOException {
         MultiMatchQueryBuilder multiMatchQuery = QueryBuilders.multiMatchQuery(key,
                 "id",
                 "fullName",
                 "phoneNumber",
                 "email",
-                //"dateOfBirth",
                 "hometown",
-                "school",
-                "job",
-                "levelJob",
+                "schoolId",
+                "schoolName",
+                "jobId",
+                "jobName",
+                "levelJobId",
+                "levelJobName",
                 "cv",
-                "sourceCV",
+                "sourceCVId",
+                "sourceCVName",
                 "hrRef",
-                //"dateOfApply",
                 "cvType",
-                "statusCV",
+                "statusCVId",
+                "statusCVName",
                 "content");
         SearchResponse response = elasticClient.getClient()
                 .prepareSearch("resume")
-                .setRouting("cv")
+                .setRouting("profile")
                 .setQuery(multiMatchQuery)
                 .execute()
                 .actionGet();
@@ -85,31 +88,31 @@ public class CvRepo extends BaseService {
                 .getHits()
                 .getHits();
         return Arrays.stream(searchHits)
-                .map(hit -> JSON.parseObject(hit.getSourceAsString(), CV.class))
+                .map(hit -> JSON.parseObject(hit.getSourceAsString(), Profile.class))
                 .collect(Collectors.toList());
     }
 
-    public CV searchById(String id) throws IOException {
+    public Profile searchById(String id) throws IOException {
         MultiMatchQueryBuilder query = QueryBuilders.multiMatchQuery(id, "id");
         SearchResponse response = elasticClient.getClient()
                 .prepareSearch("resume")
-                .setRouting("cv")
+                .setRouting("profile")
                 .setQuery(query)
                 .execute()
                 .actionGet();
         SearchHit[] searchHits = response
                 .getHits()
                 .getHits();
-        List<CV> CVList = Arrays.stream(searchHits)
-                .map(hit -> JSON.parseObject(hit.getSourceAsString(), CV.class))
+        List<Profile> ProfileList = Arrays.stream(searchHits)
+                .map(hit -> JSON.parseObject(hit.getSourceAsString(), Profile.class))
                 .collect(Collectors.toList());
-        if (CVList.isEmpty()) return null;
-        return CVList.get(0);
+        if (ProfileList.isEmpty()) return null;
+        return ProfileList.get(0);
     }
 
     public String delete(DeleteCVRequest deleteCVRequest) {
         DeleteResponse deleteResponse = elasticClient.getClient()
-                .prepareDelete("resume", "cv", deleteCVRequest.getId())
+                .prepareDelete("resume", "profile", deleteCVRequest.getId())
                 .get();
         return deleteResponse.getResult().toString();
     }
@@ -117,7 +120,7 @@ public class CvRepo extends BaseService {
     public String update(UpdateCVRequest updateCVRequest) throws IOException {
         UpdateRequest updateRequest = new UpdateRequest();
         updateRequest.index("resume")
-                .type("cv")
+                .type("profile")
                 .id(String.valueOf(updateCVRequest.getId()))
                 .doc(jsonBuilder()
                         .startObject()
@@ -127,11 +130,15 @@ public class CvRepo extends BaseService {
                         .field("email", updateCVRequest.getEmail())
                         .field("dateOfBirth", updateCVRequest.getDateOfBirth())
                         .field("hometown", updateCVRequest.getHometown())
-                        .field("school", updateCVRequest.getSchool())
-                        .field("job", updateCVRequest.getJob())
-                        .field("levelJob", updateCVRequest.getLevelJob())
+                        .field("schoolId", updateCVRequest.getSchoolId())
+                        .field("schoolName", updateCVRequest.getSchoolName())
+                        .field("jobId", updateCVRequest.getJobId())
+                        .field("jobName", updateCVRequest.getJobName())
+                        .field("levelJobId", updateCVRequest.getLevelJobId())
+                        .field("levelJobName", updateCVRequest.getLevelJobName())
                         .field("cv", updateCVRequest.getCv())
-                        .field("sourceCV", updateCVRequest.getSourceCV())
+                        .field("sourceCVId", updateCVRequest.getSourceCVId())
+                        .field("sourceCVName", updateCVRequest.getSourceCVName())
                         .field("hrRef", updateCVRequest.getHrRef())
                         .field("dateOfApply", updateCVRequest.getDateOfApply())
                         .field("cvType", updateCVRequest.getCvType())
@@ -146,14 +153,15 @@ public class CvRepo extends BaseService {
         return "Id không tồn tại";
     }
 
-    public void updateStatus(String id, String status) throws IOException{
+    public void updateStatus(String id, String statusId, String statusName) throws IOException{
         UpdateRequest updateRequest = new UpdateRequest();
         updateRequest.index("resume")
-                .type("cv")
+                .type("profile")
                 .id(id)
                 .doc(jsonBuilder()
                         .startObject()
-                        .field("statusCV", status)
+                        .field("statusCVId", statusId)
+                        .field("statusCVName", statusName)
                         .field("update_at", System.currentTimeMillis())
                         .endObject());
         try {
@@ -163,28 +171,33 @@ public class CvRepo extends BaseService {
         }
     }
 
-    public void save(CV cv) {
+    public void save(Profile profile) {
         try {
             IndexResponse response = elasticClient.getClient()
-                    .prepareIndex("resume", "cv", cv.getId())
+                    .prepareIndex("resume", "profile", profile.getId())
                     .setSource(jsonBuilder()
                             .startObject()
-                            .field("id", cv.getId())
-                            .field("fullName", cv.getFullName())
-                            .field("phoneNumber", cv.getPhoneNumber())
-                            .field("email", cv.getEmail())
-                            .field("dateOfBirth", cv.getDateOfBirth().toString())
-                            .field("hometown", cv.getHometown())
-                            .field("school", cv.getSchool())
-                            .field("job", cv.getJob())
-                            .field("levelJob", cv.getLevelJob())
-                            .field("cv", cv.getCv())
-                            .field("sourceCV", cv.getSourceCV())
-                            .field("hrRef", cv.getHrRef())
-                            .field("dateOfApply", cv.getDateOfApply().toString())
-                            .field("cvType", cv.getCvType())
-                            .field("statusCV", cv.getStatusCV())
-                            .field("content", cv.getContent())
+                            .field("id", profile.getId())
+                            .field("fullName", profile.getFullName() != null?profile.getFullName():null)
+                            .field("phoneNumber", profile.getPhoneNumber()!=null?profile.getPhoneNumber():null)
+                            .field("email", profile.getEmail()!=null?profile.getEmail():null)
+                            .field("dateOfBirth", profile.getDateOfBirth()!=null?profile.getDateOfBirth().toString():null)
+                            .field("hometown", profile.getHometown()!=null?profile.getHometown():null)
+                            .field("schoolId", profile.getSchoolId()!=null?profile.getSchoolId():null)
+                            .field("schoolName", profile.getSchoolName()!=null?profile.getSchoolName():null)
+                            .field("jobId", profile.getJobId()!=null?profile.getJobId():null)
+                            .field("jobName", profile.getJobName()!=null?profile.getJobName():null)
+                            .field("levelJobId", profile.getLevelJobId()!=null?profile.getLevelJobId():null)
+                            .field("levelJobName", profile.getLevelJobName()!=null?profile.getLevelJobName():null)
+                            .field("cv", profile.getCv()!=null?profile.getCv():null)
+                            .field("sourceCVId", profile.getSourceCVId()!=null?profile.getSourceCVId():null)
+                            .field("sourceCVName", profile.getSourceCVName()!=null?profile.getSourceCVName():null)
+                            .field("hrRef", profile.getHrRef()!=null?profile.getHrRef():null)
+                            .field("dateOfApply", profile.getDateOfApply()!=null?profile.getDateOfApply().toString():null)
+                            .field("cvType", profile.getCvType()!=null?profile.getCvType():null)
+                            .field("statusCVId", profile.getStatusCVId()!=null?profile.getStatusCVId():null)
+                            .field("statusCVName", profile.getStatusCVName()!=null?profile.getStatusCVName():null)
+                            .field("content", profile.getContent()!=null?profile.getContent():null)
                             .field("create_at", System.currentTimeMillis())
                             .field("update_at", System.currentTimeMillis())
                             .endObject()
@@ -196,14 +209,14 @@ public class CvRepo extends BaseService {
         }
     }
 
-    public void saveContent(CV cv) {
+    public void saveContent(Profile profile) {
         try {
             IndexResponse response = elasticClient.getClient()
-                    .prepareIndex("resume", "cv", cv.getId())
+                    .prepareIndex("resume", "profile", profile.getId())
                     .setSource(jsonBuilder()
                             .startObject()
-                            .field("id", cv.getId())
-                            .field("content", cv.getContent())
+                            .field("id", profile.getId())
+                            .field("content", profile.getContent())
                             .field("create_at", System.currentTimeMillis())
                             .field("update_at", System.currentTimeMillis())
                             .endObject()

@@ -1,6 +1,6 @@
 package com.edso.resume.file.controller;
 
-import com.edso.resume.file.domain.entities.CV;
+import com.edso.resume.file.domain.entities.Profile;
 import com.edso.resume.file.domain.request.DeleteCVRequest;
 import com.edso.resume.file.domain.request.UpdateCVRequest;
 import com.edso.resume.file.domain.request.UploadCVRequest;
@@ -46,8 +46,8 @@ public class UploadController extends BaseController {
     }
 
     @GetMapping("/view")
-    public GetArrayResponse<CV> viewAll (@RequestHeader Map<String, String> headers,
-                                         @RequestParam(required = false) String key) {
+    public GetArrayResponse<Profile> viewAll (@RequestHeader Map<String, String> headers,
+                                              @RequestParam(required = false) String key) {
         HeaderInfo headerInfo = ParseHeaderUtil.build(headers);
         if(key != null) {
             return cvService.viewByKey(headerInfo, key);
@@ -69,7 +69,7 @@ public class UploadController extends BaseController {
                 response = cvService.delete(headerInfo, deleteCVRequest);
             }
         }
-        logger.info("Delete CV u: {}, req: {}, res: {}", headerInfo, uploadCVService, response);
+        logger.info("Delete Profile u: {}, req: {}, res: {}", headerInfo, uploadCVService, response);
         return response;
     }
 
@@ -86,7 +86,7 @@ public class UploadController extends BaseController {
                 response = cvService.update(headerInfo, updateCVRequest);
             }
         }
-        logger.info("Update CV u: {}, req: {}, res: {}", headerInfo, updateCVRequest, response);
+        logger.info("Update Profile u: {}, req: {}, res: {}", headerInfo, updateCVRequest, response);
         return response;
     }
 

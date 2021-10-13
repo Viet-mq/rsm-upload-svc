@@ -1,7 +1,7 @@
 package com.edso.resume.file.config;
 
 import com.alibaba.fastjson.JSON;
-import com.edso.resume.file.domain.entities.CV;
+import com.edso.resume.file.domain.entities.Profile;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.TransportAddress;
@@ -49,8 +49,8 @@ public class ElasticClient {
                 .getHits()
                 .getHits();
         System.out.println("searchAll searchHits:" + searchHits[0]);
-        List<CV> results = Arrays.stream(searchHits)
-                .map(hit -> JSON.parseObject(hit.getSourceAsString(), CV.class))
+        List<Profile> results = Arrays.stream(searchHits)
+                .map(hit -> JSON.parseObject(hit.getSourceAsString(), Profile.class))
                 .collect(Collectors.toList());
         System.out.println("results:" + results);
         System.out.println("--------------------------------------------------");

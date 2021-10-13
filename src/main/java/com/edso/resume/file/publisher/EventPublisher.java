@@ -1,6 +1,6 @@
 package com.edso.resume.file.publisher;
 
-import com.edso.resume.file.domain.entities.CV;
+import com.edso.resume.file.domain.entities.Profile;
 import com.edso.resume.file.domain.entities.Event;
 import com.edso.resume.lib.response.BaseResponse;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -22,8 +22,8 @@ public class EventPublisher {
     private String routingkey;
 
     @PostMapping("/publish/{type}")
-    public BaseResponse addEvent(@PathVariable("type") String type, @RequestBody(required = false) CV cv){
-        Event event = new Event(type, cv);
+    public BaseResponse addEvent(@PathVariable("type") String type, @RequestBody(required = false) Profile profile){
+        Event event = new Event(type, profile);
         rabbitTemplate.convertAndSend(exchange, routingkey, event);
         BaseResponse baseResponse = new BaseResponse();
         baseResponse.setSuccess("Published");

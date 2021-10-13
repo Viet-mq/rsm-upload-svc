@@ -1,6 +1,6 @@
 package com.edso.resume.file.service;
 
-import com.edso.resume.file.domain.entities.CV;
+import com.edso.resume.file.domain.entities.Profile;
 import com.edso.resume.file.domain.repo.CvRepo;
 import com.edso.resume.file.domain.request.UploadCVRequest;
 import com.edso.resume.lib.response.BaseResponse;
@@ -50,15 +50,15 @@ public class UploadCVServiceImpl extends BaseService implements UploadCVService 
                 return baseResponse;
         }
 
-        CV cv = cvRepo.searchById(request.getProfileId());
-        if (cv != null) {
-            cv.setContent(cv.getContent() + textParsed);
-            cvRepo.save(cv);
+        Profile profile = cvRepo.searchById(request.getProfileId());
+        if (profile != null) {
+            profile.setContent(profile.getContent() + textParsed);
+            cvRepo.save(profile);
         } else {
-            CV cv1 = new CV();
-            cv1.setId(request.getProfileId());
-            cv1.setContent(textParsed);
-            cvRepo.saveContent(cv1);
+            Profile profile1 = new Profile();
+            profile1.setId(request.getProfileId());
+            profile1.setContent(textParsed);
+            cvRepo.saveContent(profile1);
         }
         baseResponse.setSuccess("OK");
         return baseResponse;

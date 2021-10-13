@@ -1,6 +1,6 @@
 package com.edso.resume.file.service;
 
-import com.edso.resume.file.domain.entities.CV;
+import com.edso.resume.file.domain.entities.Profile;
 import com.edso.resume.file.domain.entities.Event;
 import com.edso.resume.file.domain.request.DeleteCVRequest;
 import com.edso.resume.file.domain.request.UpdateCVRequest;
@@ -10,13 +10,13 @@ import com.edso.resume.lib.response.GetArrayResponse;
 
 public interface CVService {
 
-    void saveCv(CV cv);
+    void saveCv(Profile profile);
     void update(Event event);
     void delete(String profileId);
     void create(Event event);
     void updateStatus(Event event);
-    GetArrayResponse<CV> viewAll (HeaderInfo headerInfo);
-    GetArrayResponse<CV> viewByKey(HeaderInfo headerInfo, String key);
+    GetArrayResponse<Profile> viewAll (HeaderInfo headerInfo);
+    GetArrayResponse<Profile> viewByKey(HeaderInfo headerInfo, String key);
     BaseResponse delete(HeaderInfo headerInfo, DeleteCVRequest deleteCVRequest);
     BaseResponse update(HeaderInfo headerInfo, UpdateCVRequest updateCVRequest);
 }

@@ -12,15 +12,20 @@ public class UpdateCVRequest {
     private String email;
     private Long dateOfBirth;
     private String hometown;
-    private String school;
-    private String job;
-    private String levelJob;
+    private String schoolId;
+    private String schoolName;
+    private String jobId;
+    private String jobName;
+    private String levelJobId;
+    private String levelJobName;
     private String cv;
-    private String sourceCV;
+    private String sourceCVId;
+    private String sourceCVName;
     private String hrRef;
     private Long dateOfApply;
     private String cvType;
-    private String statusCV;
+    private String statusCVId;
+    private String statusCVName;
     private String content;
 
     public BaseResponse validate(){
@@ -42,20 +47,32 @@ public class UpdateCVRequest {
         if(Strings.isNullOrEmpty(hometown)) {
             return new BaseResponse(-1, "Vui lòng nhập trường quê quán");
         }
-        if(Strings.isNullOrEmpty(school)) {
+        if(Strings.isNullOrEmpty(schoolId)) {
             return new BaseResponse(-1, "Vui lòng nhập trường school");
         }
-        if(Strings.isNullOrEmpty(job)) {
-            return new BaseResponse(-1, "Vui lòng nhập trường job");
+        if(Strings.isNullOrEmpty(schoolName)) {
+            return new BaseResponse(-1, "Vui lòng nhập trường schoolName");
         }
-        if(Strings.isNullOrEmpty(levelJob)) {
-            return new BaseResponse(-1, "Vui lòng nhập trường levelJob");
+        if(Strings.isNullOrEmpty(jobId)) {
+            return new BaseResponse(-1, "Vui lòng nhập trường jobId");
+        }
+        if(Strings.isNullOrEmpty(jobName)) {
+            return new BaseResponse(-1, "Vui lòng nhập trường jobName");
+        }
+        if(Strings.isNullOrEmpty(levelJobId)) {
+            return new BaseResponse(-1, "Vui lòng nhập trường levelJobId");
+        }
+        if(Strings.isNullOrEmpty(levelJobName)) {
+            return new BaseResponse(-1, "Vui lòng nhập trường levelJobName");
         }
         if(Strings.isNullOrEmpty(cv)) {
-            return new BaseResponse(-1, "Vui lòng nhập trường CV");
+            return new BaseResponse(-1, "Vui lòng nhập trường Profile");
         }
-        if(Strings.isNullOrEmpty(sourceCV)) {
-            return new BaseResponse(-1, "Vui lòng nhập trường sourceCV");
+        if(Strings.isNullOrEmpty(sourceCVId)) {
+            return new BaseResponse(-1, "Vui lòng nhập trường sourceCVId");
+        }
+        if(Strings.isNullOrEmpty(sourceCVName)) {
+            return new BaseResponse(-1, "Vui lòng nhập trường sourceCVName");
         }
         if(Strings.isNullOrEmpty(hrRef)) {
             return new BaseResponse(-1, "Vui lòng nhập trường hrRef");
@@ -66,8 +83,11 @@ public class UpdateCVRequest {
         if(Strings.isNullOrEmpty(cvType)) {
             return new BaseResponse(-1, "Vui lòng nhập trường cvType");
         }
-        if(Strings.isNullOrEmpty(statusCV)) {
-            return new BaseResponse(-1, "Vui lòng nhập trường statusCV");
+        if(Strings.isNullOrEmpty(statusCVId)) {
+            return new BaseResponse(-1, "Vui lòng nhập trường statusCVId");
+        }
+        if(Strings.isNullOrEmpty(statusCVName)) {
+            return new BaseResponse(-1, "Vui lòng nhập trường statusCVName");
         }
 
         return null;

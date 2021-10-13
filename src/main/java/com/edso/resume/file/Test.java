@@ -1,7 +1,7 @@
 //package com.edso.resume.file;
 //
 //import com.edso.resume.file.service.CVService;
-//import com.edso.resume.file.domain.entities.CV;
+//import com.edso.resume.file.domain.entities.Profile;
 //import org.springframework.boot.CommandLineRunner;
 //import org.springframework.stereotype.Component;
 //
@@ -21,14 +21,14 @@
 //    public void run(String... args) throws Exception {
 //        try {
 ////            String id = UUID.randomUUID().toString();
-////            CV cv = new CV();
+////            Profile cv = new Profile();
 ////            cv.setId(id);
 ////            cv.setName("vietmq");
 ////            cv.setProfileId("1506");
 ////            cv.setPathFile("/home/vietmq");
 ////            cv.setContent("Dev, ....");
 ////            cvService.saveCv(cv);
-//            List<CV> cvs = cvService.findAllByName(null);
+//            List<Profile> cvs = cvService.findAllByName(null);
 //            System.out.println(cvs);
 //        } catch (Throwable ex) {
 //            ex.printStackTrace();

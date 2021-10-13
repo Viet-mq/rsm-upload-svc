@@ -37,7 +37,7 @@ public class Consumer {
                 cvService.update(event);
                 break;
             case EVENT_DELETE:
-                cvService.delete(event.getCv().getId());
+                cvService.delete(event.getProfile().getId());
                 break;
             case UPDATE_STATUS:
                 cvService.updateStatus(event);
