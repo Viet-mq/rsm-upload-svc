@@ -100,11 +100,11 @@ public class CvRepo extends BaseService {
         SearchHit[] searchHits = response
                 .getHits()
                 .getHits();
-        List<CV> cvList = Arrays.stream(searchHits)
+        List<CV> CVList = Arrays.stream(searchHits)
                 .map(hit -> JSON.parseObject(hit.getSourceAsString(), CV.class))
                 .collect(Collectors.toList());
-        if (cvList.isEmpty()) return null;
-        return cvList.get(0);
+        if (CVList.isEmpty()) return null;
+        return CVList.get(0);
     }
 
     public String delete(DeleteCVRequest deleteCVRequest) {
@@ -184,6 +184,25 @@ public class CvRepo extends BaseService {
                             .field("dateOfApply", cv.getDateOfApply().toString())
                             .field("cvType", cv.getCvType())
                             .field("statusCV", cv.getStatusCV())
+                            .field("content", cv.getContent())
+                            .field("create_at", System.currentTimeMillis())
+                            .field("update_at", System.currentTimeMillis())
+                            .endObject()
+                    )
+                    .get();
+            logger.info(response.toString());
+        } catch (IOException e) {
+            logger.error("Ex: ", e);
+        }
+    }
+
+    public void saveContent(CV cv) {
+        try {
+            IndexResponse response = elasticClient.getClient()
+                    .prepareIndex("resume", "cv", cv.getId())
+                    .setSource(jsonBuilder()
+                            .startObject()
+                            .field("id", cv.getId())
                             .field("content", cv.getContent())
                             .field("create_at", System.currentTimeMillis())
                             .field("update_at", System.currentTimeMillis())

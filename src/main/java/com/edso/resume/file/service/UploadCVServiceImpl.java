@@ -13,16 +13,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Objects;
-import java.util.UUID;
 
 @Service
 public class UploadCVServiceImpl extends BaseService implements UploadCVService {
 
     @Autowired
     FileService fileService;
-
-    @Autowired
-    CVService cvService;
 
     @Autowired
     CvRepo cvRepo;
@@ -56,12 +52,15 @@ public class UploadCVServiceImpl extends BaseService implements UploadCVService 
 
         CV cv = cvRepo.searchById(request.getProfileId());
         if (cv != null) {
-            cv.setContent(textParsed);
+            cv.setContent(cv.getContent() + textParsed);
             cvRepo.save(cv);
-            baseResponse.setSuccess("OK");
-        } else
-            baseResponse.setFailed("Invalid profileId");
-
+        } else {
+            CV cv1 = new CV();
+            cv1.setId(request.getProfileId());
+            cv1.setContent(textParsed);
+            cvRepo.saveContent(cv1);
+        }
+        baseResponse.setSuccess("OK");
         return baseResponse;
 
     }
