@@ -129,7 +129,9 @@ public class CVServiceImpl extends BaseService implements CVService {
         Profile profile = cvRepo.searchById(event.getProfile().getId());
         if(profile != null){
             cvRepo.updateStatus(event.getProfile().getId(), event.getProfile().getStatusCVId(), event.getProfile().getStatusCVName());
-            logger.info("Update Profile status id: {}, value {}", profile.getId(), profile.getStatusCVId());
+            logger.info("Update Profile status id: {}, statusId {}, statusName {}", profile.getId()
+                    , event.getProfile().getStatusCVId()
+                    , event.getProfile().getStatusCVName());
         }
         else logger.info("Update status failed: Invalid ID");
     }

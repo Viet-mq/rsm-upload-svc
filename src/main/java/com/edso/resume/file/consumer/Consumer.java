@@ -14,7 +14,7 @@ public class Consumer {
     private final String EVENT_CREATE = "create";
     private final String EVENT_UPDATE = "update";
     private final String EVENT_DELETE = "delete";
-    private final String UPDATE_STATUS = "updateStatus";
+    private final String UPDATE_STATUS = "update-status";
 
     private final CVService cvService;
 
