@@ -72,27 +72,25 @@ public class CVServiceImpl extends BaseService implements CVService {
             if (profile != null) {
                 UpdateCVRequest request = new UpdateCVRequest();
                 request.setId(profile.getId());
-                request.setFullName(eventProfile.getFullName());
-                request.setPhoneNumber(eventProfile.getPhoneNumber());
-                request.setEmail(eventProfile.getEmail());
-                request.setDateOfApply(eventProfile.getDateOfApply());
-                request.setHometown(eventProfile.getHometown());
-                request.setSchoolId(eventProfile.getSchoolId());
-                request.setSchoolName(eventProfile.getSchoolName());
-                request.setJobId(eventProfile.getJobId());
-                request.setJobName(eventProfile.getJobName());
-                request.setLevelJobId(eventProfile.getLevelJobId());
-                request.setLevelJobName(eventProfile.getLevelJobName());
-                request.setCv(eventProfile.getCv());
-                request.setSourceCVId(eventProfile.getSourceCVId());
-                request.setSourceCVName(eventProfile.getSourceCVName());
-                request.setHrRef(eventProfile.getHrRef());
-                request.setDateOfBirth(eventProfile.getDateOfBirth());
-                request.setCvType(eventProfile.getCvType());
-                request.setStatusCVId(eventProfile.getStatusCVId());
-                request.setStatusCVName(eventProfile.getStatusCVName());
+                request.setFullName(eventProfile.getFullName()!=null?eventProfile.getFullName(): profile.getFullName());
+                request.setPhoneNumber(eventProfile.getPhoneNumber()!=null?eventProfile.getPhoneNumber(): profile.getPhoneNumber());
+                request.setEmail(eventProfile.getEmail()!=null?eventProfile.getEmail(): profile.getEmail());
+                request.setDateOfApply(eventProfile.getDateOfApply()!=null?eventProfile.getDateOfApply(): profile.getDateOfApply());
+                request.setHometown(eventProfile.getHometown()!=null?eventProfile.getHometown(): profile.getHometown());
+                request.setSchoolId(eventProfile.getSchoolId()!=null?eventProfile.getSchoolId(): profile.getSchoolId());
+                request.setSchoolName(eventProfile.getSchoolName()!=null?eventProfile.getSchoolName(): profile.getSchoolName());
+                request.setJobId(eventProfile.getJobId()!=null?eventProfile.getJobId(): profile.getJobId());
+                request.setJobName(eventProfile.getJobName()!=null?eventProfile.getJobName(): profile.getJobName());
+                request.setLevelJobId(eventProfile.getLevelJobId()!=null?eventProfile.getLevelJobId(): profile.getLevelJobId());
+                request.setLevelJobName(eventProfile.getLevelJobName()!=null?eventProfile.getLevelJobName(): profile.getLevelJobName());
+                request.setCv(eventProfile.getCv()!=null?eventProfile.getCv(): profile.getCv());
+                request.setSourceCVId(eventProfile.getSourceCVId()!=null?eventProfile.getSourceCVId(): profile.getSourceCVId());
+                request.setSourceCVName(eventProfile.getSourceCVName()!=null?eventProfile.getSourceCVName(): profile.getSourceCVName());
+                request.setHrRef(eventProfile.getHrRef()!=null?eventProfile.getHrRef(): profile.getHrRef());
+                request.setDateOfBirth(eventProfile.getDateOfBirth()!=null?eventProfile.getDateOfBirth(): profile.getDateOfBirth());
+                request.setCvType(eventProfile.getCvType()!=null?eventProfile.getCvType(): profile.getCvType());
                 cvRepo.update(request);
-                logger.info("Update Profile id: {}", profile.getId());
+                logger.info("Update Profile id: {}, value: {}", profile.getId(), profile);
             }
             else logger.info("Update Profile failed: Invalid id");
         }

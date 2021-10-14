@@ -35,7 +35,7 @@ spring:
 
 elasticsearch:
   clustername: elasticsearch
-  host: 127.0.0.1
+  host: localhost
   port: 9300
 
 server:

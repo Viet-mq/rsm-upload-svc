@@ -83,12 +83,6 @@ public class UpdateCVRequest {
         if(Strings.isNullOrEmpty(cvType)) {
             return new BaseResponse(-1, "Vui lòng nhập trường cvType");
         }
-        if(Strings.isNullOrEmpty(statusCVId)) {
-            return new BaseResponse(-1, "Vui lòng nhập trường statusCVId");
-        }
-        if(Strings.isNullOrEmpty(statusCVName)) {
-            return new BaseResponse(-1, "Vui lòng nhập trường statusCVName");
-        }
 
         return null;
     }
