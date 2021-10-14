@@ -3,6 +3,7 @@ package com.edso.resume.file.controller;
 import java.io.IOException;
 import java.nio.file.*;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.*;
@@ -13,7 +14,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/pdf")
 public class PDFController extends BaseController {
 
-    private final String pdfFilesPath = "D:\\";
+    @Value("${pdf.path}")
+    private String pdfFilesPath;
 
     @GetMapping("{filename:.+}")
     @ResponseBody

@@ -6,6 +6,7 @@ import com.edso.resume.file.domain.request.UploadCVRequest;
 import com.edso.resume.lib.response.BaseResponse;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,6 +17,9 @@ import java.util.Objects;
 
 @Service
 public class UploadCVServiceImpl extends BaseService implements UploadCVService {
+
+    @Value("${pdf.path}")
+    private String pdfFilesPath;
 
     @Autowired
     FileService fileService;
@@ -65,8 +69,8 @@ public class UploadCVServiceImpl extends BaseService implements UploadCVService 
 
     }
 
-    public static File convertToFile(MultipartFile file) throws IOException {
-        File convFile = new File(file.getName());
+    public File convertToFile(MultipartFile file) throws IOException {
+        File convFile = new File(pdfFilesPath + file.getOriginalFilename());
         FileOutputStream fos = new FileOutputStream(convFile);
         fos.write(file.getBytes());
         fos.close();
