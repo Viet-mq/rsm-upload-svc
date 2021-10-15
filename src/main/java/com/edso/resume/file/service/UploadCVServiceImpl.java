@@ -18,7 +18,10 @@ import java.util.Objects;
 @Service
 public class UploadCVServiceImpl extends BaseService implements UploadCVService {
 
-    @Value("${pdf.path}")
+    @Value("${pdf.domain}")
+    private String domain;
+
+    @Value("${pdf.serverpath}")
     private String pdfFilesPath;
 
     @Autowired
@@ -57,11 +60,15 @@ public class UploadCVServiceImpl extends BaseService implements UploadCVService 
         Profile profile = cvRepo.searchById(request.getProfileId());
         if (profile != null) {
             profile.setContent(profile.getContent() + textParsed);
+            profile.setFileName(fileUpload.getOriginalFilename());
+            profile.setUrl(domain + fileUpload.getOriginalFilename());
             cvRepo.save(profile);
         } else {
             Profile profile1 = new Profile();
             profile1.setId(request.getProfileId());
             profile1.setContent(textParsed);
+            profile1.setFileName(fileUpload.getOriginalFilename());
+            profile1.setUrl(domain + fileUpload.getOriginalFilename());
             cvRepo.saveContent(profile1);
         }
         baseResponse.setSuccess("OK");

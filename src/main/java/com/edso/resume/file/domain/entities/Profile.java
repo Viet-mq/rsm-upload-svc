@@ -25,4 +25,6 @@ public class Profile {
     private String statusCVId;
     private String statusCVName;
     private String content;
+    private String url;
+    private String fileName;
 }

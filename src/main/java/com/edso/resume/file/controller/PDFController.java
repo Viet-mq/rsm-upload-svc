@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/pdf")
 public class PDFController extends BaseController {
 
-    @Value("${pdf.path}")
+    @Value("${pdf.localpath}")
     private String pdfFilesPath;
 
     @GetMapping("{filename:.+}")
     @ResponseBody
-    public ResponseEntity<Resource> downloadFile(@PathVariable String filename) throws IOException {
+    public ResponseEntity<Resource> serveFile(@PathVariable String filename) throws IOException {
         Resource resource = new UrlResource(Paths.get(pdfFilesPath)
                 .resolve(filename)
                 .toUri());
