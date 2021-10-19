@@ -78,3 +78,19 @@ pdf:
   domain: http://file-rs.edsolabs.com/
   localpath: fileupload/
   serverpath: /usr/share/nginx/file-rs/
+
+email:
+  sender:
+    host: smtp.gmail.com
+    port: 587
+    username: vietmq@edsolabs.com
+    password: edso@@123
+  transport:
+    protocol: smtp
+  smtp:
+    auth: true
+    starttls:
+      enable: true
+  debug: false
+  from:
+    address: vietmq@edsolabs.com
