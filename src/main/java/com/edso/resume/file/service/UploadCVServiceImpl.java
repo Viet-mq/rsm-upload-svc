@@ -1,8 +1,10 @@
 package com.edso.resume.file.service;
 
+import com.edso.resume.file.domain.entities.CV;
 import com.edso.resume.file.domain.entities.Profile;
 import com.edso.resume.file.domain.repo.CvRepo;
 import com.edso.resume.file.domain.request.UploadCVRequest;
+import com.edso.resume.file.publisher.CVPublisher;
 import com.edso.resume.lib.response.BaseResponse;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class UploadCVServiceImpl extends BaseService implements UploadCVService 
 
     @Value("${pdf.serverpath}")
     private String pdfFilesPath;
+
+    @Autowired
+    CVPublisher cvPublisher;
 
     @Autowired
     FileService fileService;
@@ -62,6 +67,8 @@ public class UploadCVServiceImpl extends BaseService implements UploadCVService 
             profile.setContent(profile.getContent() + textParsed);
             profile.setFileName(fileUpload.getOriginalFilename());
             profile.setUrl(domain + fileUpload.getOriginalFilename());
+            CV cv = new CV(request.getProfileId(), profile.getUrl(), profile.getFileName());
+            cvPublisher.publish(cv);
             cvRepo.save(profile);
         } else {
             Profile profile1 = new Profile();
@@ -69,6 +76,8 @@ public class UploadCVServiceImpl extends BaseService implements UploadCVService 
             profile1.setContent(textParsed);
             profile1.setFileName(fileUpload.getOriginalFilename());
             profile1.setUrl(domain + fileUpload.getOriginalFilename());
+            CV cv = new CV(request.getProfileId(), profile1.getUrl(), profile1.getFileName());
+            cvPublisher.publish(cv);
             cvRepo.saveContent(profile1);
         }
         baseResponse.setSuccess("OK");

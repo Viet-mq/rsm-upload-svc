@@ -9,6 +9,10 @@ spring:
     exchange: event.exchange
     queue: event.queue
     routingkey: event.routingkey
+    CV:
+      exchange: cv.exchange
+      queue: cv.queue
+      routingkey: cv.routingkey
   redis:
     host: '103.152.165.53'
     port: 9981
