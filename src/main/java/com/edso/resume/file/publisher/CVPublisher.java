@@ -1,6 +1,7 @@
 package com.edso.resume.file.publisher;
 
 import com.edso.resume.file.domain.entities.CV;
+import com.rabbitmq.client.AMQP.*;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -66,7 +67,10 @@ public class CVPublisher {
         Channel channel = connection.createChannel();
         channel.queueDeclare(queue, true, false, false, null);
         String msg = cv.toString();
-        channel.basicPublish("", queue, null, msg.getBytes(StandardCharsets.UTF_8));
+        BasicProperties messageProperties = new BasicProperties.Builder()
+                .contentType("application/json")
+                .build();
+        channel.basicPublish("", queue, messageProperties, msg.getBytes(StandardCharsets.UTF_8));
         channel.close();
         connection.close();
 

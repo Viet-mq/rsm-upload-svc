@@ -4,18 +4,19 @@ import com.edso.resume.lib.response.BaseResponse;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.elasticsearch.common.Strings;
+import org.springframework.web.multipart.MultipartFile;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @ToString(callSuper = true)
-public class DeleteCVRequest extends BaseAuthRequest {
-    private String id;
+public class CreateEmailTemplateRequest extends BaseAuthRequest{
+    private String name;
+    private String subject;
+    private String attachment;
+    private String message;
 
-    public BaseResponse validate(){
-        if(Strings.isNullOrEmpty(id)){
-            return new BaseResponse(-1, "Vui lòng chọn id");
-        }
+    public BaseResponse validate() {
+
         return null;
     }
 }

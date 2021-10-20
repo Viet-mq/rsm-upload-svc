@@ -2,10 +2,14 @@ package com.edso.resume.file.domain.request;
 
 import com.edso.resume.lib.response.BaseResponse;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.elasticsearch.common.Strings;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class UpdateCVRequest {
+@ToString(callSuper = true)
+public class UpdateCVRequest extends BaseAuthRequest {
     private String id;
     private String fullName;
     private String phoneNumber;
