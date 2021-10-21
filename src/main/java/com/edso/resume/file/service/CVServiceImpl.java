@@ -28,36 +28,45 @@ public class CVServiceImpl extends BaseService implements CVService {
     }
 
     @Override
-    public GetArrayResponse<Profile> viewAll(HeaderInfo headerInfo) {
+    public GetArrayResponse<Profile> viewAll(HeaderInfo headerInfo, Integer page, Integer size) {
         List<Profile> profiles = cvRepo.findAll();
         GetArrayResponse<Profile> response = new GetArrayResponse<>();
         response.setSuccess(profiles.size(), profiles);
-        logger.info("View all: {}" , profiles);
         return response;
     }
 
     @SneakyThrows
     @Override
-    public GetArrayResponse<Profile> viewByKey(HeaderInfo headerInfo, String key) {
+    public GetArrayResponse<Profile> viewByKey(HeaderInfo headerInfo, String key, Integer page, Integer size) {
         List<Profile> profiles = cvRepo.multiMatchQuery(key);
         GetArrayResponse<Profile> response = new GetArrayResponse<>();
         response.setSuccess(profiles.size(), profiles);
-        logger.info("View by key {}: {}", key, profiles);
         return response;
     }
 
     @SneakyThrows
     @Override
-    public BaseResponse update(HeaderInfo header, UpdateCVRequest updateCVRequest){
+    public BaseResponse update(UpdateCVRequest updateCVRequest){
         BaseResponse response = new BaseResponse();
+        Profile profile = cvRepo.searchById(updateCVRequest.getId());
+        if(profile == null) {
+            response.setFailed("Id không tồn tại");
+            return response;
+        }
         String result = cvRepo.update(updateCVRequest);
         response.setSuccess(result);
         return response;
     }
 
+    @SneakyThrows
     @Override
-    public BaseResponse delete(HeaderInfo headerInfo, DeleteCVRequest deleteCVRequest) {
+    public BaseResponse delete(DeleteCVRequest deleteCVRequest) {
         BaseResponse response = new BaseResponse();
+        Profile profile = cvRepo.searchById(deleteCVRequest.getId());
+        if(profile == null) {
+            response.setFailed("Id không tồn tại");
+            return response;
+        }
         String result = cvRepo.delete(deleteCVRequest);
         response.setSuccess(result);
         return response;
@@ -90,9 +99,9 @@ public class CVServiceImpl extends BaseService implements CVService {
                 request.setDateOfBirth(eventProfile.getDateOfBirth()!=null?eventProfile.getDateOfBirth(): profile.getDateOfBirth());
                 request.setCvType(eventProfile.getCvType()!=null?eventProfile.getCvType(): profile.getCvType());
                 cvRepo.update(request);
-                logger.info("Update Profile id: {}, value: {}", profile.getId(), profile);
+                logger.info("=>Update Profile id: {}", profile.getId());
             }
-            else logger.info("Update Profile failed: Invalid id");
+            else logger.info("=>Update Profile failed: Invalid id");
         }
     }
 
@@ -104,9 +113,9 @@ public class CVServiceImpl extends BaseService implements CVService {
             DeleteCVRequest deleteCVRequest = new DeleteCVRequest();
             deleteCVRequest.setId(profile.getId());
             cvRepo.delete(deleteCVRequest);
-            logger.info("Delete Profile id: {}", profile.getId());
+            logger.info("=>Delete Profile id: {}", profile.getId());
         }
-        else logger.info("Delete Profile failed: Invalid id");
+        else logger.info("=>Delete Profile failed: Invalid id");
     }
 
     @SneakyThrows
@@ -114,11 +123,11 @@ public class CVServiceImpl extends BaseService implements CVService {
     public void create(Event event) {
         Profile profile = event.getProfile();
         if(cvRepo.searchById(profile.getId()) != null) {
-            logger.info("Create Profile failed: ID already exists");
+            logger.info("=>Create Profile failed: ID already exists");
             return;
         }
         cvRepo.save(profile);
-        logger.info("Create Profile id : {}", profile.getId());
+        logger.info("=>Create Profile id : {}", profile.getId());
     }
 
     @SneakyThrows
@@ -127,10 +136,10 @@ public class CVServiceImpl extends BaseService implements CVService {
         Profile profile = cvRepo.searchById(event.getProfile().getId());
         if(profile != null){
             cvRepo.updateStatus(event.getProfile().getId(), event.getProfile().getStatusCVId(), event.getProfile().getStatusCVName());
-            logger.info("Update Profile status id: {}, statusId {}, statusName {}", profile.getId()
+            logger.info("=>Update Profile status id: {}, statusId {}, statusName {}", profile.getId()
                     , event.getProfile().getStatusCVId()
                     , event.getProfile().getStatusCVName());
         }
-        else logger.info("Update status failed: Invalid ID");
+        else logger.info("=>Update status failed: Invalid ID");
     }
 }

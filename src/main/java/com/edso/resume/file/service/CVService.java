@@ -15,8 +15,8 @@ public interface CVService {
     void delete(String profileId);
     void create(Event event);
     void updateStatus(Event event);
-    GetArrayResponse<Profile> viewAll (HeaderInfo headerInfo);
-    GetArrayResponse<Profile> viewByKey(HeaderInfo headerInfo, String key);
-    BaseResponse delete(HeaderInfo headerInfo, DeleteCVRequest deleteCVRequest);
-    BaseResponse update(HeaderInfo headerInfo, UpdateCVRequest updateCVRequest);
+    GetArrayResponse<Profile> viewAll (HeaderInfo headerInfo, Integer page, Integer size);
+    GetArrayResponse<Profile> viewByKey(HeaderInfo headerInfo, String key, Integer page, Integer size);
+    BaseResponse delete(DeleteCVRequest deleteCVRequest);
+    BaseResponse update(UpdateCVRequest updateCVRequest);
 }

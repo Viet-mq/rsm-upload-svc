@@ -47,13 +47,18 @@ public class UploadController extends BaseController {
 
     @GetMapping("/view")
     public GetArrayResponse<Profile> viewAll (@RequestHeader Map<String, String> headers,
-                                              @RequestParam(required = false) String key) {
+                                              @RequestParam(required = false) String key,
+                                              @RequestParam(value = "page", required = false) Integer page,
+                                              @RequestParam(value = "size", required = false) Integer size) {
         HeaderInfo headerInfo = ParseHeaderUtil.build(headers);
         if(key != null) {
-            return cvService.viewByKey(headerInfo, key);
+            logger.info("=>viewAllProfile u: {}, page {}, size {}", headerInfo, page, size);
+            return cvService.viewByKey(headerInfo, key, page, size);
         }
-        else
-            return cvService.viewAll(headerInfo);
+        else {
+            logger.info("=>viewAllProfile u: {}, key {}, page {}, size {}", headerInfo, key, page, size);
+            return cvService.viewAll(headerInfo, page, size);
+        }
     }
 
     @DeleteMapping("/delete")
@@ -66,7 +71,7 @@ public class UploadController extends BaseController {
         else {
             response = deleteCVRequest.validate();
             if(response == null){
-                response = cvService.delete(headerInfo, deleteCVRequest);
+                response = cvService.delete(deleteCVRequest);
             }
         }
         logger.info("Delete Profile u: {}, req: {}, res: {}", headerInfo, uploadCVService, response);
@@ -83,7 +88,7 @@ public class UploadController extends BaseController {
         else {
             response = updateCVRequest.validate();
             if(response == null){
-                response = cvService.update(headerInfo, updateCVRequest);
+                response = cvService.update(updateCVRequest);
             }
         }
         logger.info("Update Profile u: {}, req: {}, res: {}", headerInfo, updateCVRequest, response);
