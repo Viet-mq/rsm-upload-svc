@@ -28,7 +28,7 @@ public class CVServiceImpl extends BaseService implements CVService {
     }
 
     @Override
-    public GetArrayResponse<Profile> viewAll(HeaderInfo headerInfo, Integer page, Integer size) {
+    public GetArrayResponse<Profile> viewAll(HeaderInfo headerInfo) {
         List<Profile> profiles = cvRepo.findAll();
         GetArrayResponse<Profile> response = new GetArrayResponse<>();
         response.setSuccess(profiles.size(), profiles);
@@ -37,7 +37,7 @@ public class CVServiceImpl extends BaseService implements CVService {
 
     @SneakyThrows
     @Override
-    public GetArrayResponse<Profile> viewByKey(HeaderInfo headerInfo, String key, Integer page, Integer size) {
+    public GetArrayResponse<Profile> viewByKey(HeaderInfo headerInfo, String key) {
         List<Profile> profiles = cvRepo.multiMatchQuery(key);
         GetArrayResponse<Profile> response = new GetArrayResponse<>();
         response.setSuccess(profiles.size(), profiles);
