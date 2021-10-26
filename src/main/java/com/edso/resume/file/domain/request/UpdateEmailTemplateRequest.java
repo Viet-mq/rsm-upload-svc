@@ -5,7 +5,6 @@ import com.google.common.base.Strings;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.springframework.web.multipart.MultipartFile;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -15,7 +14,7 @@ public class UpdateEmailTemplateRequest extends BaseAuthRequest{
     private String name;
     private String subject;
     private String attachment;
-    private String message;
+    private String content;
 
     public BaseResponse validate(){
         if (Strings.isNullOrEmpty(id)) {
@@ -27,7 +26,7 @@ public class UpdateEmailTemplateRequest extends BaseAuthRequest{
         if(Strings.isNullOrEmpty(subject)) {
             return new BaseResponse(-1, "Vui lòng nhập tiêu đề mẫu Email");
         }
-        if(Strings.isNullOrEmpty(message)) {
+        if(Strings.isNullOrEmpty(content)) {
             return new BaseResponse(-1, "Vui lòng nhập nội dung Email");
         }
         if(Strings.isNullOrEmpty(attachment)) {

@@ -50,7 +50,7 @@ public class EmailTemplateServiceImpl extends BaseService implements EmailTempla
                         .id(AppUtils.parseString(doc.get("id")))
                         .name(AppUtils.parseString(doc.get("name")))
                         .subject(AppUtils.parseString(doc.get("subject")))
-                        .message(AppUtils.parseString(doc.get("message")))
+                        .content(AppUtils.parseString(doc.get("content")))
                         .attachment(AppUtils.parseString(doc.get("attachment")))
                         .build();
                 rows.add(email);
@@ -81,7 +81,7 @@ public class EmailTemplateServiceImpl extends BaseService implements EmailTempla
         emailTemplate.append("name", name);
         emailTemplate.append("subject", request.getSubject());
         emailTemplate.append("attachment", request.getAttachment());
-        emailTemplate.append("message", request.getMessage());
+        emailTemplate.append("content", request.getContent());
         emailTemplate.append("name_search", name.toLowerCase());
         emailTemplate.append("create_at", System.currentTimeMillis());
         emailTemplate.append("update_at", System.currentTimeMillis());
@@ -119,7 +119,7 @@ public class EmailTemplateServiceImpl extends BaseService implements EmailTempla
                 Updates.set("name", name),
                 Updates.set("subject", request.getSubject()),
                 Updates.set("attachment", request.getAttachment()),
-                Updates.set("message", request.getMessage()),
+                Updates.set("content", request.getContent()),
                 Updates.set("name_search", name.toLowerCase()),
                 Updates.set("update_at", System.currentTimeMillis()),
                 Updates.set("update_by", request.getInfo().getUsername())

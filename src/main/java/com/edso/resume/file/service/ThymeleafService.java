@@ -48,8 +48,13 @@ public class ThymeleafService {
         return templateResolver;
     }
 
-    public String getContext() {
-        final Context context = new Context();
+    public String getContent() {
+        Context context = new Context();
+
+        context.setVariable("name", "Viet");
+        context.setVariable("job", "Java Dev");
+        context.setVariable("company", "Edsolabs");
+        context.setVariable("user", "HR");
 
         return templateEngine.process(TEMPLATE_NAME, context);
     }

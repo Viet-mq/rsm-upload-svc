@@ -1,12 +1,28 @@
 package com.edso.resume.file.service;
 
+import com.edso.resume.file.domain.db.MongoDbOnlineSyncActions;
+import com.edso.resume.file.domain.entities.KeyPoint;
+import com.edso.resume.lib.common.AppUtils;
+import com.edso.resume.lib.common.CollectionNameDefs;
 import com.edso.resume.lib.response.BaseResponse;
+import com.google.common.base.Strings;
+import com.mongodb.client.model.Filters;
+import lombok.SneakyThrows;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
+import org.thymeleaf.templateresolver.ITemplateResolver;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -15,6 +31,12 @@ import java.util.Objects;
 
 @Service
 public class EmailServiceImpl extends BaseService implements EmailService{
+
+    private final MongoDbOnlineSyncActions db;
+
+    public EmailServiceImpl (MongoDbOnlineSyncActions db) {
+        this.db = db;
+    }
 
     @Autowired
     private JavaMailSender javaMailSender;
