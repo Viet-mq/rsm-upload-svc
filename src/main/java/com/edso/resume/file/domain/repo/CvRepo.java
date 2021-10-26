@@ -197,6 +197,8 @@ public class CvRepo extends BaseService {
                             .field("cvType", profile.getCvType()!=null?profile.getCvType():null)
                             .field("statusCVId", profile.getStatusCVId()!=null?profile.getStatusCVId():null)
                             .field("statusCVName", profile.getStatusCVName()!=null?profile.getStatusCVName():null)
+                            .field("talentPoolId", profile.getTalentPoolId()!=null?profile.getTalentPoolId():null)
+                            .field("talentPoolName", profile.getTalentPoolName()!=null?profile.getTalentPoolName():null)
                             .field("content", profile.getContent()!=null?profile.getContent():null)
                             .field("url", profile.getUrl()!=null?profile.getUrl():null)
                             .field("fileName", profile.getFileName()!=null?profile.getFileName():null)

@@ -24,6 +24,8 @@ public class Profile {
     private String cvType;
     private String statusCVId;
     private String statusCVName;
+    private String talentPoolId;
+    private String talentPoolName;
     private String content;
     private String url;
     private String fileName;

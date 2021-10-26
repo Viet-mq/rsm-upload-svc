@@ -98,6 +98,8 @@ public class CVServiceImpl extends BaseService implements CVService {
                 request.setHrRef(eventProfile.getHrRef()!=null?eventProfile.getHrRef(): profile.getHrRef());
                 request.setDateOfBirth(eventProfile.getDateOfBirth()!=null?eventProfile.getDateOfBirth(): profile.getDateOfBirth());
                 request.setCvType(eventProfile.getCvType()!=null?eventProfile.getCvType(): profile.getCvType());
+                request.setTalentPoolId(eventProfile.getTalentPoolId()!=null?eventProfile.getTalentPoolId(): profile.getTalentPoolId());
+                request.setTalentPoolName(eventProfile.getTalentPoolName()!=null? eventProfile.getTalentPoolName(): profile.getTalentPoolName());
                 cvRepo.update(request);
                 logger.info("=>Update Profile id: {}", profile.getId());
             }
