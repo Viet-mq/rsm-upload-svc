@@ -29,9 +29,6 @@ public class UpdateEmailTemplateRequest extends BaseAuthRequest{
         if(Strings.isNullOrEmpty(content)) {
             return new BaseResponse(-1, "Vui lòng nhập nội dung Email");
         }
-        if(Strings.isNullOrEmpty(attachment)) {
-            return new BaseResponse(-1, "Vui lòng thêm tệp đính kèm");
-        }
 
         return null;
     }
