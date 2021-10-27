@@ -70,7 +70,7 @@ public class KeypointController extends BaseController {
     }
 
     @PostMapping("/delete")
-    public BaseResponse deleteEmailTemplate(@RequestHeader Map<String, String> headers, @RequestBody DeleteKeyPointRequest request) {
+    public BaseResponse deleteKeypoint(@RequestHeader Map<String, String> headers, @RequestBody DeleteKeyPointRequest request) {
         logger.info("=>deleteKeypoint req: {}", request);
         BaseResponse response = new BaseResponse();
         if (request == null) {
