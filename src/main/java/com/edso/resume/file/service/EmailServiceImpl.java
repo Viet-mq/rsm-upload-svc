@@ -133,6 +133,7 @@ public class EmailServiceImpl extends BaseService implements EmailService{
                     replacementStrings.put(KeyPointConfig.FULL_NAME, fullName);
                     break;
                 case KeyPointConfig.NAME:
+                case KeyPointConfig.FIRST_NAME:
                     replacementStrings.put(KeyPointConfig.NAME, firstName);
                     break;
                 case KeyPointConfig.LAST_NAME:
@@ -148,6 +149,8 @@ public class EmailServiceImpl extends BaseService implements EmailService{
                     replacementStrings.put(KeyPointConfig.COMPANY, "Edsolabs");
                     break;
                 case KeyPointConfig.USER_NAME:
+                case KeyPointConfig.USER_FIRSTNAME:
+                case KeyPointConfig.ME:
                     replacementStrings.put(KeyPointConfig.USER_NAME, headerInfo.getUsername());
                     break;
                 case KeyPointConfig.USER_FULL_NAME:
