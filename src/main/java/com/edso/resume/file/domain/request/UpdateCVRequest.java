@@ -89,6 +89,12 @@ public class UpdateCVRequest extends BaseAuthRequest {
         if(Strings.isNullOrEmpty(cvType)) {
             return new BaseResponse(-1, "Vui lòng nhập trường cvType");
         }
+        if(Strings.isNullOrEmpty(talentPoolId)) {
+            return new BaseResponse(-1, "Vui lòng nhập trường talentPoolId");
+        }
+        if(Strings.isNullOrEmpty(talentPoolName)) {
+            return new BaseResponse(-1, "Vui lòng nhập trường talentPoolName");
+        }
 
         return null;
     }

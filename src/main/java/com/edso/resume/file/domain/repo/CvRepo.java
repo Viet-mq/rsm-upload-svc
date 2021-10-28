@@ -31,6 +31,9 @@ import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 @Repository
 public class CvRepo extends BaseService {
 
+    private static final String INDEX = "resume";
+    private static final String TYPE = "profile";
+
     private final ElasticClient elasticClient;
 
     public CvRepo(ElasticClient elasticClient) {
@@ -39,8 +42,8 @@ public class CvRepo extends BaseService {
 
     public List<Profile> findAll() {
         SearchResponse response = elasticClient.getClient()
-                .prepareSearch("resume")
-                .setRouting("profile")
+                .prepareSearch(INDEX)
+                .setRouting(TYPE)
                 .execute()
                 .actionGet();
         SearchHit[] searchHits = response
@@ -53,7 +56,7 @@ public class CvRepo extends BaseService {
 
     public Map<String, Object> findById(UUID id) {
         GetResponse response = elasticClient.getClient()
-                .prepareGet("resume", "profile", String.valueOf(id))
+                .prepareGet(INDEX, TYPE, String.valueOf(id))
                 .get();
         return response.getSource();
     }
@@ -82,8 +85,8 @@ public class CvRepo extends BaseService {
                 ElasticFields.TALENT_POOL_NAME,
                 ElasticFields.CONTENT);
         SearchResponse response = elasticClient.getClient()
-                .prepareSearch("resume")
-                .setRouting("profile")
+                .prepareSearch(INDEX)
+                .setRouting(TYPE)
                 .setQuery(multiMatchQuery)
                 .execute()
                 .actionGet();
@@ -96,10 +99,10 @@ public class CvRepo extends BaseService {
     }
 
     public Profile searchById(String id) throws IOException {
-        MultiMatchQueryBuilder query = QueryBuilders.multiMatchQuery(id, "id");
+        MultiMatchQueryBuilder query = QueryBuilders.multiMatchQuery(id, ElasticFields.ID);
         SearchResponse response = elasticClient.getClient()
-                .prepareSearch("resume")
-                .setRouting("profile")
+                .prepareSearch(INDEX)
+                .setRouting(TYPE)
                 .setQuery(query)
                 .execute()
                 .actionGet();
@@ -115,15 +118,15 @@ public class CvRepo extends BaseService {
 
     public String delete(DeleteCVRequest deleteCVRequest) {
         DeleteResponse deleteResponse = elasticClient.getClient()
-                .prepareDelete("resume", "profile", deleteCVRequest.getId())
+                .prepareDelete(INDEX, TYPE, deleteCVRequest.getId())
                 .get();
         return deleteResponse.getResult().toString();
     }
 
     public String update(UpdateCVRequest updateCVRequest) throws IOException {
         UpdateRequest updateRequest = new UpdateRequest();
-        updateRequest.index("resume")
-                .type("profile")
+        updateRequest.index(INDEX)
+                .type(TYPE)
                 .id(String.valueOf(updateCVRequest.getId()))
                 .doc(jsonBuilder()
                         .startObject()
@@ -145,6 +148,8 @@ public class CvRepo extends BaseService {
                         .field(ElasticFields.HR_REF, updateCVRequest.getHrRef())
                         .field(ElasticFields.DATE_OF_APPLY, updateCVRequest.getDateOfApply())
                         .field(ElasticFields.CV_TYPE, updateCVRequest.getCvType())
+                        .field(ElasticFields.TALENT_POOL_ID, updateCVRequest.getTalentPoolId())
+                        .field(ElasticFields.TALENT_POOL_NAME, updateCVRequest.getTalentPoolName())
                         .field(ElasticFields.UPDATE_AT, System.currentTimeMillis())
                         .endObject());
         try {
@@ -158,8 +163,8 @@ public class CvRepo extends BaseService {
 
     public void updateStatus(String id, String statusId, String statusName) throws IOException{
         UpdateRequest updateRequest = new UpdateRequest();
-        updateRequest.index("resume")
-                .type("profile")
+        updateRequest.index(INDEX)
+                .type(TYPE)
                 .id(id)
                 .doc(jsonBuilder()
                         .startObject()
@@ -177,7 +182,7 @@ public class CvRepo extends BaseService {
     public void save(Profile profile) {
         try {
             IndexResponse response = elasticClient.getClient()
-                    .prepareIndex("resume", "profile", profile.getId())
+                    .prepareIndex(INDEX, TYPE, profile.getId())
                     .setSource(jsonBuilder()
                             .startObject()
                             .field(ElasticFields.ID, profile.getId())
@@ -219,7 +224,7 @@ public class CvRepo extends BaseService {
     public void saveContent(Profile profile) {
         try {
             IndexResponse response = elasticClient.getClient()
-                    .prepareIndex("resume", "profile", profile.getId())
+                    .prepareIndex(INDEX, TYPE, profile.getId())
                     .setSource(jsonBuilder()
                             .startObject()
                             .field(ElasticFields.ID, profile.getId())
