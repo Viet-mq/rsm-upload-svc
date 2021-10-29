@@ -62,6 +62,9 @@ public class CvRepo extends BaseService {
     }
 
     public List<Profile> multiMatchQuery(String key) throws IOException {
+        if (key.contains("@")) {
+            key = key.substring(0, key.indexOf("@"));
+        }
         MultiMatchQueryBuilder multiMatchQuery = QueryBuilders.multiMatchQuery(key,
                 ElasticFields.ID,
                 ElasticFields.FULL_NAME,
