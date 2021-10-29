@@ -65,6 +65,7 @@ public class CvRepo extends BaseService {
         MultiMatchQueryBuilder multiMatchQuery = QueryBuilders.multiMatchQuery(key,
                 ElasticFields.ID,
                 ElasticFields.FULL_NAME,
+                ElasticFields.GENDER,
                 ElasticFields.PHONE_NUMBER,
                 ElasticFields.EMAIL,
                 ElasticFields.HOME_TOWN,
@@ -132,6 +133,7 @@ public class CvRepo extends BaseService {
                         .startObject()
                         .field(ElasticFields.ID, updateCVRequest.getId())
                         .field(ElasticFields.FULL_NAME, updateCVRequest.getFullName())
+                        .field(ElasticFields.GENDER, updateCVRequest.getGender())
                         .field(ElasticFields.PHONE_NUMBER, updateCVRequest.getPhoneNumber())
                         .field(ElasticFields.EMAIL, updateCVRequest.getEmail())
                         .field(ElasticFields.DATE_OF_BIRTH, updateCVRequest.getDateOfBirth())
@@ -188,6 +190,7 @@ public class CvRepo extends BaseService {
                             .field(ElasticFields.ID, profile.getId())
                             .field(ElasticFields.FULL_NAME, profile.getFullName() != null?profile.getFullName():null)
                             .field(ElasticFields.PHONE_NUMBER, profile.getPhoneNumber()!=null?profile.getPhoneNumber():null)
+                            .field(ElasticFields.GENDER, profile.getGender()!=null?profile.getGender():null)
                             .field(ElasticFields.EMAIL, profile.getEmail()!=null?profile.getEmail():null)
                             .field(ElasticFields.DATE_OF_BIRTH, profile.getDateOfBirth()!=null?profile.getDateOfBirth().toString():null)
                             .field(ElasticFields.HOME_TOWN, profile.getHometown()!=null?profile.getHometown():null)

@@ -3,6 +3,7 @@ package com.edso.resume.file.config;
 public class ElasticFields {
     public static final String ID = "id";
     public static final String FULL_NAME = "fullName";
+    public static final String GENDER = "gender";
     public static final String PHONE_NUMBER = "phoneNumber";
     public static final String EMAIL = "email";
     public static final String DATE_OF_BIRTH = "dateOfBirth";

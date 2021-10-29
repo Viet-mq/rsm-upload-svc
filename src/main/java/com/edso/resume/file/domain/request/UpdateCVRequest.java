@@ -12,6 +12,7 @@ import org.elasticsearch.common.Strings;
 public class UpdateCVRequest extends BaseAuthRequest {
     private String id;
     private String fullName;
+    private String gender;
     private String phoneNumber;
     private String email;
     private Long dateOfBirth;
@@ -40,6 +41,9 @@ public class UpdateCVRequest extends BaseAuthRequest {
         }
         if(Strings.isNullOrEmpty(fullName)) {
             return new BaseResponse(-1, "Vui lòng nhập trường name");
+        }
+        if(Strings.isNullOrEmpty(gender)) {
+            return new BaseResponse(-1, "Vui lòng nhập trường gender");
         }
         if(Strings.isNullOrEmpty(phoneNumber)) {
             return new BaseResponse(-1, "Vui lòng nhập trường phoneNumber");

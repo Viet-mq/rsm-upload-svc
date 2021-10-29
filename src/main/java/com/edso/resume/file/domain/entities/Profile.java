@@ -6,6 +6,7 @@ import lombok.Data;
 public class Profile {
     private String id;
     private String fullName;
+    private String gender;
     private String phoneNumber;
     private String email;
     private Long dateOfBirth;
