@@ -236,6 +236,7 @@ public class CvRepo extends BaseService {
                             .field(ElasticFields.ID, profile.getId())
                             .field(ElasticFields.CONTENT, profile.getContent())
                             .field(ElasticFields.URL, profile.getUrl())
+                            .field(ElasticFields.CV, profile.getFileName())
                             .field(ElasticFields.FILE_NAME, profile.getFileName())
                             .field(ElasticFields.CREATE_AT, System.currentTimeMillis())
                             .field(ElasticFields.UPDATE_AT, System.currentTimeMillis())
