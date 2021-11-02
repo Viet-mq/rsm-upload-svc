@@ -83,6 +83,7 @@ public class CVServiceImpl extends BaseService implements CVService {
                 request.setId(profile.getId());
                 request.setFullName(eventProfile.getFullName()!=null?eventProfile.getFullName(): profile.getFullName());
                 request.setPhoneNumber(eventProfile.getPhoneNumber()!=null?eventProfile.getPhoneNumber(): profile.getPhoneNumber());
+                request.setGender(eventProfile.getGender()!=null?eventProfile.getGender(): profile.getGender());
                 request.setEmail(eventProfile.getEmail()!=null?eventProfile.getEmail(): profile.getEmail());
                 request.setDateOfApply(eventProfile.getDateOfApply()!=null?eventProfile.getDateOfApply(): profile.getDateOfApply());
                 request.setHometown(eventProfile.getHometown()!=null?eventProfile.getHometown(): profile.getHometown());
@@ -143,5 +144,27 @@ public class CVServiceImpl extends BaseService implements CVService {
                     , event.getProfile().getStatusCVName());
         }
         else logger.info("=>Update status failed: Invalid ID");
+    }
+
+    @SneakyThrows
+    @Override
+    public void updateImages(Event event) {
+        Profile profile = cvRepo.searchById(event.getImage().getId());
+        if (profile != null){
+            cvRepo.updateImages(event.getImage().getId(), event.getImage().getUrl());
+            logger.info("=>Update Image to id: {}, url_image: {}", profile.getId(), event.getImage().getUrl());
+        }
+        else logger.info("Update image failed: Invalid ID");
+    }
+
+    @SneakyThrows
+    @Override
+    public void deleteImages(Event event) {
+        Profile profile = cvRepo.searchById(event.getImage().getId());
+        if (profile != null){
+            cvRepo.deleteImages(event.getImage().getId());
+            logger.info("=>Delete Image in id: {}", profile.getId());
+        }
+        else logger.info("Delete image failed: Invalid ID");
     }
 }

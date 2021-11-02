@@ -7,7 +7,6 @@ import com.edso.resume.file.domain.request.UploadCVRequest;
 import com.edso.resume.file.publisher.CVPublisher;
 import com.edso.resume.lib.response.BaseResponse;
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,14 +25,17 @@ public class UploadCVServiceImpl extends BaseService implements UploadCVService 
     @Value("${pdf.serverpath}")
     private String pdfFilesPath;
 
-    @Autowired
-    CVPublisher cvPublisher;
+    final CVPublisher cvPublisher;
 
-    @Autowired
-    FileService fileService;
+    final FileService fileService;
 
-    @Autowired
-    CvRepo cvRepo;
+    final CvRepo cvRepo;
+
+    public UploadCVServiceImpl(CVPublisher cvPublisher, FileService fileService, CvRepo cvRepo) {
+        this.cvPublisher = cvPublisher;
+        this.fileService = fileService;
+        this.cvRepo = cvRepo;
+    }
 
     @SneakyThrows
     @Override
@@ -66,10 +68,10 @@ public class UploadCVServiceImpl extends BaseService implements UploadCVService 
         if (profile != null) {
             profile.setContent(profile.getContent() + textParsed);
             profile.setFileName(fileUpload.getOriginalFilename());
-            profile.setUrl(domain + fileUpload.getOriginalFilename());
+            profile.setUrlCV(domain + fileUpload.getOriginalFilename());
             profile.setCv(fileUpload.getOriginalFilename());
             profile.setCvType(extension);
-            CV cv = new CV(request.getProfileId(), extension, profile.getUrl(), profile.getFileName());
+            CV cv = new CV(request.getProfileId(), extension, profile.getUrlCV(), profile.getFileName());
             cvPublisher.publish(cv);
             cvRepo.save(profile);
         } else {
@@ -77,9 +79,9 @@ public class UploadCVServiceImpl extends BaseService implements UploadCVService 
             profile1.setId(request.getProfileId());
             profile1.setContent(textParsed);
             profile1.setFileName(fileUpload.getOriginalFilename());
-            profile1.setUrl(domain + fileUpload.getOriginalFilename());
+            profile1.setUrlCV(domain + fileUpload.getOriginalFilename());
             profile1.setCvType(extension);
-            CV cv = new CV(request.getProfileId(), extension ,profile1.getUrl(), profile1.getFileName());
+            CV cv = new CV(request.getProfileId(), extension ,profile1.getUrlCV(), profile1.getFileName());
             cvPublisher.publish(cv);
             cvRepo.saveContent(profile1);
         }

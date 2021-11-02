@@ -25,8 +25,9 @@ public class ElasticFields {
     public static final String TALENT_POOL_ID = "talentPoolId";
     public static final String TALENT_POOL_NAME = "talentPoolName";
     public static final String CONTENT = "content";
-    public static final String URL = "url";
+    public static final String URL_CV = "urlCV";
     public static final String FILE_NAME = "fileName";
+    public static final String IMAGE = "image";
     public static final String CREATE_AT = "create_at";
     public static final String UPDATE_AT = "update_at";
 }

@@ -1,5 +1,6 @@
 package com.edso.resume.file.publisher;
 
+import com.edso.resume.file.domain.entities.Image;
 import com.edso.resume.file.domain.entities.Profile;
 import com.edso.resume.file.domain.entities.Event;
 import com.edso.resume.lib.response.BaseResponse;
@@ -22,7 +23,8 @@ public class EventPublisher {
     private String routingkey;
 
     @PostMapping("/publish/{type}")
-    public BaseResponse addEvent(@PathVariable("type") String type, @RequestBody(required = false) Profile profile){
+    public BaseResponse addEvent(@PathVariable("type") String type,
+                                 @RequestBody(required = false) Profile profile){
         Event event = new Event(type, profile);
         rabbitTemplate.convertAndSend(exchange, routingkey, event);
         BaseResponse baseResponse = new BaseResponse();

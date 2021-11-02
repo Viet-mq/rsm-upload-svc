@@ -61,7 +61,7 @@ public class CvRepo extends BaseService {
         return response.getSource();
     }
 
-    public List<Profile> multiMatchQuery(String key) throws IOException {
+    public List<Profile> multiMatchQuery(String key) {
         if (key.contains("@")) {
             key = key.substring(0, key.indexOf("@"));
         }
@@ -87,6 +87,8 @@ public class CvRepo extends BaseService {
                 ElasticFields.STATUS_CV_NAME,
                 ElasticFields.TALENT_POOL_ID,
                 ElasticFields.TALENT_POOL_NAME,
+                ElasticFields.URL_CV,
+                ElasticFields.IMAGE,
                 ElasticFields.CONTENT);
         SearchResponse response = elasticClient.getClient()
                 .prepareSearch(INDEX)
@@ -102,7 +104,7 @@ public class CvRepo extends BaseService {
                 .collect(Collectors.toList());
     }
 
-    public Profile searchById(String id) throws IOException {
+    public Profile searchById(String id) {
         MultiMatchQueryBuilder query = QueryBuilders.multiMatchQuery(id, ElasticFields.ID);
         SearchResponse response = elasticClient.getClient()
                 .prepareSearch(INDEX)
@@ -177,11 +179,36 @@ public class CvRepo extends BaseService {
                         .field(ElasticFields.STATUS_CV_NAME, statusName)
                         .field(ElasticFields.UPDATE_AT, System.currentTimeMillis())
                         .endObject());
-        try {
-            UpdateResponse updateResponse = elasticClient.getClient().update(updateRequest).get();
-        } catch (InterruptedException | ExecutionException e) {
-            logger.error("Ex: ", e);
-        }
+        elasticClient.getClient().update(updateRequest);
+    }
+
+    public void updateImages(String id, String url) throws IOException {
+        UpdateRequest updateRequest = new UpdateRequest();
+        updateRequest.index(INDEX)
+                .type(TYPE)
+                .id(id)
+                .doc(jsonBuilder()
+                        .startObject()
+                        .field(ElasticFields.IMAGE, url)
+                        .field(ElasticFields.UPDATE_AT, System.currentTimeMillis())
+                        .endObject());
+
+        elasticClient.getClient().update(updateRequest);
+
+    }
+
+    public void deleteImages(String id) throws  IOException {
+        UpdateRequest updateRequest = new UpdateRequest();
+        updateRequest.index(INDEX)
+                .type(TYPE)
+                .id(id)
+                .doc(jsonBuilder()
+                        .startObject()
+                        .field(ElasticFields.IMAGE, "")
+                        .field(ElasticFields.UPDATE_AT, System.currentTimeMillis())
+                        .endObject());
+
+        elasticClient.getClient().update(updateRequest);
     }
 
     public void save(Profile profile) {
@@ -214,7 +241,8 @@ public class CvRepo extends BaseService {
                             .field(ElasticFields.TALENT_POOL_ID, profile.getTalentPoolId()!=null?profile.getTalentPoolId():null)
                             .field(ElasticFields.TALENT_POOL_NAME, profile.getTalentPoolName()!=null?profile.getTalentPoolName():null)
                             .field(ElasticFields.CONTENT, profile.getContent()!=null?profile.getContent():null)
-                            .field(ElasticFields.URL, profile.getUrl()!=null?profile.getUrl():null)
+                            .field(ElasticFields.URL_CV, profile.getUrlCV()!=null?profile.getUrlCV():null)
+                            .field(ElasticFields.IMAGE, profile.getImage()!=null?profile.getImage():null)
                             .field(ElasticFields.FILE_NAME, profile.getFileName()!=null?profile.getFileName():null)
                             .field(ElasticFields.CREATE_AT, System.currentTimeMillis())
                             .field(ElasticFields.UPDATE_AT, System.currentTimeMillis())
@@ -235,7 +263,7 @@ public class CvRepo extends BaseService {
                             .startObject()
                             .field(ElasticFields.ID, profile.getId())
                             .field(ElasticFields.CONTENT, profile.getContent())
-                            .field(ElasticFields.URL, profile.getUrl())
+                            .field(ElasticFields.URL_CV, profile.getUrlCV())
                             .field(ElasticFields.CV, profile.getFileName())
                             .field(ElasticFields.FILE_NAME, profile.getFileName())
                             .field(ElasticFields.CREATE_AT, System.currentTimeMillis())

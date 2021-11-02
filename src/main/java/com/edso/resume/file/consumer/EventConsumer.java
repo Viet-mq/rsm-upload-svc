@@ -9,18 +9,20 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Consumer {
+public class EventConsumer {
 
     private final String EVENT_CREATE = "create";
     private final String EVENT_UPDATE = "update";
     private final String EVENT_DELETE = "delete";
     private final String UPDATE_STATUS = "update-status";
+    private final String UPDATE_IMAGE = "update-image";
+    private final String DELETE_IMAGE = "delete-image";
 
     private final CVService cvService;
 
-    private static final Logger logger = LoggerFactory.getLogger(Consumer.class);
+    private static final Logger logger = LoggerFactory.getLogger(EventConsumer.class);
 
-    public Consumer(CVService cvService) {
+    public EventConsumer(CVService cvService) {
         this.cvService = cvService;
     }
 
@@ -41,6 +43,12 @@ public class Consumer {
                 break;
             case UPDATE_STATUS:
                 cvService.updateStatus(event);
+                break;
+            case UPDATE_IMAGE:
+                cvService.updateImages(event);
+                break;
+            case DELETE_IMAGE:
+                cvService.deleteImages(event);
                 break;
             default:
                 logger.info("Invalid type");
