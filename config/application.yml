@@ -6,9 +6,9 @@ spring:
     port: 5672
     username: admin
     password: rabb@t@7911
-    exchange: event.exchange
+    exchange: event.exchange1
     queue: event.queue1
-    routingkey: event.routingkey
+    routingkey: event.routingkey1
     CV:
       exchange: cv.exchange
       queue: cv.queue

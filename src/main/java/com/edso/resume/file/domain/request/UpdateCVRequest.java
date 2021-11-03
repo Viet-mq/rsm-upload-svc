@@ -34,6 +34,11 @@ public class UpdateCVRequest extends BaseAuthRequest {
     private String talentPoolId;
     private String talentPoolName;
     private String content;
+    private String schoolLevel;
+    private String evaluation;
+    private Long lastApply;
+    private String departmentId;
+    private String departmentName;
 
     public BaseResponse validate(){
         if (Strings.isNullOrEmpty(id)) {

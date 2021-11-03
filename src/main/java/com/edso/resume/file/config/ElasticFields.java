@@ -28,6 +28,11 @@ public class ElasticFields {
     public static final String URL_CV = "urlCV";
     public static final String FILE_NAME = "fileName";
     public static final String IMAGE = "image";
+    public static final String SCHOOL_LEVEL = "schoolLevel";
+    public static final String EVALUATION = "evaluation";
+    public static final String LAST_APPLY = "lastApply";
+    public static final String DEPARTMENT_ID = "departmentId";
+    public static final String DEPARTMENT_NAME = "departmentName";
     public static final String CREATE_AT = "create_at";
     public static final String UPDATE_AT = "update_at";
 }

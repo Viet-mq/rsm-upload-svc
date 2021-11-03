@@ -16,6 +16,7 @@ import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
@@ -61,39 +62,42 @@ public class CvRepo extends BaseService {
         return response.getSource();
     }
 
-    public List<Profile> multiMatchQuery(String key) {
+    public List<Profile> multiMatchQuery(String key, int size) {
         if (key.contains("@")) {
             key = key.substring(0, key.indexOf("@"));
         }
-        MultiMatchQueryBuilder multiMatchQuery = QueryBuilders.multiMatchQuery(key,
-                ElasticFields.ID,
-                ElasticFields.FULL_NAME,
-                ElasticFields.GENDER,
-                ElasticFields.PHONE_NUMBER,
-                ElasticFields.EMAIL,
-                ElasticFields.HOME_TOWN,
-                ElasticFields.SCHOOL_ID,
-                ElasticFields.SCHOOL_NAME,
-                ElasticFields.JOB_ID,
-                ElasticFields.JOB_NAME,
-                ElasticFields.LEVEL_JOB_ID,
-                ElasticFields.LEVEL_JOB_NAME,
-                ElasticFields.CV,
-                ElasticFields.SOURCE_CV_ID,
-                ElasticFields.SOURCE_CV_NAME,
-                ElasticFields.HR_REF,
-                ElasticFields.CV_TYPE,
-                ElasticFields.STATUS_CV_ID,
-                ElasticFields.STATUS_CV_NAME,
-                ElasticFields.TALENT_POOL_ID,
-                ElasticFields.TALENT_POOL_NAME,
-                ElasticFields.URL_CV,
-                ElasticFields.IMAGE,
-                ElasticFields.CONTENT);
+        MultiMatchQueryBuilder multiMatchQuery = QueryBuilders.multiMatchQuery(key)
+                .field(ElasticFields.ID)
+                .field(ElasticFields.FULL_NAME, 3)
+                .field(ElasticFields.GENDER)
+                .field(ElasticFields.PHONE_NUMBER)
+                .field(ElasticFields.EMAIL, 5)
+                .field(ElasticFields.HOME_TOWN)
+                .field(ElasticFields.SCHOOL_ID)
+                .field(ElasticFields.SCHOOL_NAME)
+                .field(ElasticFields.JOB_ID)
+                .field(ElasticFields.JOB_NAME, 2)
+                .field(ElasticFields.LEVEL_JOB_ID)
+                .field(ElasticFields.LEVEL_JOB_NAME)
+                .field(ElasticFields.CV, 2)
+                .field(ElasticFields.SOURCE_CV_ID)
+                .field(ElasticFields.SOURCE_CV_NAME)
+                .field(ElasticFields.HR_REF)
+                .field(ElasticFields.CV_TYPE)
+                .field(ElasticFields.STATUS_CV_ID)
+                .field(ElasticFields.STATUS_CV_NAME)
+                .field(ElasticFields.TALENT_POOL_ID)
+                .field(ElasticFields.TALENT_POOL_NAME)
+                .field(ElasticFields.URL_CV)
+                .field(ElasticFields.IMAGE)
+                .field(ElasticFields.DEPARTMENT_NAME)
+                .field(ElasticFields.EVALUATION)
+                .field(ElasticFields.SCHOOL_LEVEL)
+                .field(ElasticFields.CONTENT);
         SearchResponse response = elasticClient.getClient()
                 .prepareSearch(INDEX)
                 .setRouting(TYPE)
-                .setQuery(multiMatchQuery)
+                .setSource(new SearchSourceBuilder().query(multiMatchQuery).size(size))
                 .execute()
                 .actionGet();
         SearchHit[] searchHits = response
@@ -244,6 +248,11 @@ public class CvRepo extends BaseService {
                             .field(ElasticFields.URL_CV, profile.getUrlCV()!=null?profile.getUrlCV():null)
                             .field(ElasticFields.IMAGE, profile.getImage()!=null?profile.getImage():null)
                             .field(ElasticFields.FILE_NAME, profile.getFileName()!=null?profile.getFileName():null)
+                            .field(ElasticFields.SCHOOL_LEVEL, profile.getSchoolLevel()!=null?profile.getSchoolLevel():null)
+                            .field(ElasticFields.EVALUATION, profile.getEvaluation()!=null?profile.getEvaluation():null)
+                            .field(ElasticFields.DEPARTMENT_ID, profile.getDepartmentId()!=null?profile.getDepartmentId():null)
+                            .field(ElasticFields.DEPARTMENT_NAME, profile.getDepartmentName()!=null?profile.getDepartmentName():null)
+                            .field(ElasticFields.LAST_APPLY, profile.getLastApply()!=null?profile.getLastApply():null)
                             .field(ElasticFields.CREATE_AT, System.currentTimeMillis())
                             .field(ElasticFields.UPDATE_AT, System.currentTimeMillis())
                             .endObject()

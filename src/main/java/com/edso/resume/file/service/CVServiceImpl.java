@@ -37,8 +37,12 @@ public class CVServiceImpl extends BaseService implements CVService {
 
     @SneakyThrows
     @Override
-    public GetArrayResponse<Profile> viewByKey(HeaderInfo headerInfo, String key) {
-        List<Profile> profiles = cvRepo.multiMatchQuery(key);
+    public GetArrayResponse<Profile> viewByKey(HeaderInfo headerInfo, String key, Integer size) {
+        List<Profile> profiles;
+        if (size != null) {
+            profiles = cvRepo.multiMatchQuery(key, size);
+        }
+        else profiles = cvRepo.multiMatchQuery(key, 10);
         GetArrayResponse<Profile> response = new GetArrayResponse<>();
         response.setSuccess(profiles.size(), profiles);
         return response;
@@ -101,6 +105,11 @@ public class CVServiceImpl extends BaseService implements CVService {
                 request.setCvType(eventProfile.getCvType()!=null?eventProfile.getCvType(): profile.getCvType());
                 request.setTalentPoolId(eventProfile.getTalentPoolId()!=null?eventProfile.getTalentPoolId(): profile.getTalentPoolId());
                 request.setTalentPoolName(eventProfile.getTalentPoolName()!=null? eventProfile.getTalentPoolName(): profile.getTalentPoolName());
+                request.setLastApply(eventProfile.getLastApply()!=null?eventProfile.getLastApply(): profile.getLastApply());
+                request.setSchoolLevel(eventProfile.getSchoolLevel()!=null?eventProfile.getSchoolLevel(): profile.getSchoolLevel());
+                request.setEvaluation(eventProfile.getEvaluation()!=null?eventProfile.getEvaluation(): profile.getEvaluation());
+                request.setDepartmentId(eventProfile.getDepartmentId()!=null?eventProfile.getDepartmentId(): profile.getDepartmentId());
+                request.setDepartmentName(eventProfile.getDepartmentName()!=null?eventProfile.getDepartmentName(): profile.getDepartmentName());
                 cvRepo.update(request);
                 logger.info("=>Update Profile id: {}", profile.getId());
             }

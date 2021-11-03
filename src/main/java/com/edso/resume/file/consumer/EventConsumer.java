@@ -14,6 +14,7 @@ public class EventConsumer {
     private final String EVENT_CREATE = "create";
     private final String EVENT_UPDATE = "update";
     private final String EVENT_DELETE = "delete";
+    private final String UPDATE_DETAIL = "update-detail";
     private final String UPDATE_STATUS = "update-status";
     private final String UPDATE_IMAGE = "update-image";
     private final String DELETE_IMAGE = "delete-image";
@@ -36,6 +37,7 @@ public class EventConsumer {
                 cvService.create(event);
                 break;
             case EVENT_UPDATE:
+            case UPDATE_DETAIL:
                 cvService.update(event);
                 break;
             case EVENT_DELETE:

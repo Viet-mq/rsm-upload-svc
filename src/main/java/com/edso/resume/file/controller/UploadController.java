@@ -47,11 +47,12 @@ public class UploadController extends BaseController {
 
     @GetMapping("/view")
     public GetArrayResponse<Profile> viewAll (@RequestHeader Map<String, String> headers,
-                                              @RequestParam(required = false) String key) {
+                                              @RequestParam(required = false) String key,
+                                              @RequestParam(required = false) Integer size) {
         HeaderInfo headerInfo = ParseHeaderUtil.build(headers);
         if(key != null) {
-            logger.info("=>viewAllProfile u: {}, key {}", headerInfo, key);
-            return cvService.viewByKey(headerInfo, key);
+            logger.info("=>viewAllProfile u: {}, key: {}", headerInfo, key);
+            return cvService.viewByKey(headerInfo, key, size);
         }
         else {
             logger.info("=>viewAllProfile u: {}", headerInfo);

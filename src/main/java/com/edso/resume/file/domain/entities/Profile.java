@@ -27,6 +27,11 @@ public class Profile {
     private String statusCVName;
     private String talentPoolId;
     private String talentPoolName;
+    private String schoolLevel;
+    private String evaluation;
+    private Long lastApply;
+    private String departmentId;
+    private String departmentName;
     private String content;
     private String urlCV;
     private String image;
