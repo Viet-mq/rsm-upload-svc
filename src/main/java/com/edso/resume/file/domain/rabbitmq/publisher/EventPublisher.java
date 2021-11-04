@@ -1,4 +1,4 @@
-package com.edso.resume.file.publisher;
+package com.edso.resume.file.domain.rabbitmq.publisher;
 
 import com.edso.resume.file.domain.entities.Event;
 import com.edso.resume.file.domain.entities.Profile;

@@ -1,4 +1,4 @@
-package com.edso.resume.file.consumer;
+package com.edso.resume.file.domain.rabbitmq.consumer;
 
 import com.edso.resume.file.domain.entities.Event;
 import com.edso.resume.file.service.CVService;

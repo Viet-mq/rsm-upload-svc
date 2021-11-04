@@ -4,7 +4,7 @@ import com.edso.resume.file.domain.entities.CV;
 import com.edso.resume.file.domain.entities.Profile;
 import com.edso.resume.file.domain.repo.CvRepo;
 import com.edso.resume.file.domain.request.UploadCVRequest;
-import com.edso.resume.file.publisher.CVPublisher;
+import com.edso.resume.file.domain.rabbitmq.publisher.CVPublisher;
 import com.edso.resume.lib.response.BaseResponse;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
