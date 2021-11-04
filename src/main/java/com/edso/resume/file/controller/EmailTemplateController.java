@@ -15,7 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/template")
-public class EmailTemplateController extends BaseController{
+public class EmailTemplateController extends BaseController {
 
     private final EmailTemplateService emailTemplateService;
 

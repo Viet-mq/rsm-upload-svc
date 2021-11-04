@@ -29,7 +29,7 @@ public class EmailTemplateServiceImpl extends BaseService implements EmailTempla
 
     private final MongoDbOnlineSyncActions db;
 
-    public EmailTemplateServiceImpl (MongoDbOnlineSyncActions db) {
+    public EmailTemplateServiceImpl(MongoDbOnlineSyncActions db) {
         this.db = db;
     }
 

@@ -46,10 +46,10 @@ public class UploadCVServiceImpl extends BaseService implements UploadCVService 
         File file = convertToFile(fileUpload);
         String extension = Objects.requireNonNull(fileUpload
                         .getOriginalFilename())
-                        .substring(fileUpload.getOriginalFilename()
+                .substring(fileUpload.getOriginalFilename()
                         .lastIndexOf(".") + 1);
 
-        switch (extension){
+        switch (extension) {
             case "pdf":
                 textParsed = fileService.PdfToText(file);
                 break;
@@ -81,7 +81,7 @@ public class UploadCVServiceImpl extends BaseService implements UploadCVService 
             profile1.setFileName(fileUpload.getOriginalFilename());
             profile1.setUrlCV(domain + fileUpload.getOriginalFilename());
             profile1.setCvType(extension);
-            CV cv = new CV(request.getProfileId(), extension ,profile1.getUrlCV(), profile1.getFileName());
+            CV cv = new CV(request.getProfileId(), extension, profile1.getUrlCV(), profile1.getFileName());
             cvPublisher.publish(cv);
             cvRepo.saveContent(profile1);
         }

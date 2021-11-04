@@ -12,8 +12,8 @@ import org.elasticsearch.common.Strings;
 public class DeleteCVRequest extends BaseAuthRequest {
     private String id;
 
-    public BaseResponse validate(){
-        if(Strings.isNullOrEmpty(id)){
+    public BaseResponse validate() {
+        if (Strings.isNullOrEmpty(id)) {
             return new BaseResponse(-1, "Vui lòng chọn id");
         }
         return null;

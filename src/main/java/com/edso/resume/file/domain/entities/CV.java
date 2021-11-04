@@ -1,6 +1,5 @@
 package com.edso.resume.file.domain.entities;
 
-import com.rabbitmq.client.AMQP;
 import lombok.*;
 
 @Data

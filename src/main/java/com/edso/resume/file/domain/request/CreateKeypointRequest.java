@@ -9,7 +9,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @ToString(callSuper = true)
-public class CreateKeypointRequest extends BaseAuthRequest{
+public class CreateKeypointRequest extends BaseAuthRequest {
     private String id;
     private String description;
 

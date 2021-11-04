@@ -1,6 +1,5 @@
 package com.edso.resume.file.controller;
 
-import com.edso.resume.file.domain.entities.KeyPoint;
 import com.edso.resume.file.service.EmailService;
 import com.edso.resume.lib.entities.HeaderInfo;
 import com.edso.resume.lib.response.BaseResponse;
@@ -22,12 +21,12 @@ public class EmailController extends BaseController {
     @SneakyThrows
     @PostMapping("/send")
     public BaseResponse sendMail(@RequestHeader Map<String, String> headers,
-            @RequestParam("toEmail") String toEmail,
-            @RequestParam("subject") String subject,
-            @RequestParam("content") String content,
-            @RequestParam(value = "file", required = false) MultipartFile file) {
+                                 @RequestParam("toEmail") String toEmail,
+                                 @RequestParam("subject") String subject,
+                                 @RequestParam("content") String content,
+                                 @RequestParam(value = "file", required = false) MultipartFile file) {
         HeaderInfo headerInfo = ParseHeaderUtil.build(headers);
-        logger.info("=>u: {} Send email to: {}", headerInfo , toEmail);
+        logger.info("=>u: {} Send email to: {}", headerInfo, toEmail);
         return emailService.sendMail(toEmail, subject, content, file);
     }
 
@@ -35,7 +34,7 @@ public class EmailController extends BaseController {
     public BaseResponse sendEmailTemplate(@RequestHeader Map<String, String> headers,
                                           @RequestParam String profileId,
                                           @RequestParam String templateId,
-                                          @RequestParam(value = "file", required = false) MultipartFile file){
+                                          @RequestParam(value = "file", required = false) MultipartFile file) {
         HeaderInfo headerInfo = ParseHeaderUtil.build(headers);
         logger.info("=>u: {} Send email-template, profileId: {}, templateId: {}", headerInfo, profileId, templateId);
         return emailService.sendMail(headerInfo, profileId, templateId, file);

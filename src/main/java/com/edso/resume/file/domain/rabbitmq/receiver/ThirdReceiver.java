@@ -20,7 +20,7 @@ public class ThirdReceiver {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private Integer counter=0;
+    private Integer counter = 0;
 
     private final CountDownLatch latch = new CountDownLatch(1);
 
@@ -29,7 +29,7 @@ public class ThirdReceiver {
             exchange = @Exchange(value = EXCHANGE_NAME),
             key = QUEUE_ROUTINGKEY))
     public void receiveMessage(String message) {
-        logger.info("From receiver 3: Received <{}>" , message);
+        logger.info("From receiver 3: Received <{}>", message);
         counter++;
     }
 
@@ -38,6 +38,6 @@ public class ThirdReceiver {
     }
 
     public void initCounter() {
-        this.counter=0;
+        this.counter = 0;
     }
 }

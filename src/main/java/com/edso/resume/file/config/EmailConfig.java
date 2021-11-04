@@ -35,7 +35,7 @@ public class EmailConfig {
     private String debug;
 
     @Bean
-    public JavaMailSender getJavaMailSender(){
+    public JavaMailSender getJavaMailSender() {
 
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(host);
@@ -47,7 +47,7 @@ public class EmailConfig {
         return mailSender;
     }
 
-    private Properties getMailSenderProperties(){
+    private Properties getMailSenderProperties() {
         Properties props = new Properties();
         props.put("mail.transport.protocol", protocol);
         props.put("mail.smtp.auth", auth);

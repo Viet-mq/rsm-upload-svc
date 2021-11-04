@@ -8,7 +8,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @ToString(callSuper = true)
-public class CreateEmailTemplateRequest extends BaseAuthRequest{
+public class CreateEmailTemplateRequest extends BaseAuthRequest {
     private String name;
     private String subject;
     private String attachment;

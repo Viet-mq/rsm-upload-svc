@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.*;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/upload")
@@ -46,30 +46,28 @@ public class UploadController extends BaseController {
     }
 
     @GetMapping("/view")
-    public GetArrayResponse<Profile> viewAll (@RequestHeader Map<String, String> headers,
-                                              @RequestParam(required = false) String key,
-                                              @RequestParam(required = false) Integer size) {
+    public GetArrayResponse<Profile> viewAll(@RequestHeader Map<String, String> headers,
+                                             @RequestParam(required = false) String key,
+                                             @RequestParam(required = false) Integer size) {
         HeaderInfo headerInfo = ParseHeaderUtil.build(headers);
-        if(key != null) {
+        if (key != null) {
             logger.info("=>viewAllProfile u: {}, key: {}", headerInfo, key);
             return cvService.viewByKey(headerInfo, key, size);
-        }
-        else {
+        } else {
             logger.info("=>viewAllProfile u: {}", headerInfo);
             return cvService.viewAll(headerInfo);
         }
     }
 
     @DeleteMapping("/delete")
-    public BaseResponse delete (@RequestHeader Map<String, String> headers, @RequestBody DeleteCVRequest deleteCVRequest){
+    public BaseResponse delete(@RequestHeader Map<String, String> headers, @RequestBody DeleteCVRequest deleteCVRequest) {
         HeaderInfo headerInfo = ParseHeaderUtil.build(headers);
         BaseResponse response = new BaseResponse();
-        if(deleteCVRequest == null){
+        if (deleteCVRequest == null) {
             response.setResult(-1, "Vui lòng nhập đầy đủ thông tin");
-        }
-        else {
+        } else {
             response = deleteCVRequest.validate();
-            if(response == null){
+            if (response == null) {
                 response = cvService.delete(deleteCVRequest);
             }
         }
@@ -78,15 +76,14 @@ public class UploadController extends BaseController {
     }
 
     @PutMapping("/update")
-    public BaseResponse update (@RequestHeader Map<String, String> headers, @RequestBody UpdateCVRequest updateCVRequest){
+    public BaseResponse update(@RequestHeader Map<String, String> headers, @RequestBody UpdateCVRequest updateCVRequest) {
         HeaderInfo headerInfo = ParseHeaderUtil.build(headers);
         BaseResponse response = new BaseResponse();
-        if(updateCVRequest == null){
+        if (updateCVRequest == null) {
             response.setResult(-1, "Vui lòng điền đầy đủ thông tin");
-        }
-        else {
+        } else {
             response = updateCVRequest.validate();
-            if(response == null){
+            if (response == null) {
                 response = cvService.update(updateCVRequest);
             }
         }

@@ -1,7 +1,9 @@
 package com.edso.resume.file.controller;
 
 import com.edso.resume.file.domain.entities.KeyPoint;
-import com.edso.resume.file.domain.request.*;
+import com.edso.resume.file.domain.request.CreateKeypointRequest;
+import com.edso.resume.file.domain.request.DeleteKeyPointRequest;
+import com.edso.resume.file.domain.request.UpdateKeypointRequest;
 import com.edso.resume.file.service.KeypointService;
 import com.edso.resume.lib.entities.HeaderInfo;
 import com.edso.resume.lib.response.BaseResponse;
@@ -17,7 +19,7 @@ public class KeypointController extends BaseController {
 
     private final KeypointService keypointService;
 
-    public KeypointController (KeypointService keypointService){
+    public KeypointController(KeypointService keypointService) {
         this.keypointService = keypointService;
     }
 
@@ -51,6 +53,7 @@ public class KeypointController extends BaseController {
         logger.info("<=createKeypoint u: {}, req: {}, resp: {}", headerInfo, request, response);
         return response;
     }
+
     @PostMapping("/update")
     public BaseResponse updateKeypoint(@RequestHeader Map<String, String> headers, @RequestBody UpdateKeypointRequest request) {
         BaseResponse response = new BaseResponse();

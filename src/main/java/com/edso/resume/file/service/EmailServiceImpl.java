@@ -27,11 +27,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-public class EmailServiceImpl extends BaseService implements EmailService{
+public class EmailServiceImpl extends BaseService implements EmailService {
 
     private final MongoDbOnlineSyncActions db;
 
-    public EmailServiceImpl (MongoDbOnlineSyncActions db) {
+    public EmailServiceImpl(MongoDbOnlineSyncActions db) {
         this.db = db;
     }
 
@@ -51,7 +51,7 @@ public class EmailServiceImpl extends BaseService implements EmailService{
         helper.setSubject(subject);
         helper.setText(message);
 
-        if(file != null){
+        if (file != null) {
             helper.addAttachment(Objects.requireNonNull(file.getOriginalFilename()), file);
         }
         javaMailSender.send(mimeMessage);
@@ -91,16 +91,16 @@ public class EmailServiceImpl extends BaseService implements EmailService{
 
         BaseResponse response = new BaseResponse();
 
-        Bson cond =Filters.eq("id", profileId);
+        Bson cond = Filters.eq("id", profileId);
         Document profile = db.findOne(CollectionNameDefs.COLL_PROFILE, cond);
-        if(profile == null){
+        if (profile == null) {
             response.setFailed("Profile không tồn tại");
             return response;
         }
 
         cond = Filters.eq("id", templateId);
         Document template = db.findOne(CollectionNameDefs.COLL_EMAIL_TEMPLATE, cond);
-        if(template == null){
+        if (template == null) {
             response.setFailed("Template không tồn tại");
             return response;
         }
@@ -110,11 +110,10 @@ public class EmailServiceImpl extends BaseService implements EmailService{
         String fullName = AppUtils.parseString(profile.get(DbKeyConfig.FULL_NAME));
         String lastName;
         String firstName = null;
-        if(fullName.split("\\w+").length>1){
-            firstName = fullName.substring(fullName.lastIndexOf(" ")+1);
+        if (fullName.split("\\w+").length > 1) {
+            firstName = fullName.substring(fullName.lastIndexOf(" ") + 1);
             lastName = fullName.substring(0, fullName.indexOf(" "));
-        }
-        else{
+        } else {
             lastName = fullName;
         }
 

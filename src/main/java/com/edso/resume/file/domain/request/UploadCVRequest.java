@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 @ToString(callSuper = true)
 @Builder
-public class UploadCVRequest extends BaseAuthRequest{
+public class UploadCVRequest extends BaseAuthRequest {
     private HeaderInfo headerInfo;
     private String profileId;
     private MultipartFile file;

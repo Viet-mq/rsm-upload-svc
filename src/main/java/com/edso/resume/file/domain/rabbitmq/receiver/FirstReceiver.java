@@ -23,7 +23,7 @@ public class FirstReceiver {
             exchange = @Exchange(value = EXCHANGE_NAME, ignoreDeclarationExceptions = "true"),
             key = QUEUE_ROUTINGKEY))
     public void receiveMessage(String message) {
-        logger.info("From receiver 1: Received <{}>" , message);
+        logger.info("From receiver 1: Received <{}>", message);
         counter++;
     }
 

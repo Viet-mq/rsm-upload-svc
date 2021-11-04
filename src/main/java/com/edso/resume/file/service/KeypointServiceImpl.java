@@ -2,7 +2,9 @@ package com.edso.resume.file.service;
 
 import com.edso.resume.file.domain.db.MongoDbOnlineSyncActions;
 import com.edso.resume.file.domain.entities.KeyPoint;
-import com.edso.resume.file.domain.request.*;
+import com.edso.resume.file.domain.request.CreateKeypointRequest;
+import com.edso.resume.file.domain.request.DeleteKeyPointRequest;
+import com.edso.resume.file.domain.request.UpdateKeypointRequest;
 import com.edso.resume.lib.common.AppUtils;
 import com.edso.resume.lib.common.CollectionNameDefs;
 import com.edso.resume.lib.entities.HeaderInfo;
@@ -19,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 @Service
@@ -27,7 +28,7 @@ public class KeypointServiceImpl extends BaseService implements KeypointService 
 
     private final MongoDbOnlineSyncActions db;
 
-    public KeypointServiceImpl (MongoDbOnlineSyncActions db) {
+    public KeypointServiceImpl(MongoDbOnlineSyncActions db) {
         this.db = db;
     }
 
@@ -84,7 +85,7 @@ public class KeypointServiceImpl extends BaseService implements KeypointService 
     public BaseResponse updateKeypoint(UpdateKeypointRequest request) {
         BaseResponse response = new BaseResponse();
         String id = request.getId();
-        Bson cond = Filters.eq("id", id );
+        Bson cond = Filters.eq("id", id);
         Document idDocument = db.findOne(CollectionNameDefs.COLL_KEY_POINT, cond);
 
         if (idDocument == null) {
