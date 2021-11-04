@@ -2,7 +2,7 @@ package com.edso.resume.file.domain.repo;
 
 import com.alibaba.fastjson.JSON;
 import com.edso.resume.file.config.ElasticClient;
-import com.edso.resume.file.config.ElasticFields;
+import com.edso.resume.file.domain.elasticsearch.ElasticFields;
 import com.edso.resume.file.domain.entities.Profile;
 import com.edso.resume.file.domain.request.DeleteCVRequest;
 import com.edso.resume.file.domain.request.UpdateCVRequest;
@@ -27,13 +27,12 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+import static com.edso.resume.file.domain.elasticsearch.Elasticsearch.INDEX;
+import static com.edso.resume.file.domain.elasticsearch.Elasticsearch.TYPE;
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
 @Repository
 public class CvRepo extends BaseService {
-
-    private static final String INDEX = "resume";
-    private static final String TYPE = "profile";
 
     private final ElasticClient elasticClient;
 
@@ -71,7 +70,7 @@ public class CvRepo extends BaseService {
                 .field(ElasticFields.FULL_NAME, 3)
                 .field(ElasticFields.GENDER)
                 .field(ElasticFields.PHONE_NUMBER)
-                .field(ElasticFields.EMAIL, 5)
+                .field(ElasticFields.EMAIL, 3)
                 .field(ElasticFields.HOME_TOWN)
                 .field(ElasticFields.SCHOOL_ID)
                 .field(ElasticFields.SCHOOL_NAME)
@@ -93,11 +92,11 @@ public class CvRepo extends BaseService {
                 .field(ElasticFields.DEPARTMENT_NAME)
                 .field(ElasticFields.EVALUATION)
                 .field(ElasticFields.SCHOOL_LEVEL)
-                .field(ElasticFields.CONTENT);
+                .field(ElasticFields.CONTENT, 3);
         SearchResponse response = elasticClient.getClient()
                 .prepareSearch(INDEX)
                 .setRouting(TYPE)
-                .setSource(new SearchSourceBuilder().query(multiMatchQuery).size(size))
+                .setSource(new SearchSourceBuilder().query(multiMatchQuery).minScore(6.0F).size(size))
                 .execute()
                 .actionGet();
         SearchHit[] searchHits = response

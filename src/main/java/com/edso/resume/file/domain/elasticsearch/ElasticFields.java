@@ -1,4 +1,4 @@
-package com.edso.resume.file.config;
+package com.edso.resume.file.domain.elasticsearch;
 
 public class ElasticFields {
     public static final String ID = "id";
