@@ -14,6 +14,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -65,7 +66,7 @@ public class CvRepo extends BaseService {
         if (key.contains("@")) {
             key = key.substring(0, key.indexOf("@"));
         }
-        MultiMatchQueryBuilder multiMatchQuery = QueryBuilders.multiMatchQuery(key)
+        MultiMatchQueryBuilder multiMatchQuery = QueryBuilders.multiMatchQuery(key).type(MultiMatchQueryBuilder.Type.PHRASE)
                 .field(ElasticFields.ID)
                 .field(ElasticFields.FULL_NAME, 3)
                 .field(ElasticFields.GENDER)
@@ -96,7 +97,7 @@ public class CvRepo extends BaseService {
         SearchResponse response = elasticClient.getClient()
                 .prepareSearch(INDEX)
                 .setRouting(TYPE)
-                .setSource(new SearchSourceBuilder().query(multiMatchQuery).minScore(6.0F).size(size))
+                .setSource(new SearchSourceBuilder().query(multiMatchQuery).size(size))
                 .execute()
                 .actionGet();
         SearchHit[] searchHits = response
