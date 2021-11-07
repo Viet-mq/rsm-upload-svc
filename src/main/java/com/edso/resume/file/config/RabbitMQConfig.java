@@ -31,6 +31,9 @@ public class RabbitMQConfig {
     @Value("${spring.rabbitmq.host}")
     private String host;
 
+    @Value("${spring.rabbitmq.port}")
+    private int port;
+
     @Bean
     Queue queue() {
         return new Queue(queue, true);
@@ -52,7 +55,7 @@ public class RabbitMQConfig {
 
     @Bean
     public ConnectionFactory connectionFactory() {
-        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(host);
+        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(host, port);
         cachingConnectionFactory.setUsername(username);
         cachingConnectionFactory.setPassword(password);
         return cachingConnectionFactory;
