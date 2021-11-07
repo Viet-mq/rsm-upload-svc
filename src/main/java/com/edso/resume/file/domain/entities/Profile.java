@@ -6,6 +6,7 @@ import lombok.Data;
 public class Profile {
     private String id;
     private String fullName;
+    private String gender;
     private String phoneNumber;
     private String email;
     private Long dateOfBirth;
@@ -24,7 +25,16 @@ public class Profile {
     private String cvType;
     private String statusCVId;
     private String statusCVName;
+    private String talentPoolId;
+    private String talentPoolName;
+    private String schoolLevel;
+    private String evaluation;
+    private Long lastApply;
+    private String departmentId;
+    private String departmentName;
     private String content;
-    private String url;
+    private String urlCV;
+    private String image;
     private String fileName;
+
 }

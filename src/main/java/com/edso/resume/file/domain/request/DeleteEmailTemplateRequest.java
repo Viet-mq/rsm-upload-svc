@@ -1,15 +1,16 @@
 package com.edso.resume.file.domain.request;
 
 import com.edso.resume.lib.response.BaseResponse;
+import com.google.common.base.Strings;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.elasticsearch.common.Strings;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @ToString(callSuper = true)
-public class DeleteCVRequest extends BaseAuthRequest {
+public class DeleteEmailTemplateRequest extends BaseAuthRequest {
+
     private String id;
 
     public BaseResponse validate() {

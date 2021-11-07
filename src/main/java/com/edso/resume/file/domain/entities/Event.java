@@ -10,4 +10,10 @@ import lombok.*;
 public class Event {
     private String type;
     private Profile profile;
+    private Image image;
+
+    public Event(String type, Profile profile) {
+        this.type = type;
+        this.profile = profile;
+    }
 }

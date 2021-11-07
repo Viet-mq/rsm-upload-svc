@@ -1,7 +1,7 @@
 package com.edso.resume.file.service;
 
-import com.edso.resume.file.domain.entities.Profile;
 import com.edso.resume.file.domain.entities.Event;
+import com.edso.resume.file.domain.entities.Profile;
 import com.edso.resume.file.domain.repo.CvRepo;
 import com.edso.resume.file.domain.request.DeleteCVRequest;
 import com.edso.resume.file.domain.request.UpdateCVRequest;
@@ -11,7 +11,7 @@ import com.edso.resume.lib.response.GetArrayResponse;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
 
 @Service
 public class CVServiceImpl extends BaseService implements CVService {
@@ -32,32 +32,44 @@ public class CVServiceImpl extends BaseService implements CVService {
         List<Profile> profiles = cvRepo.findAll();
         GetArrayResponse<Profile> response = new GetArrayResponse<>();
         response.setSuccess(profiles.size(), profiles);
-        logger.info("View all: {}" , profiles);
         return response;
     }
 
     @SneakyThrows
     @Override
-    public GetArrayResponse<Profile> viewByKey(HeaderInfo headerInfo, String key) {
-        List<Profile> profiles = cvRepo.multiMatchQuery(key);
+    public GetArrayResponse<Profile> viewByKey(HeaderInfo headerInfo, String key, Integer size) {
+        List<Profile> profiles;
+        if (size != null) {
+            profiles = cvRepo.multiMatchQuery(key, size);
+        } else profiles = cvRepo.multiMatchQuery(key, 10);
         GetArrayResponse<Profile> response = new GetArrayResponse<>();
         response.setSuccess(profiles.size(), profiles);
-        logger.info("View by key {}: {}", key, profiles);
         return response;
     }
 
     @SneakyThrows
     @Override
-    public BaseResponse update(HeaderInfo header, UpdateCVRequest updateCVRequest){
+    public BaseResponse update(UpdateCVRequest updateCVRequest) {
         BaseResponse response = new BaseResponse();
+        Profile profile = cvRepo.searchById(updateCVRequest.getId());
+        if (profile == null) {
+            response.setFailed("Id không tồn tại");
+            return response;
+        }
         String result = cvRepo.update(updateCVRequest);
         response.setSuccess(result);
         return response;
     }
 
+    @SneakyThrows
     @Override
-    public BaseResponse delete(HeaderInfo headerInfo, DeleteCVRequest deleteCVRequest) {
+    public BaseResponse delete(DeleteCVRequest deleteCVRequest) {
         BaseResponse response = new BaseResponse();
+        Profile profile = cvRepo.searchById(deleteCVRequest.getId());
+        if (profile == null) {
+            response.setFailed("Id không tồn tại");
+            return response;
+        }
         String result = cvRepo.delete(deleteCVRequest);
         response.setSuccess(result);
         return response;
@@ -72,27 +84,34 @@ public class CVServiceImpl extends BaseService implements CVService {
             if (profile != null) {
                 UpdateCVRequest request = new UpdateCVRequest();
                 request.setId(profile.getId());
-                request.setFullName(eventProfile.getFullName()!=null?eventProfile.getFullName(): profile.getFullName());
-                request.setPhoneNumber(eventProfile.getPhoneNumber()!=null?eventProfile.getPhoneNumber(): profile.getPhoneNumber());
-                request.setEmail(eventProfile.getEmail()!=null?eventProfile.getEmail(): profile.getEmail());
-                request.setDateOfApply(eventProfile.getDateOfApply()!=null?eventProfile.getDateOfApply(): profile.getDateOfApply());
-                request.setHometown(eventProfile.getHometown()!=null?eventProfile.getHometown(): profile.getHometown());
-                request.setSchoolId(eventProfile.getSchoolId()!=null?eventProfile.getSchoolId(): profile.getSchoolId());
-                request.setSchoolName(eventProfile.getSchoolName()!=null?eventProfile.getSchoolName(): profile.getSchoolName());
-                request.setJobId(eventProfile.getJobId()!=null?eventProfile.getJobId(): profile.getJobId());
-                request.setJobName(eventProfile.getJobName()!=null?eventProfile.getJobName(): profile.getJobName());
-                request.setLevelJobId(eventProfile.getLevelJobId()!=null?eventProfile.getLevelJobId(): profile.getLevelJobId());
-                request.setLevelJobName(eventProfile.getLevelJobName()!=null?eventProfile.getLevelJobName(): profile.getLevelJobName());
-                request.setCv(eventProfile.getCv()!=null?eventProfile.getCv(): profile.getCv());
-                request.setSourceCVId(eventProfile.getSourceCVId()!=null?eventProfile.getSourceCVId(): profile.getSourceCVId());
-                request.setSourceCVName(eventProfile.getSourceCVName()!=null?eventProfile.getSourceCVName(): profile.getSourceCVName());
-                request.setHrRef(eventProfile.getHrRef()!=null?eventProfile.getHrRef(): profile.getHrRef());
-                request.setDateOfBirth(eventProfile.getDateOfBirth()!=null?eventProfile.getDateOfBirth(): profile.getDateOfBirth());
-                request.setCvType(eventProfile.getCvType()!=null?eventProfile.getCvType(): profile.getCvType());
+                request.setFullName(eventProfile.getFullName() != null ? eventProfile.getFullName() : profile.getFullName());
+                request.setPhoneNumber(eventProfile.getPhoneNumber() != null ? eventProfile.getPhoneNumber() : profile.getPhoneNumber());
+                request.setGender(eventProfile.getGender() != null ? eventProfile.getGender() : profile.getGender());
+                request.setEmail(eventProfile.getEmail() != null ? eventProfile.getEmail() : profile.getEmail());
+                request.setDateOfApply(eventProfile.getDateOfApply() != null ? eventProfile.getDateOfApply() : profile.getDateOfApply());
+                request.setHometown(eventProfile.getHometown() != null ? eventProfile.getHometown() : profile.getHometown());
+                request.setSchoolId(eventProfile.getSchoolId() != null ? eventProfile.getSchoolId() : profile.getSchoolId());
+                request.setSchoolName(eventProfile.getSchoolName() != null ? eventProfile.getSchoolName() : profile.getSchoolName());
+                request.setJobId(eventProfile.getJobId() != null ? eventProfile.getJobId() : profile.getJobId());
+                request.setJobName(eventProfile.getJobName() != null ? eventProfile.getJobName() : profile.getJobName());
+                request.setLevelJobId(eventProfile.getLevelJobId() != null ? eventProfile.getLevelJobId() : profile.getLevelJobId());
+                request.setLevelJobName(eventProfile.getLevelJobName() != null ? eventProfile.getLevelJobName() : profile.getLevelJobName());
+                request.setCv(eventProfile.getCv() != null ? eventProfile.getCv() : profile.getCv());
+                request.setSourceCVId(eventProfile.getSourceCVId() != null ? eventProfile.getSourceCVId() : profile.getSourceCVId());
+                request.setSourceCVName(eventProfile.getSourceCVName() != null ? eventProfile.getSourceCVName() : profile.getSourceCVName());
+                request.setHrRef(eventProfile.getHrRef() != null ? eventProfile.getHrRef() : profile.getHrRef());
+                request.setDateOfBirth(eventProfile.getDateOfBirth() != null ? eventProfile.getDateOfBirth() : profile.getDateOfBirth());
+                request.setCvType(eventProfile.getCvType() != null ? eventProfile.getCvType() : profile.getCvType());
+                request.setTalentPoolId(eventProfile.getTalentPoolId() != null ? eventProfile.getTalentPoolId() : profile.getTalentPoolId());
+                request.setTalentPoolName(eventProfile.getTalentPoolName() != null ? eventProfile.getTalentPoolName() : profile.getTalentPoolName());
+                request.setLastApply(eventProfile.getLastApply() != null ? eventProfile.getLastApply() : profile.getLastApply());
+                request.setSchoolLevel(eventProfile.getSchoolLevel() != null ? eventProfile.getSchoolLevel() : profile.getSchoolLevel());
+                request.setEvaluation(eventProfile.getEvaluation() != null ? eventProfile.getEvaluation() : profile.getEvaluation());
+                request.setDepartmentId(eventProfile.getDepartmentId() != null ? eventProfile.getDepartmentId() : profile.getDepartmentId());
+                request.setDepartmentName(eventProfile.getDepartmentName() != null ? eventProfile.getDepartmentName() : profile.getDepartmentName());
                 cvRepo.update(request);
-                logger.info("Update Profile id: {}, value: {}", profile.getId(), profile);
-            }
-            else logger.info("Update Profile failed: Invalid id");
+                logger.info("=>Update Profile id: {}", profile.getId());
+            } else logger.info("=>Update Profile failed: Invalid id");
         }
     }
 
@@ -104,33 +123,51 @@ public class CVServiceImpl extends BaseService implements CVService {
             DeleteCVRequest deleteCVRequest = new DeleteCVRequest();
             deleteCVRequest.setId(profile.getId());
             cvRepo.delete(deleteCVRequest);
-            logger.info("Delete Profile id: {}", profile.getId());
-        }
-        else logger.info("Delete Profile failed: Invalid id");
+            logger.info("=>Delete Profile id: {}", profile.getId());
+        } else logger.info("=>Delete Profile failed: Invalid id");
     }
 
     @SneakyThrows
     @Override
     public void create(Event event) {
         Profile profile = event.getProfile();
-        if(cvRepo.searchById(profile.getId()) != null) {
-            logger.info("Create Profile failed: ID already exists");
+        if (cvRepo.searchById(profile.getId()) != null) {
+            logger.info("=>Create Profile failed: ID already exists");
             return;
         }
         cvRepo.save(profile);
-        logger.info("Create Profile id : {}", profile.getId());
+        logger.info("=>Create Profile id : {}", profile.getId());
     }
 
     @SneakyThrows
     @Override
     public void updateStatus(Event event) {
         Profile profile = cvRepo.searchById(event.getProfile().getId());
-        if(profile != null){
+        if (profile != null) {
             cvRepo.updateStatus(event.getProfile().getId(), event.getProfile().getStatusCVId(), event.getProfile().getStatusCVName());
-            logger.info("Update Profile status id: {}, statusId {}, statusName {}", profile.getId()
+            logger.info("=>Update Profile status id: {}, statusId {}, statusName {}", profile.getId()
                     , event.getProfile().getStatusCVId()
                     , event.getProfile().getStatusCVName());
-        }
-        else logger.info("Update status failed: Invalid ID");
+        } else logger.info("=>Update status failed: Invalid ID");
+    }
+
+    @SneakyThrows
+    @Override
+    public void updateImages(Event event) {
+        Profile profile = cvRepo.searchById(event.getImage().getId());
+        if (profile != null) {
+            cvRepo.updateImages(event.getImage().getId(), event.getImage().getUrl());
+            logger.info("=>Update Image to id: {}, url_image: {}", profile.getId(), event.getImage().getUrl());
+        } else logger.info("Update image failed: Invalid ID");
+    }
+
+    @SneakyThrows
+    @Override
+    public void deleteImages(Event event) {
+        Profile profile = cvRepo.searchById(event.getImage().getId());
+        if (profile != null) {
+            cvRepo.deleteImages(event.getImage().getId());
+            logger.info("=>Delete Image in id: {}", profile.getId());
+        } else logger.info("Delete image failed: Invalid ID");
     }
 }

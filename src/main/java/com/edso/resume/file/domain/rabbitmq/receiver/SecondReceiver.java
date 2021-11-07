@@ -20,7 +20,7 @@ public class SecondReceiver {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private Integer counter=0;
+    private Integer counter = 0;
 
     private CountDownLatch latch = new CountDownLatch(1);
 
@@ -29,7 +29,7 @@ public class SecondReceiver {
             exchange = @Exchange(value = EXCHANGE_NAME),
             key = QUEUE_ROUTINGKEY))
     public void receiveMessage(String message) {
-        logger.info("From receiver 2: Received <{}>" , message);
+        logger.info("From receiver 2: Received <{}>", message);
         counter++;
     }
 
@@ -38,7 +38,7 @@ public class SecondReceiver {
     }
 
     public void initCounter() {
-        this.counter=0;
+        this.counter = 0;
     }
 }
 

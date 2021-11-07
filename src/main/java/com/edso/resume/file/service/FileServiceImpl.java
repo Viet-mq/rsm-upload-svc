@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.Iterator;
 
 @Service
-public class FileServiceImpl implements FileService{
+public class FileServiceImpl implements FileService {
 
     public String PdfToText(File pdfFile) throws IOException {
         PDFParser pdfParser = new PDFParser(new RandomAccessFile(pdfFile, "r"));
@@ -41,17 +41,16 @@ public class FileServiceImpl implements FileService{
             XWPFDocument file = new XWPFDocument(OPCPackage.open(fis));
             XWPFWordExtractor extractor = new XWPFWordExtractor(file);
             return extractor.getText();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         return null;
     }
 
-    public String XlsxToText(File xlsxFile){
+    public String XlsxToText(File xlsxFile) {
         StringBuilder stringBuilder = new StringBuilder();
-        try
-        {
+        try {
             FileInputStream file = new FileInputStream(xlsxFile);
             XSSFWorkbook workbook = new XSSFWorkbook(file);
             XSSFSheet sheet = workbook.getSheetAt(0);
@@ -74,9 +73,7 @@ public class FileServiceImpl implements FileService{
                 stringBuilder.append("\n");
             }
             file.close();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
