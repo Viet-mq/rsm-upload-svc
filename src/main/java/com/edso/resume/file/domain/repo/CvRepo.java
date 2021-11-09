@@ -14,7 +14,6 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
-import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -66,7 +65,7 @@ public class CvRepo extends BaseService {
         if (key.contains("@")) {
             key = key.substring(0, key.indexOf("@"));
         }
-        MultiMatchQueryBuilder multiMatchQuery = QueryBuilders.multiMatchQuery(key).type(MultiMatchQueryBuilder.Type.PHRASE)
+        MultiMatchQueryBuilder multiMatchQuery = QueryBuilders.multiMatchQuery(key).type(MultiMatchQueryBuilder.Type.PHRASE_PREFIX)
                 .field(ElasticFields.ID)
                 .field(ElasticFields.FULL_NAME, 3)
                 .field(ElasticFields.GENDER)
@@ -76,7 +75,7 @@ public class CvRepo extends BaseService {
                 .field(ElasticFields.SCHOOL_ID)
                 .field(ElasticFields.SCHOOL_NAME)
                 .field(ElasticFields.JOB_ID)
-                .field(ElasticFields.JOB_NAME, 2)
+                .field(ElasticFields.JOB_NAME, 3)
                 .field(ElasticFields.LEVEL_JOB_ID)
                 .field(ElasticFields.LEVEL_JOB_NAME)
                 .field(ElasticFields.CV, 2)
@@ -90,7 +89,7 @@ public class CvRepo extends BaseService {
                 .field(ElasticFields.TALENT_POOL_NAME)
                 .field(ElasticFields.URL_CV)
                 .field(ElasticFields.IMAGE)
-                .field(ElasticFields.DEPARTMENT_NAME)
+                .field(ElasticFields.DEPARTMENT_NAME, 3)
                 .field(ElasticFields.EVALUATION)
                 .field(ElasticFields.SCHOOL_LEVEL)
                 .field(ElasticFields.CONTENT, 3);
