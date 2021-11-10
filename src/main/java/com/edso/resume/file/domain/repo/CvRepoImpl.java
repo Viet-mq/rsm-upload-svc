@@ -3,6 +3,7 @@ package com.edso.resume.file.domain.repo;
 import com.alibaba.fastjson.JSON;
 import com.edso.resume.file.config.ElasticClient;
 import com.edso.resume.file.domain.elasticsearch.ElasticFields;
+import com.edso.resume.file.domain.elasticsearch.KeywordProcessing;
 import com.edso.resume.file.domain.entities.Profile;
 import com.edso.resume.file.domain.request.DeleteCVRequest;
 import com.edso.resume.file.domain.request.UpdateCVRequest;
@@ -14,6 +15,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -36,8 +38,11 @@ public class CvRepoImpl extends BaseService implements CvRepo{
 
     private final ElasticClient elasticClient;
 
-    public CvRepoImpl(ElasticClient elasticClient) {
+    private final KeywordProcessing keywordProcessing;
+
+    public CvRepoImpl(ElasticClient elasticClient, KeywordProcessing keywordProcessing) {
         this.elasticClient = elasticClient;
+        this.keywordProcessing = keywordProcessing;
     }
 
     public List<Profile> findAll() {
@@ -62,41 +67,11 @@ public class CvRepoImpl extends BaseService implements CvRepo{
     }
 
     public List<Profile> multiMatchQuery(String key, int size) {
-        if (key.contains("@")) {
-            key = key.substring(0, key.indexOf("@"));
-        }
-        MultiMatchQueryBuilder multiMatchQuery = QueryBuilders.multiMatchQuery(key).type(MultiMatchQueryBuilder.Type.PHRASE_PREFIX)
-                .field(ElasticFields.ID)
-                .field(ElasticFields.FULL_NAME, 3)
-                .field(ElasticFields.GENDER)
-                .field(ElasticFields.PHONE_NUMBER)
-                .field(ElasticFields.EMAIL, 3)
-                .field(ElasticFields.HOME_TOWN)
-                .field(ElasticFields.SCHOOL_ID)
-                .field(ElasticFields.SCHOOL_NAME)
-                .field(ElasticFields.JOB_ID)
-                .field(ElasticFields.JOB_NAME, 3)
-                .field(ElasticFields.LEVEL_JOB_ID)
-                .field(ElasticFields.LEVEL_JOB_NAME)
-                .field(ElasticFields.CV, 2)
-                .field(ElasticFields.SOURCE_CV_ID)
-                .field(ElasticFields.SOURCE_CV_NAME)
-                .field(ElasticFields.HR_REF)
-                .field(ElasticFields.CV_TYPE)
-                .field(ElasticFields.STATUS_CV_ID)
-                .field(ElasticFields.STATUS_CV_NAME)
-                .field(ElasticFields.TALENT_POOL_ID)
-                .field(ElasticFields.TALENT_POOL_NAME)
-                .field(ElasticFields.URL_CV)
-                .field(ElasticFields.IMAGE)
-                .field(ElasticFields.DEPARTMENT_NAME, 3)
-                .field(ElasticFields.EVALUATION)
-                .field(ElasticFields.SCHOOL_LEVEL)
-                .field(ElasticFields.CONTENT, 3);
+        QueryBuilder query = keywordProcessing.queryKey(key);
         SearchResponse response = elasticClient.getClient()
                 .prepareSearch(INDEX)
                 .setRouting(TYPE)
-                .setSource(new SearchSourceBuilder().query(multiMatchQuery).size(size))
+                .setSource(new SearchSourceBuilder().query(query).size(size).minScore(2.0F))
                 .execute()
                 .actionGet();
         SearchHit[] searchHits = response
