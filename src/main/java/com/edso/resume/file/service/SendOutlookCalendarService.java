@@ -75,6 +75,7 @@ public class SendOutlookCalendarService extends BaseService implements CalendarS
 
             while (index < 10 && result == null) {
                 result = sender.postJson(url, headers, params);
+                Thread.sleep(3000);
                 index++;
             }
 
