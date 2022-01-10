@@ -1,4 +1,4 @@
-package com.edso.resume.file.Schedule;
+package com.edso.resume.file.schedule;
 
 import com.edso.resume.file.domain.entities.OutlookSessionEntity;
 import com.edso.resume.file.domain.repo.SessionRepository;
