@@ -12,16 +12,16 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/calendar")
-public class SendOutlookCalendarController extends BaseController {
+public class SendCalendarController extends BaseController {
 
     private final CalendarService calendarService;
 
-    public SendOutlookCalendarController(@Qualifier("SendOutlookCalendarService") CalendarService sendOutlookCalendarService) {
+    public SendCalendarController(@Qualifier("SendOutlookCalendarService") CalendarService sendOutlookCalendarService) {
         this.calendarService = sendOutlookCalendarService;
     }
 
     @PostMapping("/send")
-    public BaseResponse sendOutlookCalendar(@RequestHeader Map<String, String> headers, @RequestBody SendCalendarRequest request) {
+    public BaseResponse sendCalendar(@RequestHeader Map<String, String> headers, @RequestBody SendCalendarRequest request) {
         BaseResponse response = new BaseResponse();
         HeaderInfo headerInfo = ParseHeaderUtil.build(headers);
         logger.info("=>sendOutlookCalendar u: {}, req: {}", headerInfo, request);
