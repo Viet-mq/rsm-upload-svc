@@ -58,6 +58,7 @@ public class OutlookCalendarSchedule {
 
             while (index < 10 && object == null) {
                 object = sender1.postForm(url, null, body);
+                Thread.sleep(3000);
                 index++;
             }
 
