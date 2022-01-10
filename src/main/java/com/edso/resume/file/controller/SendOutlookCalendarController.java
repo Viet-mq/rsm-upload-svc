@@ -1,25 +1,27 @@
 package com.edso.resume.file.controller;
 
-import com.edso.resume.file.domain.request.SendOutlookCalendarRequest;
-import com.edso.resume.file.service.SendOutlookCalendarService;
+import com.edso.resume.file.domain.request.SendCalendarRequest;
+import com.edso.resume.file.service.CalendarService;
 import com.edso.resume.lib.entities.HeaderInfo;
 import com.edso.resume.lib.response.BaseResponse;
 import com.edso.resume.lib.utils.ParseHeaderUtil;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
 @RestController
 @RequestMapping("/calendar")
-public class SendOutlookCalendarController extends BaseController{
-    private final SendOutlookCalendarService sendOutlookCalendarService;
+public class SendOutlookCalendarController extends BaseController {
 
-    public SendOutlookCalendarController(SendOutlookCalendarService sendOutlookCalendarService) {
-        this.sendOutlookCalendarService = sendOutlookCalendarService;
+    private final CalendarService calendarService;
+
+    public SendOutlookCalendarController(@Qualifier("SendOutlookCalendarService") CalendarService sendOutlookCalendarService) {
+        this.calendarService = sendOutlookCalendarService;
     }
 
     @PostMapping("/send")
-    public BaseResponse sendOutlookCalendar(@RequestHeader Map<String, String> headers, @RequestBody SendOutlookCalendarRequest request) {
+    public BaseResponse sendOutlookCalendar(@RequestHeader Map<String, String> headers, @RequestBody SendCalendarRequest request) {
         BaseResponse response = new BaseResponse();
         HeaderInfo headerInfo = ParseHeaderUtil.build(headers);
         logger.info("=>sendOutlookCalendar u: {}, req: {}", headerInfo, request);
@@ -29,10 +31,11 @@ public class SendOutlookCalendarController extends BaseController{
             response = request.validate();
             if (response == null) {
                 request.setInfo(headerInfo);
-                response = sendOutlookCalendarService.sendOutlookCalendar(request);
+                response = calendarService.sendCalendar(request);
             }
         }
         logger.info("<=sendOutlookCalendar u: {}, req: {}, resp: {}", headerInfo, request, response);
         return response;
     }
+
 }

@@ -12,7 +12,7 @@ import java.util.List;
 @ToString(callSuper = true)
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class SendOutlookCalendarRequest extends BaseAuthRequest {
+public class SendCalendarRequest extends BaseAuthRequest {
     private String subject;
     private String job;
     private String content;
