@@ -41,6 +41,7 @@ public class OutlookCalendarSchedule {
 
     @Scheduled(fixedRate = 3000000)
     public void refreshTokenOutlook() {
+
         HttpSender sender1 = new HttpSenderImpl();
         Map<String, String> body = new HashMap<>();
         body.put("client_id", clientId);
@@ -49,12 +50,40 @@ public class OutlookCalendarSchedule {
         body.put("redirect_uri", redirectUri);
         body.put("grant_type", grantType);
         body.put("client_secret", clientSecret);
-        JsonObject object = sender1.postForm(url, null, body);
-        OutlookSessionEntity outlookSessionEntity = OutlookSessionEntity.builder()
-                .id("outlook")
-                .token(object.get("access_token").toString().replace("\"", ""))
-                .build();
-        sessionRepository.addSession(outlookSessionEntity);
-        logger.info("refreshTokenOutlook outlookSessionEntity: {}", outlookSessionEntity);
+
+        try {
+
+            int index = 0;
+            JsonObject object = null;
+
+            while (index < 10 && object == null) {
+                object = sender1.postForm(url, null, body);
+                Thread.sleep(3000);
+                index++;
+            }
+
+            if (object == null) {
+                return;
+            }
+
+            if (!object.has("access_token") || object.get("access_token").isJsonNull()) {
+                return;
+            }
+
+            String token = object.get("access_token").toString().replace("\"", "");
+
+            OutlookSessionEntity outlookSessionEntity = OutlookSessionEntity.builder()
+                    .id("outlook")
+                    .token(token)
+                    .build();
+
+            sessionRepository.addSession(outlookSessionEntity);
+            logger.info("refreshTokenOutlook outlookSessionEntity: {}", outlookSessionEntity);
+
+        } catch (Throwable ex) {
+            logger.error("Ex: ", ex);
+        }
+
     }
+
 }
