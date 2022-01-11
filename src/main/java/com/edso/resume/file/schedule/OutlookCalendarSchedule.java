@@ -18,7 +18,7 @@ import java.util.Map;
 public class OutlookCalendarSchedule {
 
     private final SessionRepository sessionRepository;
-    private static final Logger logger = LoggerFactory.getLogger(OutlookCalendarSchedule.class);
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Value("${refresh-token.url}")
     private String url;
     @Value("${refresh-token.client_id}")
