@@ -2,7 +2,6 @@ package com.edso.resume.file.schedule;
 
 import com.edso.resume.file.domain.entities.OutlookSessionEntity;
 import com.edso.resume.file.domain.repo.SessionRepository;
-import com.edso.resume.file.publisher.CVPublisher;
 import com.edso.resume.lib.http.HttpSender;
 import com.edso.resume.lib.http.HttpSenderImpl;
 import com.google.gson.JsonObject;
@@ -19,7 +18,7 @@ import java.util.Map;
 public class OutlookCalendarSchedule {
 
     private final SessionRepository sessionRepository;
-    private static final Logger logger = LoggerFactory.getLogger(CVPublisher.class);
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Value("${refresh-token.url}")
     private String url;
     @Value("${refresh-token.client_id}")
