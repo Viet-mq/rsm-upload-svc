@@ -131,6 +131,10 @@ public class CVServiceImpl extends BaseService implements CVService {
     @Override
     public void create(Event event) {
         Profile profile = event.getProfile();
+        if (profile.getId() == null){
+            logger.info("=>Create Profile failed: profile ID is null");
+            return;
+        }
         if (cvRepo.searchById(profile.getId()) != null) {
             logger.info("=>Create Profile failed: ID already exists");
             return;
@@ -142,6 +146,10 @@ public class CVServiceImpl extends BaseService implements CVService {
     @SneakyThrows
     @Override
     public void updateStatus(Event event) {
+        if (event.getProfile().getId() == null){
+            logger.info("=>Update status failed: profile ID is null");
+            return;
+        }
         Profile profile = cvRepo.searchById(event.getProfile().getId());
         if (profile != null) {
             cvRepo.updateStatus(event.getProfile().getId(), event.getProfile().getStatusCVId(), event.getProfile().getStatusCVName());
@@ -154,20 +162,28 @@ public class CVServiceImpl extends BaseService implements CVService {
     @SneakyThrows
     @Override
     public void updateImages(Event event) {
+        if (event.getImage().getId() == null){
+            logger.info("=>Update Image failed: profile ID is null");
+            return;
+        }
         Profile profile = cvRepo.searchById(event.getImage().getId());
         if (profile != null) {
             cvRepo.updateImages(event.getImage().getId(), event.getImage().getUrl());
             logger.info("=>Update Image to id: {}, url_image: {}", profile.getId(), event.getImage().getUrl());
-        } else logger.info("Update image failed: Invalid ID");
+        } else logger.info("Update Image failed: Invalid ID");
     }
 
     @SneakyThrows
     @Override
     public void deleteImages(Event event) {
+        if (event.getImage().getId() == null){
+            logger.info("=>Delete Image failed: profile ID is null");
+            return;
+        }
         Profile profile = cvRepo.searchById(event.getImage().getId());
         if (profile != null) {
             cvRepo.deleteImages(event.getImage().getId());
             logger.info("=>Delete Image in id: {}", profile.getId());
-        } else logger.info("Delete image failed: Invalid ID");
+        } else logger.info("Delete Image failed: Invalid ID");
     }
 }

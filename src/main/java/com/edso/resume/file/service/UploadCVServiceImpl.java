@@ -4,9 +4,10 @@ import com.edso.resume.file.domain.entities.CV;
 import com.edso.resume.file.domain.entities.Profile;
 import com.edso.resume.file.domain.repo.CvRepo;
 import com.edso.resume.file.domain.request.UploadCVRequest;
-import com.edso.resume.file.publisher.CVPublisher;
+import com.edso.resume.file.domain.rabbitmq.publisher.CVPublisher;
 import com.edso.resume.lib.response.BaseResponse;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,13 +28,21 @@ public class UploadCVServiceImpl extends BaseService implements UploadCVService 
 
     final CVPublisher cvPublisher;
 
-    final FileService fileService;
+    final FileService pdfToText;
+    final FileService docxToText;
+    final FileService xlsxToText;
 
     final CvRepo cvRepo;
 
-    public UploadCVServiceImpl(CVPublisher cvPublisher, FileService fileService, CvRepo cvRepo) {
+    public UploadCVServiceImpl(CVPublisher cvPublisher,
+                               @Qualifier("filePdfToText") FileService pdfToText,
+                               @Qualifier("fileDocxToText") FileService docxToText,
+                               @Qualifier("fileXlsxToText") FileService xlsxToText,
+                               CvRepo cvRepo) {
         this.cvPublisher = cvPublisher;
-        this.fileService = fileService;
+        this.pdfToText = pdfToText;
+        this.docxToText = docxToText;
+        this.xlsxToText = xlsxToText;
         this.cvRepo = cvRepo;
     }
 
@@ -51,13 +60,13 @@ public class UploadCVServiceImpl extends BaseService implements UploadCVService 
 
         switch (extension) {
             case "pdf":
-                textParsed = fileService.PdfToText(file);
+                textParsed = pdfToText.convertToText(file);
                 break;
             case "docx":
-                textParsed = fileService.DocxToText(file);
+                textParsed = docxToText.convertToText(file);
                 break;
             case "xlsx":
-                textParsed = fileService.XlsxToText(file);
+                textParsed = xlsxToText.convertToText(file);
                 break;
             default:
                 baseResponse.setFailed("Invalid file");

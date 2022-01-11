@@ -1,4 +1,4 @@
-package com.edso.resume.file.publisher;
+package com.edso.resume.file.domain.rabbitmq.publisher;
 
 import com.edso.resume.file.domain.entities.CV;
 import com.rabbitmq.client.AMQP.BasicProperties;

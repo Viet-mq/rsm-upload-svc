@@ -156,11 +156,18 @@ public class EmailServiceImpl extends BaseService implements EmailService {
                     replacementStrings.put(KeyPointConfig.USER_FULL_NAME, headerInfo.getFullName());
                     break;
                 case KeyPointConfig.PREFIX:
+                    String gender = AppUtils.parseString(profile.get(DbKeyConfig.GENDER));
+                    if (gender.equals("Nam"))
+                        replacementStrings.put(KeyPointConfig.PREFIX, "Anh");
+                    else
+                        replacementStrings.put(KeyPointConfig.PREFIX, "Chị");
+                    break;
                 case KeyPointConfig.USER_EMAIL:
                 case KeyPointConfig.USER_PHONE:
                 case KeyPointConfig.NOTE:
                 case KeyPointConfig.OFFICES:
                 case KeyPointConfig.DEPT:
+                    replacementStrings.put(KeyPointConfig.DEPT, AppUtils.parseString(profile.get(DbKeyConfig.DEPARTMENT_NAME)));
                 case KeyPointConfig.JOB_UPDATE_LINK:
                 case KeyPointConfig.JOB_LINK:
                     break;
@@ -171,7 +178,7 @@ public class EmailServiceImpl extends BaseService implements EmailService {
         StrSubstitutor sub = new StrSubstitutor(replacementStrings, "{", "}");
         String result = sub.replace(content);
 
-        return sendMailMultipart(AppUtils.parseString(profile.get("email")),
+        return sendMailMultipart(AppUtils.parseString(profile.get(DbKeyConfig.EMAIL)),
                 AppUtils.parseString(template.get("subject")),
                 result, file);
     }
