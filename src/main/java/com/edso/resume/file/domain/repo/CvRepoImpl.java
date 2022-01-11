@@ -82,6 +82,23 @@ public class CvRepoImpl extends BaseService implements CvRepo{
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<Profile> matchQuery(String key, int size) {
+        QueryBuilder query = keywordProcessing.queryKey(key);
+        SearchResponse response = elasticClient.getClient()
+                .prepareSearch(INDEX)
+                .setRouting(TYPE)
+                .setSource(new SearchSourceBuilder().query(query).size(size))
+                .execute()
+                .actionGet();
+        SearchHit[] searchHits = response
+                .getHits()
+                .getHits();
+        return Arrays.stream(searchHits)
+                .map(hit -> JSON.parseObject(hit.getSourceAsString(), Profile.class))
+                .collect(Collectors.toList());
+    }
+
     public Profile searchById(String id) {
         MultiMatchQueryBuilder query = QueryBuilders.multiMatchQuery(id, ElasticFields.ID);
         SearchResponse response = elasticClient.getClient()
