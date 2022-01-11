@@ -12,17 +12,22 @@ public class KeywordProcessing {
 
     private final QueryBuilderRepo normalRepo;
     private final QueryBuilderRepo emailRepo;
+    private final QueryBuilderRepo matchRepo;
 
     public KeywordProcessing(
             @Qualifier("queryNormalRepo") QueryBuilderRepo normalRepo,
-            @Qualifier("queryFindByEmail") QueryBuilderRepo emailRepo) {
+            @Qualifier("queryFindByEmail") QueryBuilderRepo emailRepo,
+            @Qualifier("matchQuery") QueryBuilderRepo matchRepo){
         this.normalRepo = normalRepo;
         this.emailRepo = emailRepo;
+        this.matchRepo = matchRepo;
     }
 
     public QueryBuilder queryKey(String key) {
         if (key.contains("@"))
             return emailRepo.build(key);
+        if (key.contains("\""))
+            return matchRepo.build(key);
         return normalRepo.build(key);
     }
 

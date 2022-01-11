@@ -10,6 +10,7 @@ import java.util.List;
 public interface CvRepo {
     List<Profile> findAll();
     List<Profile> multiMatchQuery(String key, int size);
+    List<Profile> matchQuery(String key, int size);
     Profile searchById(String id);
     String delete(DeleteCVRequest deleteCVRequest);
     String update(UpdateCVRequest updateCVRequest) throws IOException;

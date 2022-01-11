@@ -39,9 +39,13 @@ public class CVServiceImpl extends BaseService implements CVService {
     @Override
     public GetArrayResponse<Profile> viewByKey(HeaderInfo headerInfo, String key, Integer size) {
         List<Profile> profiles;
-        if (size != null) {
+        if (key.startsWith("\"")){
+            profiles = cvRepo.matchQuery(key, size);
+        }
+        else if (size != null) {
             profiles = cvRepo.multiMatchQuery(key, size);
-        } else profiles = cvRepo.multiMatchQuery(key, 10);
+        }
+        else profiles = cvRepo.multiMatchQuery(key, 10);
         GetArrayResponse<Profile> response = new GetArrayResponse<>();
         response.setSuccess(profiles.size(), profiles);
         return response;
