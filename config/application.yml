@@ -5,17 +5,17 @@ spring:
     host: 18.139.222.137
     port: 5672
     username: admin
-    password: rabb@t@7911
-    exchange: event.exchange1
-    queue: event.queue1
-    routingkey: event.routingkey1
+    password: adminlgsp@123
+    exchange: event.exchange
+    queue: event.queue
+    routingkey: event.routingkey
     CV:
       exchange: cv.exchange
       queue: cv.queue
       routingkey: cv.routingkey
   redis:
-    host: '103.152.165.53'
-    port: 9981
+    host: '18.139.222.137'
+    port: 6379
     password: 'hhhhhhhhhhsdvnsldvmsdlvmsdlkvmsdv'
     lettuce:
       pool:
@@ -30,7 +30,7 @@ spring:
       max-request-size: 100MB
   data:
     mongodb:
-      host: 103.152.165.53
+      host: 18.139.222.137
       port: 27017
       database: 'resume'
       username: 'resume'
