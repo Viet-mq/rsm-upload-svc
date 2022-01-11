@@ -2,21 +2,22 @@ spring:
   application:
     name: upload-svc
   rabbitmq:
-    host: 18.139.222.137
-    port: 5672
+    host: 192.168.50.33
+    port: 5673
     username: admin
     password: adminlgsp@123
-    exchange: event.exchange
-    queue: event.queue
-    routingkey: event.routingkey
+    exchange: event.exchange1
+    queue: event.queue1
+    routingkey: event.routingkey1
     CV:
       exchange: cv.exchange
       queue: cv.queue
       routingkey: cv.routingkey
   redis:
-    host: '18.139.222.137'
-    port: 6379
+    host: '192.168.50.33'
+    port: 9981
     password: 'hhhhhhhhhhsdvnsldvmsdlvmsdlkvmsdv'
+    database: 6
     lettuce:
       pool:
         max-active: 7
@@ -30,11 +31,11 @@ spring:
       max-request-size: 100MB
   data:
     mongodb:
-      host: 18.139.222.137
+      host: 192.168.50.33
       port: 27017
       database: 'resume'
       username: 'resume'
-      password: 'abc123resume'
+      password: 'MHFbdWe1KsjiMKtzDpuDrue1ZtcmDifxY1ousr5HXj12Uth65ZI1juLTaXVcYU6czsdgh'
     elasticsearch:
 
 elasticsearch:
@@ -98,3 +99,14 @@ email:
   debug: false
   from:
     address: vietmq@edsolabs.com
+
+refresh-token:
+  url: 'https://login.microsoftonline.com/common/oauth2/v2.0/token'
+  client_id: '0f4945ae-656d-4dc3-a1ed-b104e41610fc'
+  scope: 'user.read'
+  refresh_token: 'M.R3_BAY.-CZUf8ZamSjQF89JrrqmuKKS49XBh*1qznW9xW4d7G!HYElikdjHQWmk5M0x7uyhEXjP3qVND!50ccL1!vb3gSyzZV66ZhLFWpepSfhSJqYNcHsB1oTXm43*zsQW*nQxvzjZvUdO*ArQS2BbfKKXaXnQEV!QAub3j4v4bGkx7QPdQLhR*BEqkubMC8EHXzMBK9mqUvoYvnzqxwAHibxDClaVE7RWa5gcUhQBMU4bY6M5K4y5SQRt55ldHYWejS!4ZQfwMiQqDlPWm2m19HyW!2hHbnT9A8vS0xqsg!CMOqVkwLDtMyukxH*IUZodn9TOBaA$$'
+  redirect_uri: 'http://localhost'
+  grant_type: 'refresh_token'
+  client_secret: 'ogU7Q~AZ81lAtVSUCqYne4ggOEw6ph64yVOMA'
+send-outlook:
+  url: 'https://graph.microsoft.com/v1.0/me/events'
