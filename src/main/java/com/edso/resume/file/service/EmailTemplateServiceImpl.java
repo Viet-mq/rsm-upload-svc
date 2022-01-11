@@ -1,5 +1,6 @@
 package com.edso.resume.file.service;
 
+import com.edso.resume.file.config.EmailTemplateConfig;
 import com.edso.resume.file.domain.db.MongoDbOnlineSyncActions;
 import com.edso.resume.file.domain.entities.Email;
 import com.edso.resume.file.domain.request.CreateEmailTemplateRequest;
@@ -37,7 +38,7 @@ public class EmailTemplateServiceImpl extends BaseService implements EmailTempla
     public GetArrayResponse<Email> findAll(HeaderInfo headerInfo, String name, Integer page, Integer size) {
         List<Bson> c = new ArrayList<>();
         if (!Strings.isNullOrEmpty(name)) {
-            c.add(Filters.regex("name_search", Pattern.compile(name.toLowerCase())));
+            c.add(Filters.regex(EmailTemplateConfig.NAME_SEARCH, Pattern.compile(name.toLowerCase())));
         }
         Bson cond = buildCondition(c);
         long total = db.countAll(CollectionNameDefs.COLL_EMAIL_TEMPLATE, cond);
@@ -47,11 +48,11 @@ public class EmailTemplateServiceImpl extends BaseService implements EmailTempla
         if (lst != null) {
             for (Document doc : lst) {
                 Email email = Email.builder()
-                        .id(AppUtils.parseString(doc.get("id")))
-                        .name(AppUtils.parseString(doc.get("name")))
-                        .subject(AppUtils.parseString(doc.get("subject")))
-                        .content(AppUtils.parseString(doc.get("content")))
-                        .attachment(AppUtils.parseString(doc.get("attachment")))
+                        .id(AppUtils.parseString(doc.get(EmailTemplateConfig.ID)))
+                        .name(AppUtils.parseString(doc.get(EmailTemplateConfig.NAME)))
+                        .subject(AppUtils.parseString(doc.get(EmailTemplateConfig.SUBJECT)))
+                        .content(AppUtils.parseString(doc.get(EmailTemplateConfig.CONTENT)))
+                        .attachment(AppUtils.parseString(doc.get(EmailTemplateConfig.ATTACHMENT)))
                         .build();
                 rows.add(email);
             }
@@ -68,7 +69,7 @@ public class EmailTemplateServiceImpl extends BaseService implements EmailTempla
         BaseResponse response = new BaseResponse();
 
         String name = request.getName();
-        Bson c = Filters.eq("name_search", name.toLowerCase());
+        Bson c = Filters.eq(EmailTemplateConfig.NAME_SEARCH, name.toLowerCase());
         long count = db.countAll(CollectionNameDefs.COLL_EMAIL_TEMPLATE, c);
 
         if (count > 0) {
@@ -77,16 +78,16 @@ public class EmailTemplateServiceImpl extends BaseService implements EmailTempla
         }
 
         Document emailTemplate = new Document();
-        emailTemplate.append("id", UUID.randomUUID().toString());
-        emailTemplate.append("name", name);
-        emailTemplate.append("subject", request.getSubject());
-        emailTemplate.append("attachment", request.getAttachment());
-        emailTemplate.append("content", request.getContent());
-        emailTemplate.append("name_search", name.toLowerCase());
-        emailTemplate.append("create_at", System.currentTimeMillis());
-        emailTemplate.append("update_at", System.currentTimeMillis());
-        emailTemplate.append("create_by", request.getInfo().getUsername());
-        emailTemplate.append("update_by", request.getInfo().getUsername());
+        emailTemplate.append(EmailTemplateConfig.ID, UUID.randomUUID().toString());
+        emailTemplate.append(EmailTemplateConfig.NAME, name);
+        emailTemplate.append(EmailTemplateConfig.SUBJECT, request.getSubject());
+        emailTemplate.append(EmailTemplateConfig.ATTACHMENT, request.getAttachment());
+        emailTemplate.append(EmailTemplateConfig.CONTENT, request.getContent());
+        emailTemplate.append(EmailTemplateConfig.NAME_SEARCH, name.toLowerCase());
+        emailTemplate.append(EmailTemplateConfig.CREATE_AT, System.currentTimeMillis());
+        emailTemplate.append(EmailTemplateConfig.UPDATE_AT, System.currentTimeMillis());
+        emailTemplate.append(EmailTemplateConfig.CREATE_BY, request.getInfo().getUsername());
+        emailTemplate.append(EmailTemplateConfig.UPDATE_BY, request.getInfo().getUsername());
 
         db.insertOne(CollectionNameDefs.COLL_EMAIL_TEMPLATE, emailTemplate);
 
@@ -97,7 +98,7 @@ public class EmailTemplateServiceImpl extends BaseService implements EmailTempla
     public BaseResponse updateEmailTemplate(UpdateEmailTemplateRequest request) {
         BaseResponse response = new BaseResponse();
         String id = request.getId();
-        Bson cond = Filters.eq("id", id);
+        Bson cond = Filters.eq(EmailTemplateConfig.ID, id);
         Document idDocument = db.findOne(CollectionNameDefs.COLL_EMAIL_TEMPLATE, cond);
 
         if (idDocument == null) {
@@ -106,9 +107,9 @@ public class EmailTemplateServiceImpl extends BaseService implements EmailTempla
         }
 
         String name = request.getName();
-        Document obj = db.findOne(CollectionNameDefs.COLL_EMAIL_TEMPLATE, Filters.eq("name_search", name.toLowerCase()));
+        Document obj = db.findOne(CollectionNameDefs.COLL_EMAIL_TEMPLATE, Filters.eq(EmailTemplateConfig.NAME_SEARCH, name.toLowerCase()));
         if (obj != null) {
-            String objId = AppUtils.parseString(obj.get("id"));
+            String objId = AppUtils.parseString(obj.get(EmailTemplateConfig.ID));
             if (!objId.equals(id)) {
                 response.setFailed("Tên này đã tồn tại");
                 return response;
@@ -116,13 +117,13 @@ public class EmailTemplateServiceImpl extends BaseService implements EmailTempla
         }
 
         Bson updates = Updates.combine(
-                Updates.set("name", name),
-                Updates.set("subject", request.getSubject()),
-                Updates.set("attachment", request.getAttachment()),
-                Updates.set("content", request.getContent()),
-                Updates.set("name_search", name.toLowerCase()),
-                Updates.set("update_at", System.currentTimeMillis()),
-                Updates.set("update_by", request.getInfo().getUsername())
+                Updates.set(EmailTemplateConfig.NAME, name),
+                Updates.set(EmailTemplateConfig.SUBJECT, request.getSubject()),
+                Updates.set(EmailTemplateConfig.ATTACHMENT, request.getAttachment()),
+                Updates.set(EmailTemplateConfig.CONTENT, request.getContent()),
+                Updates.set(EmailTemplateConfig.NAME_SEARCH, name.toLowerCase()),
+                Updates.set(EmailTemplateConfig.UPDATE_AT, System.currentTimeMillis()),
+                Updates.set(EmailTemplateConfig.UPDATE_BY, request.getInfo().getUsername())
         );
         db.update(CollectionNameDefs.COLL_EMAIL_TEMPLATE, cond, updates, true);
 
@@ -134,7 +135,7 @@ public class EmailTemplateServiceImpl extends BaseService implements EmailTempla
     public BaseResponse deleteEmailTemplate(DeleteEmailTemplateRequest request) {
         BaseResponse response = new BaseResponse();
         String id = request.getId();
-        Bson cond = Filters.eq("id", id);
+        Bson cond = Filters.eq(EmailTemplateConfig.ID, id);
         Document idDocument = db.findOne(CollectionNameDefs.COLL_EMAIL_TEMPLATE, cond);
 
         if (idDocument == null) {
