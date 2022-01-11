@@ -1,5 +1,6 @@
 package com.edso.resume.file.service;
 
+import com.edso.resume.file.config.EmailTemplateConfig;
 import com.edso.resume.file.config.KeyPointConfig;
 import com.edso.resume.file.domain.db.MongoDbOnlineSyncActions;
 import com.edso.resume.lib.common.AppUtils;
@@ -91,14 +92,14 @@ public class EmailServiceImpl extends BaseService implements EmailService {
 
         BaseResponse response = new BaseResponse();
 
-        Bson cond = Filters.eq("id", profileId);
+        Bson cond = Filters.eq(EmailTemplateConfig.ID, profileId);
         Document profile = db.findOne(CollectionNameDefs.COLL_PROFILE, cond);
         if (profile == null) {
             response.setFailed("Profile không tồn tại");
             return response;
         }
 
-        cond = Filters.eq("id", templateId);
+        cond = Filters.eq(EmailTemplateConfig.ID, templateId);
         Document template = db.findOne(CollectionNameDefs.COLL_EMAIL_TEMPLATE, cond);
         if (template == null) {
             response.setFailed("Template không tồn tại");
@@ -106,7 +107,7 @@ public class EmailServiceImpl extends BaseService implements EmailService {
         }
 
         //Name Filter
-        String content = AppUtils.parseString(template.get("content"));
+        String content = AppUtils.parseString(template.get(EmailTemplateConfig.CONTENT));
         String fullName = AppUtils.parseString(profile.get(DbKeyConfig.FULL_NAME));
         String lastName;
         String firstName = null;
@@ -179,7 +180,7 @@ public class EmailServiceImpl extends BaseService implements EmailService {
         String result = sub.replace(content);
 
         return sendMailMultipart(AppUtils.parseString(profile.get(DbKeyConfig.EMAIL)),
-                AppUtils.parseString(template.get("subject")),
+                AppUtils.parseString(template.get(EmailTemplateConfig.SUBJECT)),
                 result, file);
     }
 }
