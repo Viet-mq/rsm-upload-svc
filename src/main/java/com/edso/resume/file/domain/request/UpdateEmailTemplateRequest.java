@@ -15,6 +15,7 @@ public class UpdateEmailTemplateRequest extends BaseAuthRequest {
     private String subject;
     private String attachment;
     private String content;
+    private String type;
 
     public BaseResponse validate() {
         if (Strings.isNullOrEmpty(id)) {

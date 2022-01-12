@@ -53,6 +53,7 @@ public class EmailTemplateServiceImpl extends BaseService implements EmailTempla
                         .subject(AppUtils.parseString(doc.get(EmailTemplateConfig.SUBJECT)))
                         .content(AppUtils.parseString(doc.get(EmailTemplateConfig.CONTENT)))
                         .attachment(AppUtils.parseString(doc.get(EmailTemplateConfig.ATTACHMENT)))
+                        .type(AppUtils.parseString(doc.get(EmailTemplateConfig.TYPE)))
                         .build();
                 rows.add(email);
             }
@@ -83,6 +84,7 @@ public class EmailTemplateServiceImpl extends BaseService implements EmailTempla
         emailTemplate.append(EmailTemplateConfig.SUBJECT, request.getSubject());
         emailTemplate.append(EmailTemplateConfig.ATTACHMENT, request.getAttachment());
         emailTemplate.append(EmailTemplateConfig.CONTENT, request.getContent());
+        emailTemplate.append(EmailTemplateConfig.TYPE, request.getType());
         emailTemplate.append(EmailTemplateConfig.NAME_SEARCH, name.toLowerCase());
         emailTemplate.append(EmailTemplateConfig.CREATE_AT, System.currentTimeMillis());
         emailTemplate.append(EmailTemplateConfig.UPDATE_AT, System.currentTimeMillis());
@@ -121,6 +123,7 @@ public class EmailTemplateServiceImpl extends BaseService implements EmailTempla
                 Updates.set(EmailTemplateConfig.SUBJECT, request.getSubject()),
                 Updates.set(EmailTemplateConfig.ATTACHMENT, request.getAttachment()),
                 Updates.set(EmailTemplateConfig.CONTENT, request.getContent()),
+                Updates.set(EmailTemplateConfig.TYPE, request.getType()),
                 Updates.set(EmailTemplateConfig.NAME_SEARCH, name.toLowerCase()),
                 Updates.set(EmailTemplateConfig.UPDATE_AT, System.currentTimeMillis()),
                 Updates.set(EmailTemplateConfig.UPDATE_BY, request.getInfo().getUsername())
