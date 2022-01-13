@@ -88,8 +88,8 @@ email:
   sender:
     host: smtp.gmail.com
     port: 587
-    username: vietmq@edsolabs.com
-    password: edso@@123
+    username: resume-noti@edsolabs.com
+    password: UZ8mJEZma5fwnM4n
   transport:
     protocol: smtp
   smtp:
@@ -98,7 +98,7 @@ email:
       enable: true
   debug: false
   from:
-    address: vietmq@edsolabs.com
+    address: resume-noti@edsolabs.com
 
 refresh-token:
   url: 'https://login.microsoftonline.com/common/oauth2/v2.0/token'

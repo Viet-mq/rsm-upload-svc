@@ -20,4 +20,5 @@ public class KeyPointConfig {
     public static final String USER_EMAIL = "user_email";
     public static final String USER_PHONE = "user_phone";
     public static final String NOTE = "note";
+    public static final String REJECT_REASON = "reject_reason";
 }

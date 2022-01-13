@@ -13,6 +13,7 @@ public class CreateEmailTemplateRequest extends BaseAuthRequest {
     private String subject;
     private String attachment;
     private String content;
+    private String type;
 
     public BaseResponse validate() {
 
