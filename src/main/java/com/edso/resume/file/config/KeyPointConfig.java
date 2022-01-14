@@ -21,4 +21,13 @@ public class KeyPointConfig {
     public static final String USER_PHONE = "user_phone";
     public static final String NOTE = "note";
     public static final String REJECT_REASON = "reject_reason";
+    public static final String ROUND = "round";
+    public static final String DATE = "date";
+    public static final String INTERVIEW_TIME = "interview_time";
+    public static final String INTERVIEW_ADDRESS = "interview_address";
+    public static final String FLOOR = "floor";
+    public static final String INTERVIEW_TYPE = "interview_type";
+    public static final String HR_REF = "hr_ref";
+    public static final String MAIL_REF = "mail_ref";
+
 }

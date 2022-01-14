@@ -7,17 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
+import com.edso.resume.lib.common.RabbitMQConfig;
 
 @Component
 public class EventConsumer {
-
-    private final String EVENT_CREATE = "create";
-    private final String EVENT_UPDATE = "update";
-    private final String EVENT_DELETE = "delete";
-    private final String UPDATE_DETAIL = "update-detail";
-    private final String UPDATE_STATUS = "update-status";
-    private final String UPDATE_IMAGE = "update-image";
-    private final String DELETE_IMAGE = "delete-image";
 
     private final CVService cvService;
 
@@ -28,28 +21,28 @@ public class EventConsumer {
     }
 
     @SneakyThrows
-    @RabbitListener(queues = "${spring.rabbitmq.queue}")
+    @RabbitListener(queues = "${spring.rabbitmq.profile.queue}")
     public void consumeEvent(Event event) {
 
         logger.info("Event from queue " + event);
         switch (event.getType()) {
-            case EVENT_CREATE:
+            case RabbitMQConfig.CREATE:
                 cvService.create(event);
                 break;
-            case EVENT_UPDATE:
-            case UPDATE_DETAIL:
+            case RabbitMQConfig.UPDATE:
+            case RabbitMQConfig.UPDATE_DETAIL:
                 cvService.update(event);
                 break;
-            case EVENT_DELETE:
+            case RabbitMQConfig.DELETE:
                 cvService.delete(event.getProfile().getId());
                 break;
-            case UPDATE_STATUS:
+            case RabbitMQConfig.UPDATE_STATUS:
                 cvService.updateStatus(event);
                 break;
-            case UPDATE_IMAGE:
+            case RabbitMQConfig.UPDATE_IMAGE:
                 cvService.updateImages(event);
                 break;
-            case DELETE_IMAGE:
+            case RabbitMQConfig.DELETE_IMAGE:
                 cvService.deleteImages(event);
                 break;
             default:
