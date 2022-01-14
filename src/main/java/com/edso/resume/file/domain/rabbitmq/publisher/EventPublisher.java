@@ -15,10 +15,10 @@ public class EventPublisher {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    @Value("${spring.rabbitmq.exchange}")
+    @Value("${spring.rabbitmq.profile.exchange}")
     private String exchange;
 
-    @Value("${spring.rabbitmq.routingkey}")
+    @Value("${spring.rabbitmq.profile.routingkey}")
     private String routingkey;
 
     @PostMapping("/publish/{type}")

@@ -7,7 +7,6 @@ import com.edso.resume.file.domain.email.EmailSender;
 import com.edso.resume.lib.common.AppUtils;
 import com.edso.resume.lib.common.CollectionNameDefs;
 import com.edso.resume.lib.common.DbKeyConfig;
-import com.edso.resume.lib.entities.HeaderInfo;
 import com.edso.resume.lib.response.BaseResponse;
 import com.mongodb.client.model.Filters;
 import lombok.SneakyThrows;
@@ -37,7 +36,12 @@ public class SendRejectEmailToCandidateService extends BaseService implements Se
 
     @SneakyThrows
     @Override
-    public BaseResponse sendEmail(HeaderInfo headerInfo, String profileId, String templateId, String content, List<MultipartFile> files) {
+    public BaseResponse sendEmail(String profileId,
+                                  String subject,
+                                  String content,
+                                  String historyId,
+                                  List<MultipartFile> files) {
+
         Bson cond = Filters.eq(EmailTemplateConfig.ID, profileId);
         Document profile = db.findOne(CollectionNameDefs.COLL_PROFILE, cond);
         if (profile == null) {
@@ -52,13 +56,6 @@ public class SendRejectEmailToCandidateService extends BaseService implements Se
             return response;
         }
 
-        cond = Filters.eq(EmailTemplateConfig.ID, templateId);
-        Document template = db.findOne(CollectionNameDefs.COLL_EMAIL_TEMPLATE, cond);
-        if (template == null) {
-            response.setFailed("Template không tồn tại");
-            return response;
-        }
-
         //Name Filter
         String fullName = AppUtils.parseString(profile.get(DbKeyConfig.FULL_NAME));
         String lastName;
@@ -70,16 +67,21 @@ public class SendRejectEmailToCandidateService extends BaseService implements Se
             lastName = fullName;
         }
 
-        //Get all keypoint in template's content
-        final Pattern pattern = Pattern.compile("\\{(.+?)\\}");
-        final Matcher matcher = pattern.matcher(content);
-        final List<String> list = new LinkedList<>();
-        while (matcher.find()) {
-            list.add(matcher.group(1));
+        //Get all keypoint in content and subject
+        final Pattern pattern = Pattern.compile(AppUtils.KEYPOINT_PATTERN);
+        Matcher keypointMatcher = pattern.matcher(content);
+        final List<String> keypointList = new LinkedList<>();
+        while (keypointMatcher.find()) {
+            keypointList.add(keypointMatcher.group(1));
+        }
+
+        keypointMatcher = pattern.matcher(subject);
+        while (keypointMatcher.find()) {
+            keypointList.add(keypointMatcher.group(1));
         }
 
         Map<String, String> replacementStrings = new HashMap<>();
-        for (String placeholder : list) {
+        for (String placeholder : keypointList) {
             switch (placeholder) {
                 case KeyPointConfig.FULL_NAME:
                     replacementStrings.put(KeyPointConfig.FULL_NAME, fullName);
@@ -99,26 +101,26 @@ public class SendRejectEmailToCandidateService extends BaseService implements Se
                     break;
                 case KeyPointConfig.COMPANY:
                     break;
+                case KeyPointConfig.ROUND:
+                    replacementStrings.put(KeyPointConfig.ROUND, AppUtils.parseString(reject_profile.get(DbKeyConfig.STATUS_CV_NAME)));
+                    break;
                 case KeyPointConfig.REJECT_REASON:
                     replacementStrings.put(KeyPointConfig.REJECT_REASON, AppUtils.parseString(reject_profile.get(DbKeyConfig.REASON)));
-                    break;
-                case KeyPointConfig.USER_NAME:
-                case KeyPointConfig.USER_FIRSTNAME:
-                case KeyPointConfig.ME:
-                    replacementStrings.put(KeyPointConfig.USER_NAME, headerInfo.getUsername());
-                    break;
-                case KeyPointConfig.USER_FULL_NAME:
-                    replacementStrings.put(KeyPointConfig.USER_FULL_NAME, headerInfo.getFullName());
                     break;
             }
         }
 
         //Replace keypoint
         StrSubstitutor sub = new StrSubstitutor(replacementStrings, "{", "}");
-        String result = sub.replace(content);
+        String contentResult = sub.replace(content);
+        String subjectResult = sub.replace(subject);
 
         return emailSender.sendMail(AppUtils.parseString(profile.get(DbKeyConfig.EMAIL)),
-                AppUtils.parseString(template.get(EmailTemplateConfig.SUBJECT)),
-                result, files);
+                subjectResult, contentResult, files);
+    }
+
+    @Override
+    public BaseResponse sendMail(List<String> toEmails, String subject, String content, String historyId, List<MultipartFile> files) {
+        return null;
     }
 }

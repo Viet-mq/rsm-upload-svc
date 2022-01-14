@@ -42,11 +42,12 @@ public class EmailController extends BaseController {
     @PostMapping("/send-template")
     public BaseResponse sendEmailTemplate(@RequestHeader Map<String, String> headers,
                                           @RequestParam String profileId,
-                                          @RequestParam String templateId,
                                           @RequestParam String content,
+                                          @RequestParam String subject,
+                                          @RequestParam String historyId,
                                           @RequestParam(value = "file", required = false) List<MultipartFile> files) {
         HeaderInfo headerInfo = ParseHeaderUtil.build(headers);
-        logger.info("=>u: {} Send email-template, profileId: {}, templateId: {}", headerInfo, profileId, templateId);
-        return sendRejectEmailToCandidate.sendEmail(headerInfo, profileId, templateId, content, files);
+        logger.info("=>u: {} Send email-template, profileId: {}", headerInfo, profileId);
+        return sendCalendarEmailToPresenter.sendEmail(profileId, subject, content, historyId, files);
     }
 }
