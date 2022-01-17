@@ -1,6 +1,6 @@
 package com.edso.resume.file.service;
 
-import com.edso.resume.file.domain.entities.Event;
+import com.edso.resume.file.domain.rabbitmq.event.ProfileEvent;
 import com.edso.resume.file.domain.entities.Profile;
 import com.edso.resume.file.domain.repo.CvRepo;
 import com.edso.resume.file.domain.request.DeleteCVRequest;
@@ -81,10 +81,10 @@ public class CVServiceImpl extends BaseService implements CVService {
 
     @SneakyThrows
     @Override
-    public void update(Event event) {
-        if (event.getProfile().getId() != null) {
-            Profile eventProfile = event.getProfile();
-            Profile profile = cvRepo.searchById(event.getProfile().getId());
+    public void update(ProfileEvent profileEvent) {
+        if (profileEvent.getProfile().getId() != null) {
+            Profile eventProfile = profileEvent.getProfile();
+            Profile profile = cvRepo.searchById(profileEvent.getProfile().getId());
             if (profile != null) {
                 UpdateCVRequest request = new UpdateCVRequest();
                 request.setId(profile.getId());
@@ -133,8 +133,8 @@ public class CVServiceImpl extends BaseService implements CVService {
 
     @SneakyThrows
     @Override
-    public void create(Event event) {
-        Profile profile = event.getProfile();
+    public void create(ProfileEvent profileEvent) {
+        Profile profile = profileEvent.getProfile();
         if (profile.getId() == null){
             logger.info("=>Create Profile failed: profile ID is null");
             return;
@@ -149,44 +149,44 @@ public class CVServiceImpl extends BaseService implements CVService {
 
     @SneakyThrows
     @Override
-    public void updateStatus(Event event) {
-        if (event.getProfile().getId() == null){
+    public void updateStatus(ProfileEvent profileEvent) {
+        if (profileEvent.getProfile().getId() == null){
             logger.info("=>Update status failed: profile ID is null");
             return;
         }
-        Profile profile = cvRepo.searchById(event.getProfile().getId());
+        Profile profile = cvRepo.searchById(profileEvent.getProfile().getId());
         if (profile != null) {
-            cvRepo.updateStatus(event.getProfile().getId(), event.getProfile().getStatusCVId(), event.getProfile().getStatusCVName());
+            cvRepo.updateStatus(profileEvent.getProfile().getId(), profileEvent.getProfile().getStatusCVId(), profileEvent.getProfile().getStatusCVName());
             logger.info("=>Update Profile status id: {}, statusId {}, statusName {}", profile.getId()
-                    , event.getProfile().getStatusCVId()
-                    , event.getProfile().getStatusCVName());
+                    , profileEvent.getProfile().getStatusCVId()
+                    , profileEvent.getProfile().getStatusCVName());
         } else logger.info("=>Update status failed: Invalid ID");
     }
 
     @SneakyThrows
     @Override
-    public void updateImages(Event event) {
-        if (event.getImage().getId() == null){
+    public void updateImages(ProfileEvent profileEvent) {
+        if (profileEvent.getImage().getId() == null){
             logger.info("=>Update Image failed: profile ID is null");
             return;
         }
-        Profile profile = cvRepo.searchById(event.getImage().getId());
+        Profile profile = cvRepo.searchById(profileEvent.getImage().getId());
         if (profile != null) {
-            cvRepo.updateImages(event.getImage().getId(), event.getImage().getUrl());
-            logger.info("=>Update Image to id: {}, url_image: {}", profile.getId(), event.getImage().getUrl());
+            cvRepo.updateImages(profileEvent.getImage().getId(), profileEvent.getImage().getUrl());
+            logger.info("=>Update Image to id: {}, url_image: {}", profile.getId(), profileEvent.getImage().getUrl());
         } else logger.info("Update Image failed: Invalid ID");
     }
 
     @SneakyThrows
     @Override
-    public void deleteImages(Event event) {
-        if (event.getImage().getId() == null){
+    public void deleteImages(ProfileEvent profileEvent) {
+        if (profileEvent.getImage().getId() == null){
             logger.info("=>Delete Image failed: profile ID is null");
             return;
         }
-        Profile profile = cvRepo.searchById(event.getImage().getId());
+        Profile profile = cvRepo.searchById(profileEvent.getImage().getId());
         if (profile != null) {
-            cvRepo.deleteImages(event.getImage().getId());
+            cvRepo.deleteImages(profileEvent.getImage().getId());
             logger.info("=>Delete Image in id: {}", profile.getId());
         } else logger.info("Delete Image failed: Invalid ID");
     }

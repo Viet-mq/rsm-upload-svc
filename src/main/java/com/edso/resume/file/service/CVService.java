@@ -1,6 +1,6 @@
 package com.edso.resume.file.service;
 
-import com.edso.resume.file.domain.entities.Event;
+import com.edso.resume.file.domain.rabbitmq.event.ProfileEvent;
 import com.edso.resume.file.domain.entities.Profile;
 import com.edso.resume.file.domain.request.DeleteCVRequest;
 import com.edso.resume.file.domain.request.UpdateCVRequest;
@@ -12,17 +12,17 @@ public interface CVService {
 
     void saveCv(Profile profile);
 
-    void update(Event event);
+    void update(ProfileEvent profileEvent);
 
     void delete(String profileId);
 
-    void create(Event event);
+    void create(ProfileEvent profileEvent);
 
-    void updateStatus(Event event);
+    void updateStatus(ProfileEvent profileEvent);
 
-    void updateImages(Event event);
+    void updateImages(ProfileEvent profileEvent);
 
-    void deleteImages(Event event);
+    void deleteImages(ProfileEvent profileEvent);
 
     GetArrayResponse<Profile> viewAll(HeaderInfo headerInfo);
 

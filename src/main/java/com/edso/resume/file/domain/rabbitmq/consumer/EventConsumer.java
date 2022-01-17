@@ -1,6 +1,6 @@
 package com.edso.resume.file.domain.rabbitmq.consumer;
 
-import com.edso.resume.file.domain.entities.Event;
+import com.edso.resume.file.domain.rabbitmq.event.ProfileEvent;
 import com.edso.resume.file.service.CVService;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
@@ -22,28 +22,28 @@ public class EventConsumer {
 
     @SneakyThrows
     @RabbitListener(queues = "${spring.rabbitmq.profile.queue}")
-    public void consumeEvent(Event event) {
+    public void consumeEvent(ProfileEvent profileEvent) {
 
-        logger.info("Event from queue " + event);
-        switch (event.getType()) {
+        logger.info("Event from queue " + profileEvent);
+        switch (profileEvent.getType()) {
             case RabbitMQConfig.CREATE:
-                cvService.create(event);
+                cvService.create(profileEvent);
                 break;
             case RabbitMQConfig.UPDATE:
             case RabbitMQConfig.UPDATE_DETAIL:
-                cvService.update(event);
+                cvService.update(profileEvent);
                 break;
             case RabbitMQConfig.DELETE:
-                cvService.delete(event.getProfile().getId());
+                cvService.delete(profileEvent.getProfile().getId());
                 break;
             case RabbitMQConfig.UPDATE_STATUS:
-                cvService.updateStatus(event);
+                cvService.updateStatus(profileEvent);
                 break;
             case RabbitMQConfig.UPDATE_IMAGE:
-                cvService.updateImages(event);
+                cvService.updateImages(profileEvent);
                 break;
             case RabbitMQConfig.DELETE_IMAGE:
-                cvService.deleteImages(event);
+                cvService.deleteImages(profileEvent);
                 break;
             default:
                 logger.info("Invalid type");

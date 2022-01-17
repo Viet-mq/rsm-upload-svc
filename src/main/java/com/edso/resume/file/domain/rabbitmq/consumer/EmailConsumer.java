@@ -53,7 +53,12 @@ public class EmailConsumer {
                         sendEmailEvent.getFiles());
                 break;
             case TypeConfig.REJECT_PRESENTER:
-
+                sendRejectEmailToPresenter.sendEmail(sendEmailEvent.getProfileId(),
+                        sendEmailEvent.getSubject(),
+                        sendEmailEvent.getContent(),
+                        sendEmailEvent.getHistoryId(),
+                        sendEmailEvent.getFiles());
+                break;
             case TypeConfig.CALENDAR_CANDIDATE:
                 sendCalenderEmailToCandidate.sendEmail(sendEmailEvent.getProfileId(),
                         sendEmailEvent.getSubject(),
@@ -64,7 +69,12 @@ public class EmailConsumer {
             case TypeConfig.CALENDAR_INTERVIEWER:
 
             case TypeConfig.CALENDAR_PRESENTER:
-
+                sendCalendarEmailToPresenter.sendEmail(sendEmailEvent.getProfileId(),
+                        sendEmailEvent.getSubject(),
+                        sendEmailEvent.getContent(),
+                        sendEmailEvent.getHistoryId(),
+                        sendEmailEvent.getFiles());
+                break;
             case TypeConfig.ROUND_CANDIDATE:
                 sendRoundEmailToCandidate.sendEmail(sendEmailEvent.getProfileId(),
                         sendEmailEvent.getSubject(),
@@ -73,6 +83,12 @@ public class EmailConsumer {
                         sendEmailEvent.getFiles());
                 break;
             case TypeConfig.ROUND_PRESENTER:
+                sendRoundEmailToPresenter.sendEmail(sendEmailEvent.getProfileId(),
+                        sendEmailEvent.getSubject(),
+                        sendEmailEvent.getContent(),
+                        sendEmailEvent.getHistoryId(),
+                        sendEmailEvent.getFiles());
+                break;
 
         }
     }

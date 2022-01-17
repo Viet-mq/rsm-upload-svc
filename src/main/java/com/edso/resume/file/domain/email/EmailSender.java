@@ -27,11 +27,11 @@ public class EmailSender {
         BaseResponse baseResponse = new BaseResponse();
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
         helper.setFrom(fromAddress);
         helper.setTo(toEmail);
         helper.setSubject(subject);
-        helper.setText(message);
+        helper.setText(message, true);
 
         if (files != null) {
             for (MultipartFile file : files)
