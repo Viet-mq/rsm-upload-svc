@@ -5,7 +5,6 @@ import com.edso.resume.file.domain.email.EmailSender;
 import com.edso.resume.lib.response.BaseResponse;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -24,19 +23,14 @@ public class SendCalendarEmailToInterviewerService implements SendEmailService {
     }
 
     @Override
-    public BaseResponse sendEmail(String profileId, String subject, String content, String historyId, List<MultipartFile> file) {
+    public BaseResponse sendEmail(String profileId, String subject, String content, String historyId, List<String> file) {
         return null;
     }
 
     @SneakyThrows
     @Override
-    public BaseResponse sendMail(List<String> toEmails, String subject, String content, String historyId, List<MultipartFile> files) {
+    public BaseResponse sendMail(String calendarId, String subject, String content, String historyId, List<String> files) {
 
-        for (String toEmail : toEmails) {
-            emailSender.sendMail(toEmail, subject, content, files);
-        }
-
-        response.setSuccess("OK");
-        return response;
+        return null;
     }
 }

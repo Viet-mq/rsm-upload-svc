@@ -7,6 +7,7 @@ import com.edso.resume.file.domain.request.DeleteKeyPointRequest;
 import com.edso.resume.file.domain.request.UpdateKeypointRequest;
 import com.edso.resume.lib.common.AppUtils;
 import com.edso.resume.lib.common.CollectionNameDefs;
+import com.edso.resume.lib.common.DbKeyConfig;
 import com.edso.resume.lib.entities.HeaderInfo;
 import com.edso.resume.lib.entities.PagingInfo;
 import com.edso.resume.lib.response.BaseResponse;
@@ -36,7 +37,7 @@ public class KeypointServiceImpl extends BaseService implements KeypointService 
     public GetArrayResponse<KeyPoint> findAll(HeaderInfo headerInfo, String id, Integer page, Integer size) {
         List<Bson> c = new ArrayList<>();
         if (!Strings.isNullOrEmpty(id)) {
-            c.add(Filters.regex("id", Pattern.compile(id)));
+            c.add(Filters.regex(DbKeyConfig.ID, Pattern.compile(id)));
         }
         Bson cond = buildCondition(c);
         long total = db.countAll(CollectionNameDefs.COLL_KEY_POINT, cond);
@@ -46,8 +47,8 @@ public class KeypointServiceImpl extends BaseService implements KeypointService 
         if (lst != null) {
             for (Document doc : lst) {
                 KeyPoint keyPoint = KeyPoint.builder()
-                        .id(AppUtils.parseString(doc.get("id")))
-                        .description(AppUtils.parseString(doc.get("description")))
+                        .id(AppUtils.parseString(doc.get(DbKeyConfig.ID)))
+                        .description(AppUtils.parseString(doc.get(DbKeyConfig.DESCRIPTION)))
                         .build();
                 rows.add(keyPoint);
             }
@@ -64,7 +65,7 @@ public class KeypointServiceImpl extends BaseService implements KeypointService 
         BaseResponse response = new BaseResponse();
 
         String id = request.getId();
-        Bson c = Filters.eq("id", id);
+        Bson c = Filters.eq(DbKeyConfig.ID, id);
         long count = db.countAll(CollectionNameDefs.COLL_EMAIL_TEMPLATE, c);
 
         if (count > 0) {
@@ -73,8 +74,8 @@ public class KeypointServiceImpl extends BaseService implements KeypointService 
         }
 
         Document keypoint = new Document();
-        keypoint.append("id", id);
-        keypoint.append("description", request.getDescription());
+        keypoint.append(DbKeyConfig.ID, id);
+        keypoint.append(DbKeyConfig.DESCRIPTION, request.getDescription());
 
         db.insertOne(CollectionNameDefs.COLL_KEY_POINT, keypoint);
 
@@ -85,7 +86,7 @@ public class KeypointServiceImpl extends BaseService implements KeypointService 
     public BaseResponse updateKeypoint(UpdateKeypointRequest request) {
         BaseResponse response = new BaseResponse();
         String id = request.getId();
-        Bson cond = Filters.eq("id", id);
+        Bson cond = Filters.eq(DbKeyConfig.ID, id);
         Document idDocument = db.findOne(CollectionNameDefs.COLL_KEY_POINT, cond);
 
         if (idDocument == null) {
@@ -94,8 +95,8 @@ public class KeypointServiceImpl extends BaseService implements KeypointService 
         }
 
         Bson updates = Updates.combine(
-                Updates.set("id", id),
-                Updates.set("description", request.getDescription())
+                Updates.set(DbKeyConfig.ID, id),
+                Updates.set(DbKeyConfig.DESCRIPTION, request.getDescription())
         );
         db.update(CollectionNameDefs.COLL_KEY_POINT, cond, updates, true);
 
@@ -107,7 +108,7 @@ public class KeypointServiceImpl extends BaseService implements KeypointService 
     public BaseResponse deleteKeypoint(DeleteKeyPointRequest request) {
         BaseResponse response = new BaseResponse();
         String id = request.getId();
-        Bson cond = Filters.eq("id", id);
+        Bson cond = Filters.eq(DbKeyConfig.ID, id);
         Document idDocument = db.findOne(CollectionNameDefs.COLL_KEY_POINT, cond);
 
         if (idDocument == null) {

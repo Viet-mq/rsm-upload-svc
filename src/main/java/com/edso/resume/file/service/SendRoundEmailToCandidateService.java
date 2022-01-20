@@ -9,12 +9,12 @@ import com.edso.resume.lib.common.CollectionNameDefs;
 import com.edso.resume.lib.common.DbKeyConfig;
 import com.edso.resume.lib.response.BaseResponse;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 import lombok.SneakyThrows;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -43,12 +43,19 @@ public class SendRoundEmailToCandidateService implements SendEmailService {
                                   String subject,
                                   String content,
                                   String historyId,
-                                  List<MultipartFile> files) {
+                                  List<String> files) {
 
         Bson cond = Filters.eq(EmailTemplateConfig.ID, profileId);
         Document profile = db.findOne(CollectionNameDefs.COLL_PROFILE, cond);
         if (profile == null) {
             response.setFailed("Profile không tồn tại");
+            return response;
+        }
+
+        Bson historyCond = Filters.eq(EmailTemplateConfig.ID, historyId);
+        Document history_email = db.findOne(CollectionNameDefs.COLL_HISTORY_EMAIL, cond);
+        if (history_email == null) {
+            response.setFailed("Không tồn tại lịch sử gửi mail");
             return response;
         }
 
@@ -107,12 +114,18 @@ public class SendRoundEmailToCandidateService implements SendEmailService {
         String contentResult = sub.replace(content);
         String subjectResult = sub.replace(subject);
 
+        //Update Email's history
+        Bson updates = Updates.combine(
+                Updates.set(DbKeyConfig.STATUS, "Đã gửi email")
+        );
+        db.update(CollectionNameDefs.COLL_HISTORY_EMAIL, historyCond, updates, true);
+
         return emailSender.sendMail(AppUtils.parseString(profile.get(DbKeyConfig.EMAIL)),
                 subjectResult, contentResult, files);
     }
 
     @Override
-    public BaseResponse sendMail(List<String> toEmails, String subject, String content, String historyId, List<MultipartFile> files) {
+    public BaseResponse sendMail(String calendarId, String subject, String content, String historyId, List<String> files) {
         return null;
     }
 }
