@@ -6,7 +6,6 @@ import com.edso.resume.lib.response.BaseResponse;
 import com.edso.resume.lib.utils.ParseHeaderUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -45,9 +44,9 @@ public class EmailController extends BaseController {
                                           @RequestParam String content,
                                           @RequestParam String subject,
                                           @RequestParam String historyId,
-                                          @RequestParam(value = "file", required = false) List<MultipartFile> files) {
+                                          @RequestParam(value = "file", required = false) List<String> files) {
         HeaderInfo headerInfo = ParseHeaderUtil.build(headers);
-        logger.info("=>u: {} Send email-template, profileId: {}", headerInfo, profileId);
+        logger.info("=>u: {} Send email-template, profileId: {}, subject: {}", headerInfo, profileId, subject);
         return sendCalendarEmailToPresenter.sendEmail(profileId, subject, content, historyId, files);
     }
 }

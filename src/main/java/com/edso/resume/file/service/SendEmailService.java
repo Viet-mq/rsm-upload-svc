@@ -1,7 +1,6 @@
 package com.edso.resume.file.service;
 
 import com.edso.resume.lib.response.BaseResponse;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -10,11 +9,11 @@ public interface SendEmailService {
                            String subject,
                            String content,
                            String historyId,
-                           List<MultipartFile> files);
+                           List<String> files);
 
-    BaseResponse sendMail(List<String> toEmails,
+    BaseResponse sendMail(String calendarId,
                           String subject,
                           String content,
                           String historyId,
-                          List<MultipartFile> files);
+                          List<String> files);
 }

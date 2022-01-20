@@ -84,15 +84,15 @@ public class UploadCVServiceImpl extends BaseService implements UploadCVService 
             cvPublisher.publish(cv);
             cvRepo.save(profile);
         } else {
-            Profile profile1 = new Profile();
-            profile1.setId(request.getProfileId());
-            profile1.setContent(textParsed);
-            profile1.setFileName(fileUpload.getOriginalFilename());
-            profile1.setUrlCV(domain + fileUpload.getOriginalFilename());
-            profile1.setCvType(extension);
-            CV cv = new CV(request.getProfileId(), extension, profile1.getUrlCV(), profile1.getFileName());
+            Profile newProfile = new Profile();
+            newProfile.setId(request.getProfileId());
+            newProfile.setContent(textParsed);
+            newProfile.setFileName(fileUpload.getOriginalFilename());
+            newProfile.setUrlCV(domain + fileUpload.getOriginalFilename());
+            newProfile.setCvType(extension);
+            CV cv = new CV(request.getProfileId(), extension, newProfile.getUrlCV(), newProfile.getFileName());
             cvPublisher.publish(cv);
-            cvRepo.saveContent(profile1);
+            cvRepo.saveContent(newProfile);
         }
         baseResponse.setSuccess("OK");
         return baseResponse;

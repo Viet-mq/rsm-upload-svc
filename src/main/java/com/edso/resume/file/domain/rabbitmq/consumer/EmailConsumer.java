@@ -2,6 +2,7 @@ package com.edso.resume.file.domain.rabbitmq.consumer;
 
 import com.edso.resume.file.domain.rabbitmq.event.SendEmailEvent;
 import com.edso.resume.file.service.SendEmailService;
+import com.edso.resume.file.service.SendOutlookCalendarService;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,8 @@ public class EmailConsumer {
 
     private static final Logger logger = LoggerFactory.getLogger(EmailConsumer.class);
 
+    private final SendOutlookCalendarService sendOutlookCalendarService;
+
     private final SendEmailService sendRejectEmailToCandidate;
     private final SendEmailService sendRejectEmailToPresenter;
     private final SendEmailService sendRoundEmailToPresenter;
@@ -23,13 +26,15 @@ public class EmailConsumer {
     private final SendEmailService sendCalendarEmailToInterviewer;
     private final SendEmailService sendCalenderEmailToCandidate;
 
-    public EmailConsumer(@Qualifier("sendRejectEmailToCandidateService") SendEmailService sendRejectEmailToCandidate,
+    public EmailConsumer(SendOutlookCalendarService sendOutlookCalendarService,
+                         @Qualifier("sendRejectEmailToCandidateService") SendEmailService sendRejectEmailToCandidate,
                          @Qualifier("sendRejectEmailToPresenterService") SendEmailService sendRejectEmailToPresenter,
-                         @Qualifier("sendRoundEmailToPresenterService")SendEmailService sendRoundEmailToPresenter,
-                         @Qualifier("sendRoundEmailToCandidateService")SendEmailService sendRoundEmailToCandidate,
-                         @Qualifier("sendCalendarEmailToPresenterService")SendEmailService sendCalendarEmailToPresenter,
-                         @Qualifier("sendCalendarEmailToInterviewerService")SendEmailService sendCalendarEmailToInterviewer,
-                         @Qualifier("sendCalendarEmailToCandidateService")SendEmailService sendCalenderEmailToCandidate) {
+                         @Qualifier("sendRoundEmailToPresenterService") SendEmailService sendRoundEmailToPresenter,
+                         @Qualifier("sendRoundEmailToCandidateService") SendEmailService sendRoundEmailToCandidate,
+                         @Qualifier("sendCalendarEmailToPresenterService") SendEmailService sendCalendarEmailToPresenter,
+                         @Qualifier("sendCalendarEmailToInterviewerService") SendEmailService sendCalendarEmailToInterviewer,
+                         @Qualifier("sendCalendarEmailToCandidateService") SendEmailService sendCalenderEmailToCandidate) {
+        this.sendOutlookCalendarService = sendOutlookCalendarService;
         this.sendRejectEmailToCandidate = sendRejectEmailToCandidate;
         this.sendRejectEmailToPresenter = sendRejectEmailToPresenter;
         this.sendRoundEmailToPresenter = sendRoundEmailToPresenter;
@@ -67,7 +72,12 @@ public class EmailConsumer {
                         sendEmailEvent.getFiles());
                 break;
             case TypeConfig.CALENDAR_INTERVIEWER:
-
+                sendCalendarEmailToInterviewer.sendMail(sendEmailEvent.getCalendarId(),
+                        sendEmailEvent.getSubject(),
+                        sendEmailEvent.getContent(),
+                        sendEmailEvent.getHistoryId(),
+                        sendEmailEvent.getFiles());
+                sendOutlookCalendarService.sendCalendar(null);
             case TypeConfig.CALENDAR_PRESENTER:
                 sendCalendarEmailToPresenter.sendEmail(sendEmailEvent.getProfileId(),
                         sendEmailEvent.getSubject(),
@@ -89,7 +99,6 @@ public class EmailConsumer {
                         sendEmailEvent.getHistoryId(),
                         sendEmailEvent.getFiles());
                 break;
-
         }
     }
 }
