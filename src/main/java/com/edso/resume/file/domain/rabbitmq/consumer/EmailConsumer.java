@@ -72,11 +72,7 @@ public class EmailConsumer {
                         sendEmailEvent.getFiles());
                 break;
             case TypeConfig.CALENDAR_INTERVIEWER:
-                sendCalendarEmailToInterviewer.sendMail(sendEmailEvent.getCalendarId(),
-                        sendEmailEvent.getSubject(),
-                        sendEmailEvent.getContent(),
-                        sendEmailEvent.getHistoryId(),
-                        sendEmailEvent.getFiles());
+
                 sendOutlookCalendarService.sendCalendar(null);
             case TypeConfig.CALENDAR_PRESENTER:
                 sendCalendarEmailToPresenter.sendEmail(sendEmailEvent.getProfileId(),

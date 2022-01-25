@@ -8,6 +8,7 @@ import com.edso.resume.file.domain.request.DeleteEmailTemplateRequest;
 import com.edso.resume.file.domain.request.UpdateEmailTemplateRequest;
 import com.edso.resume.lib.common.AppUtils;
 import com.edso.resume.lib.common.CollectionNameDefs;
+import com.edso.resume.lib.common.DbKeyConfig;
 import com.edso.resume.lib.entities.HeaderInfo;
 import com.edso.resume.lib.entities.PagingInfo;
 import com.edso.resume.lib.response.BaseResponse;
@@ -54,6 +55,8 @@ public class EmailTemplateServiceImpl extends BaseService implements EmailTempla
                         .content(AppUtils.parseString(doc.get(EmailTemplateConfig.CONTENT)))
                         .attachment(AppUtils.parseString(doc.get(EmailTemplateConfig.ATTACHMENT)))
                         .type(AppUtils.parseString(doc.get(EmailTemplateConfig.TYPE)))
+                        .create_at(AppUtils.parseLong(doc.get(DbKeyConfig.CREATE_AT)))
+                        .create_by(AppUtils.parseString(doc.get(DbKeyConfig.CREATE_BY)))
                         .build();
                 rows.add(email);
             }

@@ -15,6 +15,6 @@ public class SendEmailEvent {
     private String subject;
     private String content;
     private String historyId;
-    private String calendarId;
+    private Ids ids;
     List<String> files;
 }
