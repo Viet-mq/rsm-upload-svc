@@ -17,7 +17,7 @@ public class KeywordProcessing {
     public KeywordProcessing(
             @Qualifier("queryNormalRepo") QueryBuilderRepo normalRepo,
             @Qualifier("queryFindByEmail") QueryBuilderRepo emailRepo,
-            @Qualifier("matchQuery") QueryBuilderRepo matchRepo){
+            @Qualifier("matchQuery") QueryBuilderRepo matchRepo) {
         this.normalRepo = normalRepo;
         this.emailRepo = emailRepo;
         this.matchRepo = matchRepo;

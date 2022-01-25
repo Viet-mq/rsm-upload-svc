@@ -1,29 +1,37 @@
 package com.edso.resume.file.service;
 
+import com.edso.resume.file.domain.db.MongoDbOnlineSyncActions;
+import com.edso.resume.file.domain.entities.Interviewer;
 import com.edso.resume.file.domain.repo.SessionRepository;
 import com.edso.resume.file.domain.request.SendCalendarRequest;
 import com.edso.resume.lib.common.AppUtils;
+import com.edso.resume.lib.common.CollectionNameDefs;
+import com.edso.resume.lib.common.DbKeyConfig;
 import com.edso.resume.lib.http.HttpSender;
 import com.edso.resume.lib.http.HttpSenderImpl;
 import com.edso.resume.lib.response.BaseResponse;
+import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mongodb.client.model.Filters;
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service("SendOutlookCalendarService")
 public class SendOutlookCalendarService extends BaseService implements CalendarService {
 
     @Value("${send-outlook.url}")
     private String url;
-    private final SessionRepository sessionRepository;
 
-    public SendOutlookCalendarService(SessionRepository sessionRepository) {
+    private final SessionRepository sessionRepository;
+    private final MongoDbOnlineSyncActions db;
+
+    public SendOutlookCalendarService(SessionRepository sessionRepository, MongoDbOnlineSyncActions db) {
         this.sessionRepository = sessionRepository;
+        this.db = db;
     }
 
     @Override
@@ -33,37 +41,76 @@ public class SendOutlookCalendarService extends BaseService implements CalendarS
 
         try {
 
-            String query1 = "{\n" +
+            List<Interviewer> interviewers = new ArrayList<>();
+            Document calendar = db.findOne(CollectionNameDefs.COLL_CALENDAR_PROFILE, Filters.eq(DbKeyConfig.ID, request.getCalendarId()));
+            if (calendar == null) {
+                response.setFailed("Không tồn tại calendar id này");
+                return response;
+            }
+
+            List<Document> interviewerList = (List<Document>) calendar.get(DbKeyConfig.INTERVIEWERS);
+
+            if (interviewerList == null || interviewerList.isEmpty()) {
+                response.setFailed("Không tồn tại hội đồng tuyển dụng");
+                return response;
+            }
+
+            for (Document document : interviewerList) {
+                if (!Strings.isNullOrEmpty(AppUtils.parseString(document.get(DbKeyConfig.EMAIL)))) {
+                    Interviewer interviewer = Interviewer.builder()
+                            .name(AppUtils.parseString(document.get(DbKeyConfig.FULL_NAME)))
+                            .email(AppUtils.parseString(document.get(DbKeyConfig.EMAIL)))
+                            .build();
+                    interviewers.add(interviewer);
+                }
+            }
+
+            if (interviewers.isEmpty()) {
+                response.setFailed("Không tồn tại hội đồng tuyển dụng");
+                return response;
+            }
+
+            String interviewer = "    {\n" +
+                    "      \"emailAddress\": {\n" +
+                    "        \"address\":\"" + interviewers.get(0).getEmail() + "\",\n" +
+                    "        \"name\": \"" + interviewers.get(0).getName() + "\"\n" +
+                    "      },\n" +
+                    "      \"type\": \"required\"\n" +
+                    "    }\n";
+
+            if (interviewers.size() >= 2) {
+                for (int i = 1; i < interviewers.size(); i++) {
+                    interviewer = interviewer + ",    {\n" +
+                            "      \"emailAddress\": {\n" +
+                            "        \"address\":\"" + interviewers.get(i).getEmail() + "\",\n" +
+                            "        \"name\": \"" + interviewers.get(i).getName() + "\"\n" +
+                            "      },\n" +
+                            "      \"type\": \"required\"\n" +
+                            "    }\n";
+                }
+            }
+
+            String query = "{\n" +
                     "  \"subject\": \"" + request.getSubject() + "\",\n" +
                     "  \"body\": {\n" +
                     "    \"contentType\": \"HTML\",\n" +
                     "    \"content\": \"" + request.getContent() + "\"\n" +
                     "  },\n" +
                     "  \"start\": {\n" +
-                    "      \"dateTime\": \"" + AppUtils.formatDateToString(new Date(request.getStartTime()), "yyyy-MM-dd'T'HH:mm:ss") + "\",\n" +
+                    "      \"dateTime\": \"" + AppUtils.formatDateToString(new Date(AppUtils.parseLong(calendar.get(DbKeyConfig.DATE))), "yyyy-MM-dd'T'HH:mm:ss") + "\",\n" +
                     "      \"timeZone\": \"Asia/Bangkok\"\n" +
                     "  },\n" +
                     "  \"end\": {\n" +
-                    "      \"dateTime\": \"" + AppUtils.formatDateToString(new Date(request.getEndTime()), "yyyy-MM-dd'T'HH:mm:ss") + "\",\n" +
+                    "      \"dateTime\": \"" + AppUtils.formatDateToString(new Date(AppUtils.parseLong(calendar.get(DbKeyConfig.INTERVIEW_TIME))), "yyyy-MM-dd'T'HH:mm:ss") + "\",\n" +
                     "      \"timeZone\": \"Asia/Bangkok\"\n" +
                     "  },\n" +
                     "  \"location\":{\n" +
-                    "      \"displayName\":\"" + request.getAddress() + "\"\n" +
+                    "      \"displayName\":\"" + AppUtils.parseString(calendar.get(DbKeyConfig.INTERVIEW_ADDRESS_NAME)) + "\"\n" +
                     "  },\n" +
-                    "  \"attendees\": [\n" +
-
-                    "    {\n" +
-                    "      \"emailAddress\": {\n" +
-                    "        \"address\":\"quanpk@edsolabs.com\",\n" +
-                    "        \"name\": \"quanpham\"\n" +
-                    "      },\n" +
-                    "      \"type\": \"required\"\n" +
-                    "    }\n" +
-
-                    "  ]\n" +
+                    "  \"attendees\": [\n" + interviewer + "  ]\n" +
                     "}";
 
-            JsonObject params = new JsonParser().parse(query1).getAsJsonObject();
+            JsonObject params = new JsonParser().parse(query).getAsJsonObject();
 
             HttpSender sender = new HttpSenderImpl();
             Map<String, String> headers = new HashMap<>();

@@ -34,7 +34,7 @@ import static com.edso.resume.file.domain.elasticsearch.Elasticsearch.TYPE;
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
 @Repository
-public class CvRepoImpl extends BaseService implements CvRepo{
+public class CvRepoImpl extends BaseService implements CvRepo {
 
     private final ElasticClient elasticClient;
 

@@ -1,7 +1,7 @@
 package com.edso.resume.file.domain.rabbitmq.publisher;
 
-import com.edso.resume.file.domain.rabbitmq.event.ProfileEvent;
 import com.edso.resume.file.domain.entities.Profile;
+import com.edso.resume.file.domain.rabbitmq.event.ProfileEvent;
 import com.edso.resume.lib.response.BaseResponse;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;

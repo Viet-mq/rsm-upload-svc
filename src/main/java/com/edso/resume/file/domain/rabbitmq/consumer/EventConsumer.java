@@ -2,12 +2,12 @@ package com.edso.resume.file.domain.rabbitmq.consumer;
 
 import com.edso.resume.file.domain.rabbitmq.event.ProfileEvent;
 import com.edso.resume.file.service.CVService;
+import com.edso.resume.lib.common.RabbitMQConfig;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
-import com.edso.resume.lib.common.RabbitMQConfig;
 
 @Component
 public class EventConsumer {

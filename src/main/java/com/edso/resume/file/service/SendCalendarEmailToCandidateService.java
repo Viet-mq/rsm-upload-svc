@@ -21,7 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-public class SendCalendarEmailToCandidateService implements SendEmailService{
+public class SendCalendarEmailToCandidateService implements SendEmailService {
 
     BaseResponse response = new BaseResponse();
 

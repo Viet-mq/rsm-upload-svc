@@ -6,7 +6,7 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class MatchQuery implements QueryBuilderRepo{
+public class MatchQuery implements QueryBuilderRepo {
 
     @Override
     public QueryBuilder build(String key) {

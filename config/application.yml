@@ -113,5 +113,6 @@ refresh-token:
   redirect_uri: 'http://localhost'
   grant_type: 'refresh_token'
   client_secret: 'ogU7Q~AZ81lAtVSUCqYne4ggOEw6ph64yVOMA'
+
 send-outlook:
   url: 'https://graph.microsoft.com/v1.0/me/events'

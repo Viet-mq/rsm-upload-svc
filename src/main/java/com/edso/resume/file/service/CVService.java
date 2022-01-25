@@ -1,7 +1,7 @@
 package com.edso.resume.file.service;
 
-import com.edso.resume.file.domain.rabbitmq.event.ProfileEvent;
 import com.edso.resume.file.domain.entities.Profile;
+import com.edso.resume.file.domain.rabbitmq.event.ProfileEvent;
 import com.edso.resume.file.domain.request.DeleteCVRequest;
 import com.edso.resume.file.domain.request.UpdateCVRequest;
 import com.edso.resume.lib.entities.HeaderInfo;
