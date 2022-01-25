@@ -24,11 +24,11 @@ public class EmailController extends BaseController {
 
     public EmailController(@Qualifier("sendRejectEmailToCandidateService") SendEmailService sendRejectEmailToCandidate,
                            @Qualifier("sendRejectEmailToPresenterService") SendEmailService sendRejectEmailToPresenter,
-                           @Qualifier("sendRoundEmailToPresenterService")SendEmailService sendRoundEmailToPresenter,
-                           @Qualifier("sendRoundEmailToCandidateService")SendEmailService sendRoundEmailToCandidate,
-                           @Qualifier("sendCalendarEmailToPresenterService")SendEmailService sendCalendarEmailToPresenter,
-                           @Qualifier("sendCalendarEmailToInterviewerService")SendEmailService sendCalendarEmailToInterviewer,
-                           @Qualifier("sendCalendarEmailToCandidateService")SendEmailService sendCalenderEmailToCandidate) {
+                           @Qualifier("sendRoundEmailToPresenterService") SendEmailService sendRoundEmailToPresenter,
+                           @Qualifier("sendRoundEmailToCandidateService") SendEmailService sendRoundEmailToCandidate,
+                           @Qualifier("sendCalendarEmailToPresenterService") SendEmailService sendCalendarEmailToPresenter,
+                           @Qualifier("sendCalendarEmailToInterviewerService") SendEmailService sendCalendarEmailToInterviewer,
+                           @Qualifier("sendCalendarEmailToCandidateService") SendEmailService sendCalenderEmailToCandidate) {
         this.sendRejectEmailToCandidate = sendRejectEmailToCandidate;
         this.sendRejectEmailToPresenter = sendRejectEmailToPresenter;
         this.sendRoundEmailToPresenter = sendRoundEmailToPresenter;

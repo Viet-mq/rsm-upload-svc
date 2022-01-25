@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 
 @Service
-public class FilePdfToText implements FileService{
+public class FilePdfToText implements FileService {
 
     @SneakyThrows
     @Override

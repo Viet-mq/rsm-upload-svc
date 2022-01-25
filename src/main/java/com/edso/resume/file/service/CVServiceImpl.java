@@ -1,7 +1,7 @@
 package com.edso.resume.file.service;
 
-import com.edso.resume.file.domain.rabbitmq.event.ProfileEvent;
 import com.edso.resume.file.domain.entities.Profile;
+import com.edso.resume.file.domain.rabbitmq.event.ProfileEvent;
 import com.edso.resume.file.domain.repo.CvRepo;
 import com.edso.resume.file.domain.request.DeleteCVRequest;
 import com.edso.resume.file.domain.request.UpdateCVRequest;
@@ -39,13 +39,11 @@ public class CVServiceImpl extends BaseService implements CVService {
     @Override
     public GetArrayResponse<Profile> viewByKey(HeaderInfo headerInfo, String key, Integer size) {
         List<Profile> profiles;
-        if (key.startsWith("\"")){
+        if (key.startsWith("\"")) {
             profiles = cvRepo.matchQuery(key, size);
-        }
-        else if (size != null) {
+        } else if (size != null) {
             profiles = cvRepo.multiMatchQuery(key, size);
-        }
-        else profiles = cvRepo.multiMatchQuery(key, 10);
+        } else profiles = cvRepo.multiMatchQuery(key, 10);
         GetArrayResponse<Profile> response = new GetArrayResponse<>();
         response.setSuccess(profiles.size(), profiles);
         return response;
@@ -135,7 +133,7 @@ public class CVServiceImpl extends BaseService implements CVService {
     @Override
     public void create(ProfileEvent profileEvent) {
         Profile profile = profileEvent.getProfile();
-        if (profile.getId() == null){
+        if (profile.getId() == null) {
             logger.info("=>Create Profile failed: profile ID is null");
             return;
         }
@@ -150,7 +148,7 @@ public class CVServiceImpl extends BaseService implements CVService {
     @SneakyThrows
     @Override
     public void updateStatus(ProfileEvent profileEvent) {
-        if (profileEvent.getProfile().getId() == null){
+        if (profileEvent.getProfile().getId() == null) {
             logger.info("=>Update status failed: profile ID is null");
             return;
         }
@@ -166,7 +164,7 @@ public class CVServiceImpl extends BaseService implements CVService {
     @SneakyThrows
     @Override
     public void updateImages(ProfileEvent profileEvent) {
-        if (profileEvent.getImage().getId() == null){
+        if (profileEvent.getImage().getId() == null) {
             logger.info("=>Update Image failed: profile ID is null");
             return;
         }
@@ -180,7 +178,7 @@ public class CVServiceImpl extends BaseService implements CVService {
     @SneakyThrows
     @Override
     public void deleteImages(ProfileEvent profileEvent) {
-        if (profileEvent.getImage().getId() == null){
+        if (profileEvent.getImage().getId() == null) {
             logger.info("=>Delete Image failed: profile ID is null");
             return;
         }

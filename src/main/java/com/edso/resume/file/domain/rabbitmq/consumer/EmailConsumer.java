@@ -3,13 +3,13 @@ package com.edso.resume.file.domain.rabbitmq.consumer;
 import com.edso.resume.file.domain.rabbitmq.event.SendEmailEvent;
 import com.edso.resume.file.service.SendEmailService;
 import com.edso.resume.file.service.SendOutlookCalendarService;
+import com.edso.resume.lib.common.TypeConfig;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import com.edso.resume.lib.common.TypeConfig;
 
 @Component
 public class EmailConsumer {

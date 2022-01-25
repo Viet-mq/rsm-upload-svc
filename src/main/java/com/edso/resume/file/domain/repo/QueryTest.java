@@ -1,19 +1,17 @@
 package com.edso.resume.file.domain.repo;
 
 import com.edso.resume.file.domain.elasticsearch.ElasticFields;
-import org.elasticsearch.index.query.FuzzyQueryBuilder;
-import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 
 import java.util.Arrays;
 
-public class QueryTest implements QueryBuilderRepo{
+public class QueryTest implements QueryBuilderRepo {
     @Override
     public QueryBuilder build(String key) {
         String[] keyComponent = key.trim().split("  *");
         StringBuilder query = new StringBuilder(keyComponent[0]);
-        for (int i = 1; i < keyComponent.length; i++){
+        for (int i = 1; i < keyComponent.length; i++) {
             query.append(" AND ").append(removeAccent(keyComponent[i]));
         }
         return QueryBuilders.fuzzyQuery(ElasticFields.FULL_NAME, keyComponent);

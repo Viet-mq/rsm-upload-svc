@@ -7,13 +7,13 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class QueryNormalRepo implements QueryBuilderRepo{
+public class QueryNormalRepo implements QueryBuilderRepo {
 
     @Override
     public QueryBuilder build(String key) {
         String[] keyComponent = key.trim().split("  *");
         StringBuilder query = new StringBuilder(keyComponent[0]);
-        for (int i = 1; i < keyComponent.length; i++){
+        for (int i = 1; i < keyComponent.length; i++) {
             query.append(" AND ").append(keyComponent[i]);
         }
         return QueryBuilders.queryStringQuery(query.toString()).type(MultiMatchQueryBuilder.Type.PHRASE_PREFIX)

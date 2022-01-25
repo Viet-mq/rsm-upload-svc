@@ -11,7 +11,7 @@ import java.io.FileInputStream;
 import java.util.Iterator;
 
 @Service
-public class FileXlsxToText implements FileService{
+public class FileXlsxToText implements FileService {
     @Override
     public String convertToText(File xlsxFile) {
         StringBuilder stringBuilder = new StringBuilder();
