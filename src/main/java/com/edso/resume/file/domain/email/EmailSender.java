@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,9 +33,19 @@ public class EmailSender {
         this.javaMailSender = javaMailSender;
     }
 
-    public BaseResponse sendMail(String toEmail, String subject, String content, List<String> files) throws MessagingException, IOException {
-        BaseResponse baseResponse = new BaseResponse();
+    public BaseResponse sendMail(String toEmail, String subject, String content, List<String> files) throws MessagingException {
+        BaseResponse response = new BaseResponse();
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+
+        try {
+            InternetAddress emailAddress = new InternetAddress(toEmail);
+            emailAddress.validate();
+        }catch (AddressException e) {
+            e.printStackTrace();
+            response.setFailed("Không tồn tại tài khoản email " + toEmail);
+            return response;
+        }
+
 
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, AppUtils.EMAIL_ENCODING);
         helper.setFrom(fromAddress);
@@ -47,20 +59,24 @@ public class EmailSender {
 //                String fileName = url.getFile().substring(url.getFile().lastIndexOf("/") + 1);
 //                MultipartFile multipartFile = new MockMultipartFile(url.getFile(), fileName, "text/plain", IOUtils.toByteArray(url));
 //                helper.addAttachment(Objects.requireNonNull(multipartFile.getOriginalFilename()), multipartFile);
-                File fileAttach = new File(file);
-                FileInputStream inputStream = new FileInputStream(fileAttach);
-                MultipartFile multipartFile = new MockMultipartFile(fileAttach.getName(),
-                        fileAttach.getName(),
-                        "text/plain",
-                        IOUtils.toByteArray(inputStream));
-                helper.addAttachment(Objects.requireNonNull(multipartFile.getOriginalFilename()), multipartFile);
+                try {
+                    File fileAttach = new File(file);
+                    FileInputStream inputStream = new FileInputStream(fileAttach);
+                    MultipartFile multipartFile = new MockMultipartFile(fileAttach.getName(),
+                            fileAttach.getName(),
+                            "text/plain",
+                            IOUtils.toByteArray(inputStream));
+                    helper.addAttachment(Objects.requireNonNull(multipartFile.getOriginalFilename()), multipartFile);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 
         javaMailSender.send(mimeMessage);
 
-        baseResponse.setSuccess("OK");
-        return baseResponse;
+        response.setSuccess("OK");
+        return response;
     }
 
     public BaseResponse sendMailWithMultipartFile(String toEmail, String subject, String content, List<MultipartFile> files) throws MessagingException {
