@@ -16,7 +16,7 @@ spring:
       routingkey: cv.routingkey
     email:
       exchange: email.exchange
-      queue: email.queue
+      queue: EMAIL.queue
       routingkey: email.routingkey
   redis:
     host: 18.139.222.137

@@ -1,5 +1,6 @@
 package com.edso.resume.file.domain.rabbitmq.consumer;
 
+import com.edso.resume.file.domain.rabbitmq.event.Ids;
 import com.edso.resume.file.domain.rabbitmq.event.SendEmailEvent;
 import com.edso.resume.file.service.SendEmailService;
 import com.edso.resume.file.service.SendOutlookCalendarService;
@@ -65,17 +66,21 @@ public class EmailConsumer {
                         sendEmailEvent.getFiles());
                 break;
             case TypeConfig.CALENDAR_CANDIDATE:
-                sendCalenderEmailToCandidate.sendEmail(sendEmailEvent.getProfileId(),
+                sendCalenderEmailToCandidate.sendCalendarEmail(sendEmailEvent.getCalendarId(),
                         sendEmailEvent.getSubject(),
                         sendEmailEvent.getContent(),
                         sendEmailEvent.getHistoryId(),
                         sendEmailEvent.getFiles());
                 break;
             case TypeConfig.CALENDAR_INTERVIEWER:
-
-                sendOutlookCalendarService.sendCalendar(null);
+                sendCalendarEmailToInterviewer.sendCalendarEmail(sendEmailEvent.getCalendarId(),
+                        sendEmailEvent.getSubject(),
+                        sendEmailEvent.getContent(),
+                        sendEmailEvent.getHistoryId(),
+                        sendEmailEvent.getFiles());
+                break;
             case TypeConfig.CALENDAR_PRESENTER:
-                sendCalendarEmailToPresenter.sendEmail(sendEmailEvent.getProfileId(),
+                sendCalendarEmailToPresenter.sendCalendarEmail(sendEmailEvent.getCalendarId(),
                         sendEmailEvent.getSubject(),
                         sendEmailEvent.getContent(),
                         sendEmailEvent.getHistoryId(),
@@ -95,6 +100,14 @@ public class EmailConsumer {
                         sendEmailEvent.getHistoryId(),
                         sendEmailEvent.getFiles());
                 break;
+            case TypeConfig.CALENDARS_CANDIDATE:
+                for (Ids ids : sendEmailEvent.getIds()) {
+                    sendCalenderEmailToCandidate.sendEmail(ids.getCalendarId(),
+                            sendEmailEvent.getSubject(),
+                            sendEmailEvent.getContent(),
+                            ids.getHistoryId(),
+                            sendEmailEvent.getFiles());
+                }
         }
     }
 }

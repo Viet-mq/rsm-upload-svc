@@ -47,6 +47,6 @@ public class EmailController extends BaseController {
                                           @RequestParam(value = "file", required = false) List<String> files) {
         HeaderInfo headerInfo = ParseHeaderUtil.build(headers);
         logger.info("=>u: {} Send email-template, profileId: {}, subject: {}", headerInfo, profileId, subject);
-        return sendCalenderEmailToCandidate.sendEmail(profileId, subject, content, historyId, files);
+        return sendCalenderEmailToCandidate.sendCalendarEmail(profileId, subject, content, historyId, files);
     }
 }
