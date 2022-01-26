@@ -143,7 +143,7 @@ public class SendRejectEmailToPresenterService implements SendEmailService {
     }
 
     @Override
-    public BaseResponse sendMail(String calendarId, String subject, String content, String historyId, List<String> files) {
+    public BaseResponse sendCalendarEmail(String calendarId, String subject, String content, String historyId, List<String> files) {
         return null;
     }
 }

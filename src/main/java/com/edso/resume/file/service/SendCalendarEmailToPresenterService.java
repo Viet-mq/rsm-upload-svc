@@ -34,20 +34,25 @@ public class SendCalendarEmailToPresenterService implements SendEmailService {
         this.db = db;
     }
 
-    @SneakyThrows
     @Override
     public BaseResponse sendEmail(String profileId, String subject, String content, String historyId, List<String> files) {
-        Bson cond = Filters.eq(EmailTemplateConfig.ID, profileId);
-        Document profile = db.findOne(CollectionNameDefs.COLL_PROFILE, cond);
-        if (profile == null) {
-            response.setFailed("Profile không tồn tại");
+        return null;
+    }
+
+    @SneakyThrows
+    @Override
+    public BaseResponse sendCalendarEmail(String calendarId, String subject, String content, String historyId, List<String> files) {
+        Bson cond = Filters.eq(EmailTemplateConfig.ID, calendarId);
+        Document calendar = db.findOne(CollectionNameDefs.COLL_CALENDAR_PROFILE, cond);
+        if (calendar == null) {
+            response.setFailed("Không tồn tại lịch phỏng vấn");
             return response;
         }
 
-        cond = Filters.eq(EmailTemplateConfig.ID_PROFILE, profileId);
-        Document calendar_profile = db.findOne(CollectionNameDefs.COLL_CALENDAR_PROFILE, cond);
-        if (calendar_profile == null) {
-            response.setFailed("Người dùng chưa có lịch phỏng vấn");
+        cond = Filters.eq(EmailTemplateConfig.ID_PROFILE, calendar.get(DbKeyConfig.ID_PROFILE));
+        Document profile = db.findOne(CollectionNameDefs.COLL_PROFILE, cond);
+        if (profile == null) {
+            response.setFailed("Profile không tồn tại");
             return response;
         }
 
@@ -107,21 +112,21 @@ public class SendCalendarEmailToPresenterService implements SendEmailService {
                     replacementStrings.put(KeyPointConfig.ROUND, AppUtils.parseString(profile.get(DbKeyConfig.STATUS_CV_NAME)));
                     break;
                 case KeyPointConfig.DATE:
-                    String date = AppUtils.formatDateToString(new Date(AppUtils.parseLong(calendar_profile.get(DbKeyConfig.DATE))));
+                    String date = AppUtils.formatDateToString(new Date(AppUtils.parseLong(calendar.get(DbKeyConfig.DATE))));
                     replacementStrings.put(KeyPointConfig.DATE, date);
                     break;
                 case KeyPointConfig.INTERVIEW_TIME:
-                    String interview_time = AppUtils.formatDateToString(new Date(AppUtils.parseLong(calendar_profile.get(DbKeyConfig.INTERVIEW_TIME))));
+                    String interview_time = AppUtils.formatDateToString(new Date(AppUtils.parseLong(calendar.get(DbKeyConfig.INTERVIEW_TIME))));
                     replacementStrings.put(KeyPointConfig.INTERVIEW_TIME, interview_time);
                     break;
                 case KeyPointConfig.INTERVIEW_ADDRESS:
-                    replacementStrings.put(KeyPointConfig.INTERVIEW_ADDRESS, AppUtils.parseString(calendar_profile.get(DbKeyConfig.INTERVIEW_ADDRESS_NAME)));
+                    replacementStrings.put(KeyPointConfig.INTERVIEW_ADDRESS, AppUtils.parseString(calendar.get(DbKeyConfig.INTERVIEW_ADDRESS_NAME)));
                     break;
                 case KeyPointConfig.FLOOR:
-                    replacementStrings.put(KeyPointConfig.FLOOR, AppUtils.parseString(calendar_profile.get(DbKeyConfig.FLOOR)));
+                    replacementStrings.put(KeyPointConfig.FLOOR, AppUtils.parseString(calendar.get(DbKeyConfig.FLOOR)));
                     break;
                 case KeyPointConfig.INTERVIEW_TYPE:
-                    replacementStrings.put(KeyPointConfig.INTERVIEW_TYPE, AppUtils.parseString(calendar_profile.get(DbKeyConfig.TYPE)));
+                    replacementStrings.put(KeyPointConfig.INTERVIEW_TYPE, AppUtils.parseString(calendar.get(DbKeyConfig.TYPE)));
                     break;
                 case KeyPointConfig.HR_REF:
                     replacementStrings.put(KeyPointConfig.HR_REF, AppUtils.parseString(profile.get(DbKeyConfig.HR_REF)));
@@ -151,10 +156,5 @@ public class SendCalendarEmailToPresenterService implements SendEmailService {
 
         return emailSender.sendMail(presenter_email,
                 subjectResult, contentResult, files);
-    }
-
-    @Override
-    public BaseResponse sendMail(String calendarId, String subject, String content, String historyId, List<String> files) {
-        return null;
     }
 }

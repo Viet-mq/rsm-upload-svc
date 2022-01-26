@@ -12,9 +12,10 @@ import java.util.List;
 public class SendEmailEvent {
     private String type;
     private String profileId;
+    private String calendarId;
     private String subject;
     private String content;
     private String historyId;
-    private Ids ids;
+    private List<Ids> ids;
     List<String> files;
 }

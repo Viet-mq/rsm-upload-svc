@@ -11,9 +11,9 @@ public interface SendEmailService {
                            String historyId,
                            List<String> files);
 
-    BaseResponse sendMail(String calendarId,
-                          String subject,
-                          String content,
-                          String historyId,
-                          List<String> files);
+    BaseResponse sendCalendarEmail(String calendarId,
+                                   String subject,
+                                   String content,
+                                   String historyId,
+                                   List<String> files);
 }

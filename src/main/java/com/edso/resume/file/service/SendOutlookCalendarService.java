@@ -4,6 +4,7 @@ import com.edso.resume.file.domain.db.MongoDbOnlineSyncActions;
 import com.edso.resume.file.domain.entities.Interviewer;
 import com.edso.resume.file.domain.repo.SessionRepository;
 import com.edso.resume.file.domain.request.SendCalendarRequest;
+import com.edso.resume.file.utils.SendEmailUtils;
 import com.edso.resume.lib.common.AppUtils;
 import com.edso.resume.lib.common.CollectionNameDefs;
 import com.edso.resume.lib.common.DbKeyConfig;
@@ -48,27 +49,8 @@ public class SendOutlookCalendarService extends BaseService implements CalendarS
                 return response;
             }
 
-            List<Document> interviewerList = (List<Document>) calendar.get(DbKeyConfig.INTERVIEWERS);
-
-            if (interviewerList == null || interviewerList.isEmpty()) {
-                response.setFailed("Không tồn tại hội đồng tuyển dụng");
+            if (SendEmailUtils.checkInterviewersExistence(response, interviewers, calendar))
                 return response;
-            }
-
-            for (Document document : interviewerList) {
-                if (!Strings.isNullOrEmpty(AppUtils.parseString(document.get(DbKeyConfig.EMAIL)))) {
-                    Interviewer interviewer = Interviewer.builder()
-                            .name(AppUtils.parseString(document.get(DbKeyConfig.FULL_NAME)))
-                            .email(AppUtils.parseString(document.get(DbKeyConfig.EMAIL)))
-                            .build();
-                    interviewers.add(interviewer);
-                }
-            }
-
-            if (interviewers.isEmpty()) {
-                response.setFailed("Không tồn tại hội đồng tuyển dụng");
-                return response;
-            }
 
             String interviewer = "    {\n" +
                     "      \"emailAddress\": {\n" +

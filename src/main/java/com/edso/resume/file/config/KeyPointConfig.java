@@ -29,5 +29,5 @@ public class KeyPointConfig {
     public static final String INTERVIEW_TYPE = "interview_type";
     public static final String HR_REF = "hr_ref";
     public static final String MAIL_REF = "mail_ref";
-
+    public static final String INTERVIEWER_NAME = "interviewer_name";
 }

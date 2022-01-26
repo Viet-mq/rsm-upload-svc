@@ -4,6 +4,8 @@ import com.edso.resume.lib.common.AppUtils;
 import com.edso.resume.lib.common.ErrorCodeDefs;
 import com.edso.resume.lib.response.BaseResponse;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -23,6 +25,8 @@ import java.util.Objects;
 
 @Component
 public class EmailSender {
+
+    private static final Logger logger = LoggerFactory.getLogger(EmailSender.class);
 
     private final JavaMailSender javaMailSender;
 
@@ -74,6 +78,7 @@ public class EmailSender {
         }
 
         javaMailSender.send(mimeMessage);
+        logger.info("=> Send email to {}", toEmail);
 
         response.setSuccess("OK");
         return response;
