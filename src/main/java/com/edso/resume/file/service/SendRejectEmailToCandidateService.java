@@ -127,7 +127,9 @@ public class SendRejectEmailToCandidateService extends BaseService implements Se
 
         //Update Email's history
         Bson updates = Updates.combine(
-                Updates.set(DbKeyConfig.STATUS, "Đã gửi email")
+                Updates.set(DbKeyConfig.STATUS, "Đã gửi email"),
+                Updates.set(DbKeyConfig.SUBJECT, subjectResult),
+                Updates.set(DbKeyConfig.CONTENT, contentResult)
         );
         db.update(CollectionNameDefs.COLL_HISTORY_EMAIL, historyCond, updates, true);
 

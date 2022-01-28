@@ -102,12 +102,24 @@ public class EmailConsumer {
                 break;
             case TypeConfig.CALENDARS_CANDIDATE:
                 for (Ids ids : sendEmailEvent.getIds()) {
-                    sendCalenderEmailToCandidate.sendEmail(ids.getCalendarId(),
+                    sendCalenderEmailToCandidate.sendCalendarEmail(ids.getCalendarId(),
                             sendEmailEvent.getSubject(),
                             sendEmailEvent.getContent(),
                             ids.getHistoryId(),
                             sendEmailEvent.getFiles());
                 }
+                break;
+            case TypeConfig.EMAILS_CANDIDATE:
+                for (Ids ids : sendEmailEvent.getIds()) {
+                    sendRoundEmailToCandidate.sendEmail(ids.getProfileId(),
+                            sendEmailEvent.getSubject(),
+                            sendEmailEvent.getContent(),
+                            ids.getHistoryId(),
+                            sendEmailEvent.getFiles());
+                }
+                break;
+            default:
+                logger.info("Invalid Email Type");
         }
     }
 }

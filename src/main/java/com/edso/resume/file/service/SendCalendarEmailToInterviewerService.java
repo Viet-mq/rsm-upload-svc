@@ -134,6 +134,15 @@ public class SendCalendarEmailToInterviewerService extends BaseService implement
                 StrSubstitutor sub = new StrSubstitutor(replacementStrings, "{", "}");
                 String contentResult = sub.replace(content);
                 String subjectResult = sub.replace(subject);
+
+                //Update Email's history
+                Bson updates = Updates.combine(
+                        Updates.set(DbKeyConfig.STATUS, "Đã gửi email"),
+                        Updates.set(DbKeyConfig.SUBJECT, subjectResult),
+                        Updates.set(DbKeyConfig.CONTENT, contentResult)
+                );
+                db.update(CollectionNameDefs.COLL_HISTORY_EMAIL, Filters.eq(EmailTemplateConfig.ID, historyId), updates, true);
+
                 emailSender.sendMail(interviewer.getEmail(), subjectResult, contentResult, files);
             }
 
@@ -144,11 +153,6 @@ public class SendCalendarEmailToInterviewerService extends BaseService implement
             return response;
         }
 
-        //Update Email's history
-        Bson updates = Updates.combine(
-                Updates.set(DbKeyConfig.STATUS, "Đã gửi email")
-        );
-        db.update(CollectionNameDefs.COLL_HISTORY_EMAIL, Filters.eq(EmailTemplateConfig.ID, historyId), updates, true);
 
         response.setSuccess("OK");
         return response;
