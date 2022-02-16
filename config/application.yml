@@ -87,7 +87,8 @@ application:
 pdf:
   domain: http://file-rs.edsolabs.com/
   localpath: fileupload/
-  serverpath: /usr/share/nginx/file-rs/
+#  serverpath: /usr/share/nginx/file-rs/
+  serverpath: D:\
 
 email:
   sender:
