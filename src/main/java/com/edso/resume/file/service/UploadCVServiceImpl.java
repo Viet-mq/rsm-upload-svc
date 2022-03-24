@@ -63,14 +63,15 @@ public class UploadCVServiceImpl extends BaseService implements UploadCVService 
                 textParsed = pdfToText.convertToText(file);
                 break;
             case "docx":
+            case "doc":
                 textParsed = docxToText.convertToText(file);
                 break;
             case "xlsx":
                 textParsed = xlsxToText.convertToText(file);
                 break;
             default:
-                baseResponse.setFailed("Invalid file");
-                return baseResponse;
+                textParsed = "";
+                break;
         }
 
         Profile profile = cvRepo.searchById(request.getProfileId());
