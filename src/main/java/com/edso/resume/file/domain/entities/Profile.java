@@ -2,6 +2,8 @@ package com.edso.resume.file.domain.entities;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class Profile {
     private String id;
@@ -36,5 +38,29 @@ public class Profile {
     private String urlCV;
     private String image;
     private String fileName;
+    private String mailRef;
+    private String mailRef2;
+    private List<String> skill;
+    private String levelSchool;
+    private String recruitmentId;
+    private String recruitmentName;
+    private String avatarColor;
+    private Boolean isNew;
+    private Long time;
+    private String linkedin;
+    private String facebook;
+    private String skype;
+    private String github;
+    private String otherTech;
+    private String web;
+    private String picId;
+    private String picName;
+    private String status;
+    private String companyId;
+    private String companyName;
+    private String username;
+    private List<String> followers;
+    private List<String> tags;
+    private String picMail;
 
 }
