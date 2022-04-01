@@ -44,7 +44,7 @@ public class EmailSender {
         try {
             InternetAddress emailAddress = new InternetAddress(toEmail);
             emailAddress.validate();
-        }catch (AddressException e) {
+        } catch (AddressException e) {
             e.printStackTrace();
             response.setFailed("Không tồn tại tài khoản email " + toEmail);
             return response;

@@ -6,6 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.elasticsearch.common.Strings;
 
+import java.util.List;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @ToString(callSuper = true)
@@ -39,6 +41,33 @@ public class UpdateCVRequest extends BaseAuthRequest {
     private Long lastApply;
     private String departmentId;
     private String departmentName;
+    private String urlCV;
+    private String image;
+    private String fileName;
+    private String mailRef;
+    private String mailRef2;
+    private List<String> skill;
+    private String levelSchool;
+    private String recruitmentId;
+    private String recruitmentName;
+    private String avatarColor;
+    private Boolean isNew;
+    private Long time;
+    private String linkedin;
+    private String facebook;
+    private String skype;
+    private String github;
+    private String otherTech;
+    private String web;
+    private String picId;
+    private String picName;
+    private String status;
+    private String companyId;
+    private String companyName;
+    private String username;
+    private List<String> followers;
+    private List<String> tags;
+    private String picMail;
 
     public BaseResponse validate() {
         if (Strings.isNullOrEmpty(id)) {

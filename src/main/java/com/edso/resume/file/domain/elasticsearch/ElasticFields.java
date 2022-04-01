@@ -35,4 +35,22 @@ public class ElasticFields {
     public static final String DEPARTMENT_NAME = "departmentName";
     public static final String CREATE_AT = "create_at";
     public static final String UPDATE_AT = "update_at";
+    public static final String MAIL_REF = "mailRef";
+    public static final String MAIL_REF2 = "mailRef2";
+    public static final String LEVEL_SCHOOL = "levelSchool";
+    public static final String RECRUITMENT_NAME = "recruitmentName";
+    public static final String AVATAR_COLOR = "avatarColor";
+    public static final String LINKEDIN = "linkedin";
+    public static final String FACEBOOK = "facebook";
+    public static final String SKYPE = "skype";
+    public static final String GITHUB = "github";
+    public static final String OTHER_TECH = "otherTech";
+    public static final String WEB = "web";
+    public static final String PIC_ID = "picId";
+    public static final String PIC_NAME = "picName";
+    public static final String STATUS = "status";
+    public static final String COMPANY_ID = "companyId";
+    public static final String COMPANY_NAME = "companyName";
+    public static final String USER_NAME = "userName";
+    public static final String PIC_MAIL = "picMail";
 }
